@@ -1,0 +1,590 @@
+{
+  "uponor_x148": {
+    "name": "Controlador Uponor X-148 ModBus",
+    "wop": [5, 6, 15, 16],
+    "qregsmax": 25,
+    "co": {
+      "0": {
+        "descr": {
+          "en": "Heating/Cooling changeover",
+          "sp": "Cambio Invierno/Verano",
+          "po": "Cambio Invierno/Verano"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 1",
+          "sp": "Refrigeración no permitida en el canal 1",
+          "po": "Refrigeración no permitida en el canal 1"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 2",
+          "sp": "Refrigeración no permitida en el canal 2",
+          "po": "Refrigeración no permitida en el canal 2"
+        }
+      },
+      "5": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 3",
+          "sp": "Refrigeración no permitida en el canal 3",
+          "po": "Refrigeración no permitida en el canal 3"
+        }
+      },
+      "6": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 4",
+          "sp": "Refrigeración no permitida en el canal 4",
+          "po": "Refrigeración no permitida en el canal 4"
+        }
+      },
+      "7": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 5",
+          "sp": "Refrigeración no permitida en el canal 5",
+          "po": "Refrigeración no permitida en el canal 5"
+        }
+      },
+      "8": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 6",
+          "sp": "Refrigeración no permitida en el canal 6",
+          "po": "Refrigeración no permitida en el canal 6"
+        }
+      },
+      "9": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 7",
+          "sp": "Refrigeración no permitida en el canal 7",
+          "po": "Refrigeración no permitida en el canal 7"
+        }
+      },
+      "10": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 8",
+          "sp": "Refrigeración no permitida en el canal 8",
+          "po": "Refrigeración no permitida en el canal 8"
+        }
+      },
+      "11": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 9",
+          "sp": "Refrigeración no permitida en el canal 9",
+          "po": "Refrigeración no permitida en el canal 9"
+        }
+      },
+      "12": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 10",
+          "sp": "Refrigeración no permitida en el canal 10",
+          "po": "Refrigeración no permitida en el canal 10"
+        }
+      },
+      "13": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 11",
+          "sp": "Refrigeración no permitida en el canal 11",
+          "po": "Refrigeración no permitida en el canal 11"
+        }
+      },
+      "14": {
+        "descr": {
+          "en": "Cooling not allowed on Channel 12",
+          "sp": "Refrigeración no permitida en el canal 12",
+          "po": "Refrigeración no permitida en el canal 12"
+        }
+      }
+    },
+    "di": {
+      "0": {
+        "descr": {
+          "en": "Actuator status Channel 1",
+          "sp": "Estado actuador Canal 1",
+          "po": "Estado actuador Canal 1"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "Actuator status Channel 2",
+          "sp": "Estado actuador Canal 2",
+          "po": "Estado actuador Canal 2"
+        }
+      },
+      "2": {
+        "descr": {
+          "en": "Actuator status Channel 3",
+          "sp": "Estado actuador Canal 3",
+          "po": "Estado actuador Canal 3"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "Actuator status Channel 4",
+          "sp": "Estado actuador Canal 4",
+          "po": "Estado actuador Canal 4"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "Actuator status Channel 5",
+          "sp": "Estado actuador Canal 5",
+          "po": "Estado actuador Canal 5"
+        }
+      },
+      "5": {
+        "descr": {
+          "en": "Actuator status Channel 6",
+          "sp": "Estado actuador Canal 6",
+          "po": "Estado actuador Canal 6"
+        }
+      },
+      "6": {
+        "descr": {
+          "en": "Actuator status Channel 7",
+          "sp": "Estado actuador Canal 7",
+          "po": "Estado actuador Canal 7"
+        }
+      },
+      "7": {
+        "descr": {
+          "en": "Actuator status Channel 8",
+          "sp": "Estado actuador Canal 8",
+          "po": "Estado actuador Canal 8"
+        }
+      },
+      "8": {
+        "descr": {
+          "en": "Actuator status Channel 9",
+          "sp": "Estado actuador Canal 9",
+          "po": "Estado actuador Canal 9"
+        }
+      },
+      "9": {
+        "descr": {
+          "en": "Actuator status Channel 10",
+          "sp": "Estado actuador Canal 10",
+          "po": "Estado actuador Canal 10"
+        }
+      },
+      "10": {
+        "descr": {
+          "en": "Actuator status Channel 11",
+          "sp": "Estado actuador Canal 11",
+          "po": "Estado actuador Canal 11"
+        }
+      },
+      "11": {
+        "descr": {
+          "en": "Actuator status Channel 12",
+          "sp": "Estado actuador Canal 12",
+          "po": "Estado actuador Canal 12"
+        }
+      },
+      "12": {
+        "descr": {
+          "en": "Pump/Boiler relay status",
+          "sp": "Estado relé bomba/caldera",
+          "po": "Estado relé bomba/caldera"
+        }
+      }
+     },
+    "hr": {
+      "0": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 1",
+          "sp": "Temperatura de consigna Canal 1",
+          "po": "Temperatura de consigna Canal 1"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "1": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 2",
+          "sp": "Temperatura de consigna Canal 2",
+          "po": "Temperatura de consigna Canal 2"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "2": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 3",
+          "sp": "Temperatura de consigna Canal 3",
+          "po": "Temperatura de consigna Canal 3"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "3": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 4",
+          "sp": "Temperatura de consigna Canal 4",
+          "po": "Temperatura de consigna Canal 4"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "4": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 5",
+          "sp": "Temperatura de consigna Canal 5",
+          "po": "Temperatura de consigna Canal 5"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "5": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 6",
+          "sp": "Temperatura de consigna Canal 6",
+          "po": "Temperatura de consigna Canal 6"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "6": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 7",
+          "sp": "Temperatura de consigna Canal 7",
+          "po": "Temperatura de consigna Canal 7"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "7": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 8",
+          "sp": "Temperatura de consigna Canal 8",
+          "po": "Temperatura de consigna Canal 8"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "8": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 9",
+          "sp": "Temperatura de consigna Canal 9",
+          "po": "Temperatura de consigna Canal 9"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "9": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 10",
+          "sp": "Temperatura de consigna Canal 10",
+          "po": "Temperatura de consigna Canal 10"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "10": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 11",
+          "sp": "Temperatura de consigna Canal 11",
+          "po": "Temperatura de consigna Canal 11"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "11": {
+        "descr": {
+          "en": "Room setpoint temperature Channel 12",
+          "sp": "Temperatura de consigna Canal 12",
+          "po": "Temperatura de consigna Canal 12"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      }
+    },
+    "ir": {
+      "0": {
+        "descr": {
+          "en": "Controller outdoor temperature",
+          "sp": "Temperatura exterior del controlador",
+          "po": "Temperatura exterior del controlador"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "1": {
+        "descr": {
+          "en": "Room temperature Channel 1",
+          "sp": "Temperatura Canal 1",
+          "po": "Temperatura Canal 1"
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [4, 0]
+      },
+      "2": {
+        "descr": {
+          "en": "Room temperature Channel 2",
+          "sp": "Temperatura Canal 2",
+          "po": "Temperatura Canal 2"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "3": {
+        "descr": {
+          "en": "Room temperature Channel 3",
+          "sp": "Temperatura Canal 3",
+          "po": "Temperatura Canal 3"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "4": {
+        "descr": {
+          "en": "Room temperature Channel 4",
+          "sp": "Temperatura Canal 4",
+          "po": "Temperatura Canal 4"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "5": {
+        "descr": {
+          "en": "Room temperature Channel 5",
+          "sp": "Temperatura Canal 5",
+          "po": "Temperatura Canal 5"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "6": {
+        "descr": {
+          "en": "Room temperature Channel 6",
+          "sp": "Temperatura Canal 6",
+          "po": "Temperatura Canal 6"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "7": {
+        "descr": {
+          "en": "Room temperature Channel 7",
+          "sp": "Temperatura Canal 7",
+          "po": "Temperatura Canal 7"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "8": {
+        "descr": {
+          "en": "Room temperature Channel 8",
+          "sp": "Temperatura Canal 8",
+          "po": "Temperatura Canal 8"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "9": {
+        "descr": {
+          "en": "Room temperature Channel 9",
+          "sp": "Temperatura Canal 9",
+          "po": "Temperatura Canal 9"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "10": {
+        "descr": {
+          "en": "Room temperature Channel 10",
+          "sp": "Temperatura Canal 10",
+          "po": "Temperatura Canal 10"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "11": {
+        "descr": {
+          "en": "Room temperature Channel 11",
+          "sp": "Temperatura Canal 11",
+          "po": "Temperatura Canal 11"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "12": {
+        "descr": {
+          "en": "Room temperature Channel 12",
+          "sp": "Temperatura Canal 12",
+          "po": "Temperatura Canal 12"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "13": {
+        "descr": {
+          "en": "Relative humidity Channel 1",
+          "sp": "Humedad relativa Canal 1",
+          "po": "Humedad relativa Canal 1"
+        }
+      },
+      "14": {
+        "descr": {
+          "en": "Relative humidity Channel 2",
+          "sp": "Humedad relativa Canal 2",
+          "po": "Humedad relativa Canal 2"
+        }
+      },
+      "15": {
+        "descr": {
+          "en": "Relative humidity Channel 3",
+          "sp": "Humedad relativa Canal 3",
+          "po": "Humedad relativa Canal 3"
+        }
+      },
+      "16": {
+        "descr": {
+          "en": "Relative humidity Channel 4",
+          "sp": "Humedad relativa Canal 4",
+          "po": "Humedad relativa Canal 4"
+        }
+      },
+      "17": {
+        "descr": {
+          "en": "Relative humidity Channel 5",
+          "sp": "Humedad relativa Canal 5",
+          "po": "Humedad relativa Canal 5"
+        }
+      },
+      "18": {
+        "descr": {
+          "en": "Relative humidity Channel 6",
+          "sp": "Humedad relativa Canal 6",
+          "po": "Humedad relativa Canal 6"
+        }
+      },
+      "19": {
+        "descr": {
+          "en": "Relative humidity Channel 7",
+          "sp": "Humedad relativa Canal 7",
+          "po": "Humedad relativa Canal 7"
+        }
+      },
+      "20": {
+        "descr": {
+          "en": "Relative humidity Channel 8",
+          "sp": "Humedad relativa Canal 8",
+          "po": "Humedad relativa Canal 8"
+        }
+      },
+      "21": {
+        "descr": {
+          "en": "Relative humidity Channel 9",
+          "sp": "Humedad relativa Canal 9",
+          "po": "Humedad relativa Canal 9"
+        }
+      },
+      "22": {
+        "descr": {
+          "en": "Relative humidity Channel 10",
+          "sp": "Humedad relativa Canal 10",
+          "po": "Humedad relativa Canal 10"
+        }
+      },
+      "23": {
+        "descr": {
+          "en": "Relative humidity Channel 11",
+          "sp": "Humedad relativa Canal 11",
+          "po": "Humedad relativa Canal 11"
+        }
+      },
+      "24": {
+        "descr": {
+          "en": "Relative humidity Channel 12",
+          "sp": "Humedad relativa Canal 12",
+          "po": "Humedad relativa Canal 12"
+        }
+      },
+      "25": {
+        "descr": {
+          "en": "Floor temperature Channel 1",
+          "sp": "Temperatura del suelo Canal 1",
+          "po": "Temperatura del suelo Canal 1"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "26": {
+        "descr": {
+          "en": "Floor temperature Channel 2",
+          "sp": "Temperatura del suelo Canal 2",
+          "po": "Temperatura del suelo Canal 2"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "27": {
+        "descr": {
+          "en": "Floor temperature Channel 3",
+          "sp": "Temperatura del suelo Canal 3",
+          "po": "Temperatura del suelo Canal 3"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "28": {
+        "descr": {
+          "en": "Floor temperature Channel 4",
+          "sp": "Temperatura del suelo Canal 4",
+          "po": "Temperatura del suelo Canal 4"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "29": {
+        "descr": {
+          "en": "Floor temperature Channel 5",
+          "sp": "Temperatura del suelo Canal 5",
+          "po": "Temperatura del suelo Canal 5"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "30": {
+        "descr": {
+          "en": "Floor temperature Channel 6",
+          "sp": "Temperatura del suelo Canal 6",
+          "po": "Temperatura del suelo Canal 6"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "31": {
+        "descr": {
+          "en": "Floor temperature Channel 7",
+          "sp": "Temperatura del suelo Canal 7",
+          "po": "Temperatura del suelo Canal 7"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "32": {
+        "descr": {
+          "en": "Floor temperature Channel 8",
+          "sp": "Temperatura del suelo Canal 8",
+          "po": "Temperatura del suelo Canal 8"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "33": {
+        "descr": {
+          "en": "Floor temperature Channel 9",
+          "sp": "Temperatura del suelo Canal 9",
+          "po": "Temperatura del suelo Canal 9"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "34": {
+        "descr": {
+          "en": "Floor temperature Channel 10",
+          "sp": "Temperatura del suelo Canal 10",
+          "po": "Temperatura del suelo Canal 10"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "35": {
+        "descr": {
+          "en": "Floor temperature Channel 11",
+          "sp": "Temperatura del suelo Canal 11",
+          "po": "Temperatura del suelo Canal 11"
+        },
+        "conv_f_read": [1, 5]
+      },
+      "36": {
+        "descr": {
+          "en": "Floor temperature Channel 12",
+          "sp": "Temperatura del suelo Canal 12",
+          "po": "Temperatura del suelo Canal 12"
+        },
+        "conv_f_read": [1, 5]
+      }
+    }
+  }
+}

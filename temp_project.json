@@ -1,0 +1,109 @@
+{
+  "project": {
+    "id": 1,
+    "name": "Prueba SON VELL",
+    "country": "España",
+    "region": "Menorca, Islas Baleares",
+    "city": "Ciudadela",
+    "address": "Son Vell",
+    "zp": "",
+    "buildings": {
+      "1": {
+        "id": 1,
+        "name": "Nave 4",
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Habitación 4A",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Salon",
+                "groups": [1, 100100, 100101],
+                "iv_source": {"bus": 1, "device": 1, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 1, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 1, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {}
+              },
+              "2": {
+                "id": 2,
+                "name": "Habitacion 2",
+                "groups": [1, 100100, 100102],
+                "iv_source": {"bus": 1, "device": 2, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 2, "datatype": "hr", "adr": 1},
+                "rt_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 2},
+                "rh_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 14},
+                "st_source": {"bus": 1, "device": 2, "datatype": "di", "adr": 1},
+                "af_source": {},
+                "aq_source": {},
+                "aqsp_source": {}
+             },
+              "3": {
+                "id": 3,
+                "name": "Habitacion 3",
+                "groups": [1, 100100, 100103],
+                "iv_source": {"bus": 1, "device": 3, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 3, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 3, "datatype": "di", "adr": 3},
+                "af_source": {},
+                "aq_source": {},
+                "aqsp_source": {}
+             }
+            }
+          }
+        }
+      }
+    },
+    "buses": {
+      "1": {
+        "id": 1,
+        "name": "bus 1",
+        "ip": [127,0,0,1],
+        "port": "/dev/ttySC0",
+        "devices": {
+          "1": {
+            "id": 1,
+            "name": "Centralita 1 para suelo radiante",
+            "groups": [100100],
+            "slave": 1,
+            "baudrate": 19200,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "sensor",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "2": {
+            "id": 2,
+            "name": "Centralita 2 para suelo radiante",
+            "groups": [100200],
+            "slave": 1,
+            "baudrate": 19200,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "sensor",
+            "brand": "uponor",
+            "model": "x148"
+          }
+        }
+      }
+    }
+  }
+}

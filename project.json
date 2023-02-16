@@ -1,0 +1,83 @@
+{
+  "project": {
+    "id": 1,
+    "name": "Descripción",
+    "country": "España",
+    "region": "Comunidad",
+    "city": "Ciudad",
+    "address": "Dirección",
+    "zp": "Código postal",
+    "buildings": {
+      "1": {
+        "id": 1,
+        "name": "Edificio 1",
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Vivienda 1",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Habitacion 1",
+                "groups": [1, 100100, 100101],
+                "sp": [0, 0, 0, 0, 0, 0],
+                "rt": [0, 0, 0, 0, 0, 0],
+                "st": [0, 0, 0, 0, 0, 0],
+                "aq": [0, 0, 0, 0, 0, 0],
+                "aqsp": [0, 0, 0, 0, 0, 0]
+              },
+              "2": {
+                "id": 1,
+                "name": "Habitacion 2",
+                "groups": [1, 100100, 100102],
+                "sp": [0, 0, 0, 0, 0, 0],
+                "rt": [0, 0, 0, 0, 0, 0],
+                "st": [0, 0, 0, 0, 0, 0],
+                "aq": [0, 0, 0, 0, 0, 0],
+                "aqsp": [0, 0, 0, 0, 0, 0]
+             }
+          }
+        }
+      }
+    },
+    "buses": {
+      "1": {
+        "id": 1,
+        "name": "bus 1",
+        "ip": [127,0,0,1],
+        "port": "ttyUSB0",
+        "devices": {
+          "1": {
+            "id": 1,
+            "name": "Dispositivo 1 del bus 1",
+            "sl": 1,
+            "type": "generator",
+            "brand": "me"
+          },
+          "2": {
+            "id": 2,
+            "name": "Dispositivo 2 del bus 1",
+            "sl": 2,
+            "type": "fancoil",
+            "brand": "sistena"
+          }
+        }
+        }
+      }
+    },
+    "generators": {
+      "1": {
+        "id": 1,
+        "name": "Generador 1",
+        "brand": "me"
+      }
+    },
+    "fancoils": {
+      "1": {
+        "id": 1,
+        "name": "Fancoil 1",
+        "brand": "sistena"
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+pyserial~=3.5
+pip~=23.0
+wheel~=0.38.4
+setuptools~=67.2.0
+modbus_tk~=1.1.3

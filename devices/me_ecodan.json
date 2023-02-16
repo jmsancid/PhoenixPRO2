@@ -1,0 +1,90 @@
+{
+  "me_ecodan": {
+    "name": "ecodan",
+    "wop": [5, 6, 15, 16],
+    "co": {
+      "1": {
+        "descr": {
+          "en": "System ON/OFF",
+          "sp": "Marcha/Paro del Sistema",
+          "po": "Marcha/Paro del Sistema"
+        }
+      }
+    },
+    "di": {
+      "0": {
+        "descr": {
+          "en": "Room Thermo 1 (IN1)",
+          "sp": "Termostato ambiente 1 (IN1)",
+          "po": "Termostato ambiente 1 (IN1)"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "Room Thermo 2 (IN6)",
+          "sp": "Termostato ambiente 2 (IN6)",
+          "po": "Termostato ambiente 2 (IN6)"
+        }
+      },
+      "2": {
+        "descr": {
+          "en": "Flow SW1 (IN2)",
+          "sp": "Interruptor de flujo 1 (IN2)",
+          "po": "Interruptor de flujo 1 (IN2)"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "Flow SW2 (IN3)",
+          "sp": "Interruptor de flujo 2 (IN3)",
+          "po": "Interruptor de flujo 2 (IN3)"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "Flow SW3 (IN7)",
+          "sp": "Interruptor de flujo 3 (IN7)",
+          "po": "Interruptor de flujo 3 (IN7)"
+        }
+      },
+      "5": {
+        "descr": {
+          "en": "Demand (IN4)",
+          "sp": "Demanda (IN4)",
+          "po": "Demanda (IN4)"
+        }
+      },
+      "6": {
+        "descr": {
+          "en": "Outdoor Thermo (IN5)",
+          "sp": "Termostato Exterior (IN5)",
+          "po": "Termostato Exterior (IN5)"
+        }
+      },
+      "7": {
+        "descr": {
+          "en": "Heat Pump Master ON/OFF",
+          "sp": "Marcha/Paro Bomba de Calor Maestra",
+          "po": "Marcha/Paro Bomba de Calor Maestra"
+        }
+      }
+    },
+    "hr": {
+      "0": {
+        "descr": {
+          "en": "",
+          "sp": "",
+          "po": ""
+        },
+        "conv_f_read": [1, 5],
+        "conv_f_write": [0]
+      }
+
+    },
+    "ir": {
+
+    }
+  }
+
+
+}
