@@ -32,29 +32,36 @@ PARITY_EVEN = 0 if "esp32" in os.uname().sysname else "E"
 PARITY_ODD = 1 if "esp32" in os.uname().sysname else "O"
 PARITY = {"N": PARITY_NONE, "E": PARITY_EVEN, "O": PARITY_ODD}  # Hace falta el diccionario para utilizar el
 # formato correcto de paridad cuando se trabaja con la ESP32 (main.load_devices)
+READING_TRIES = 5  # Nº máximo de intentos de lectura de un dispositivo
 
 # JSON DE CONFIGURACIÓN DEL PROYECTO
 CONFIG_FILE = "./temp_project.json"
+DEVICES_FOLDER = "./devices/"
+TEMP_DIR = "/home/pi/var/tmp/phoenix/"
+READINGS_FILE = TEMP_DIR + "modbus_readings.json"
+ROOMGROUPS_VALUES_FILE = TEMP_DIR + "roomgroups_values.json"
 
 
 # CONFIG_FILE = "./project.json"
 
 # JSON CON LOS OBJETOS DEL PROYECTO
-SENSORSDB = "./project_elements/sensors.json"
-GENERATORSDB = "./project_elements/generators.json"
-FANCOILSDB = "./project_elements/fancoils.json"
-SPLITSDB = "./project_elements/splits.json"
-HEATRECOVERYUNITSDB = "./project_elements/heatrecoveryunits.json"
-AIRZONEMANAGERSDB = "./project_elements/airzonemanagers.json"
+SENSORDB = "./project_elements/sensors.json"
+GENERATORDB = "./project_elements/generators.json"
+FANCOILDB = "./project_elements/fancoils.json"
+SPLITDB = "./project_elements/splits.json"
+HEATRECOVERYUNITDB = "./project_elements/heatrecoveryunits.json"
+AIRZONEMANAGERDB = "./project_elements/airzonemanagers.json"
+TEMPFLUIDCONTROLLERDB = "./project_elements/tempfluidcontrollers.json"
 
 # DICCIONARIO PARA ACCEDER A LOS JSON CON LOS OBJETOS DEL PROYECTO
 PRJ_DEVICES_DB = {
-    "RoomSensor": SENSORSDB,
-    "Generator": GENERATORSDB,
-    "Fancoil": FANCOILSDB,
-    "Split": SPLITSDB,
-    "HeatRecoveryUnit": HEATRECOVERYUNITSDB,
-    "AirZoneManager": AIRZONEMANAGERSDB
+    "RoomSensor": SENSORDB,
+    "Generator": GENERATORDB,
+    "Fancoil": FANCOILDB,
+    "Split": SPLITDB,
+    "HeatRecoveryUnit": HEATRECOVERYUNITDB,
+    "AirZoneManager": AIRZONEMANAGERDB,
+    "TempFluidController": TEMPFLUIDCONTROLLERDB
 }
 
 # VARIABLES PARA CÁLCULO DE TEMPERATURA DE IMPULSIÓN DE AGUA
@@ -71,5 +78,5 @@ RT_LIM_CALEF = 26
 RT_LIM_REFR = 20
 ALTITUD = 696
 
-DEFAULT_TEMP_EXTERIOR_VERANO = 35  # Valor entre Junio y Septiembre
+DEFAULT_TEMP_EXTERIOR_VERANO = 35  # Valor entre junio y septiembre
 DEFAULT_TEMP_EXTERIOR_INVIERNO = 3  # Valor resto del año

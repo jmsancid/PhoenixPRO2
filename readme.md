@@ -52,14 +52,16 @@ y el mapa de registros separados por tipo de registro:
 Por ejemplo, en la centralita Uponor X148, el máximo número de registros que se pueden leer es 24.
 Cada registro será la clave de otro subnivel que incluirá la descripción del registro 
 en español, portugués e inglés y la operación a realizar con el registro al leer (conv_f_read) y 
-al escribir (conv_f_write), por ejemplo, dividir por 10 o multiplicar por 10, convertir de ºC a ºF o 
+al escribir (conv_f_write), por ejemplo, dividir por 10 o multiplicar por 10, convertir de °C a °F o 
 viceversa, etc. 
 Las operaciones estarán definidas por una lista (array) de números enteros y almacenadas 
 en un diccionario y fichero aparte dentro del fichero <strong>regops.py</strong>. 
 Las operaciones contenidas en la lista se ejecutan secuencialmente, e.g., si conv_f_read de un
 determinado registro tiene el valor [1, 5] quiere decir que el registro leído hay que dividirlo primero por 10,
 operación 1, y luego pasarlo a grados Farenheit, operación 5.
-La función que realiza esa secuencia se denomina <strong>recursive_conv_f</strong></li>
+La función que realiza esa secuencia se denomina <strong>recursive_conv_f</strong> y se 
+llama desde la función <strong>mb_utils.read_device_datatype,</strong> que extrae de "datadb" 
+los valores leídos en el dispositivo ModBus.</li>
 <li>
 Proyecto propiamente dicho, con los objetos Proyecto, Edificio, Vivienda, Habitacion, 
 Grupo de Habitaciones, Generador, Fancoil, Split, Recuperador, Zonificador, Contador...

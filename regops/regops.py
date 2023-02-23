@@ -4,18 +4,16 @@
 Operaciones a realizar con los registros modbus al leerlos o escribirlos para convertirlos
 en sus valores reales
 """
-import math
-
-import phoenix_constants as cte
+from phoenix_constants import *
 from typing import List, Tuple
 
 # Diccionario con built-in functions para convertir los valores convertidos
 # al formato deseado
-ret_val = {cte.TYPE_INT: int, cte.TYPE_FLOAT: float, cte.TYPE_STR: str}
+ret_val = {TYPE_INT: int, TYPE_FLOAT: float, TYPE_STR: str}
 
 
 # FUNCIONES DE CONVERSIÓN DE VALORES MODBUS A LEER O ESCRIBIR
-def x10(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str]:
+def x10(val: [int, float, str], dtype=TYPE_INT, prec=1) -> [int, float, str]:
     """
     Multiplica por 10 el valor "val" y lo devuelve con el formato especificado
     en dtype. Por defecto devuelve un entero multiplicado por 10
@@ -40,7 +38,7 @@ def x10(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str]
     return ret_val[dtype](val_to_ret)
 
 
-def x10_1(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str]:
+def x10_1(val: [int, float, str], dtype=TYPE_INT, prec=1) -> [int, float, str]:
     """
     Divide entre 10 el valor "val" y lo devuelve con el formato especificado
     en dtype. Por defecto devuelve un entero dividido entre 10
@@ -66,7 +64,7 @@ def x10_1(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, st
     return ret_val[dtype](val_to_ret)
 
 
-def x100(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str]:
+def x100(val: [int, float, str], dtype=TYPE_INT, prec=1) -> [int, float, str]:
     """
     Multiplica por 100 el valor "val" y lo devuelve con el formato especificado
     en dtype. Por defecto devuelve un entero multiplicado por 100
@@ -92,7 +90,7 @@ def x100(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str
     return ret_val[dtype](val_to_ret)
 
 
-def x10_2(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str]:
+def x10_2(val: [int, float, str], dtype=TYPE_INT, prec=1) -> [int, float, str]:
     """
     Divide entre 100 el valor "val" y lo devuelve con el formato especificado
     en dtype. Por defecto devuelve un entero dividido entre 100
@@ -118,7 +116,7 @@ def x10_2(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, st
     return ret_val[dtype](val_to_ret)
 
 
-def c_to_f(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str]:
+def c_to_f(val: [int, float, str], dtype=TYPE_INT, prec=1) -> [int, float, str]:
     """
     Convierte a ºF el valor del argumento "val" expresado en ºC
     Params: val: valor a convertir. Puede ser int, float o str
@@ -143,7 +141,7 @@ def c_to_f(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, s
     return ret_val[dtype](val_to_ret)
 
 
-def f_to_c(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, str]:
+def f_to_c(val: [int, float, str], dtype=TYPE_INT, prec=1) -> [int, float, str]:
     """
     Convierte a ºC el valor del argumento "val" expresado en ºF
     Params: val: valor a convertir. Puede ser int, float o str
@@ -168,21 +166,59 @@ def f_to_c(val: [int, float, str], dtype=cte.TYPE_INT, prec=1) -> [int, float, s
     return ret_val[dtype](val_to_ret)
 
 
+def get_hb_lb(val: int, *args) -> Tuple[int, int]:
+    """
+    Separa el valor 'val' en sus bytes alto y bajo
+    Params: val: valor del que se van a obtener los bytes alto y bajo
+    args: por compatibilidad con el resto de funciones a aplicar.
+    Returns: tupla con los bytes alto y bajo de 'val'
+    """
+    hb, lb = val >> 8, val & 255
+    return hb, lb
+
+
+def set_hb(val: int, hb_new_val: int) -> int:
+    """
+    Escribe hb_new_val en el byte alto y devuelve el nuevo valor de 'val'
+    Params: val: valor cuyo byte alto se va a actualizar
+        hb_new_val: valor a escribir en el byte alto de 'val'
+    Returns: valor 'val' actualizado
+    """
+    lb = val & 255
+    val_to_ret = hb_new_val * 256 + lb
+    return val_to_ret
+
+
+def set_lb(val: int, lb_new_val: int) -> int:
+    """
+    Escribe lb_new_val en el byte bajo y devuelve el nuevo valor de 'val'
+    Params: val: valor cuyo byte bajo se va a actualizar
+        lb_new_val: valor a escribir en el byte bajo de 'val'
+    Returns: valor 'val' actualizado
+    """
+    hb = val >> 8
+    val_to_ret = hb * 256 + lb_new_val
+    return val_to_ret
+
+
 # DICCIONARIO con las FUNCIONES DE CONVERSIÓN a aplicar a los registros
 regops = {0: x10,  # Multiplica por 10 el valor
           1: x10_1,  # Divide entre 10 el valor
           2: x100,  # Multiplica por 100 el valor
           3: x10_2,  # Divide entre 100 el valor
           4: c_to_f,  # Convierte el valor de Celsius a Farenheit
-          5: f_to_c  # Convierte el valor de Farenheit a Celsius
+          5: f_to_c,  # Convierte el valor de Farenheit a Celsius
+          6: get_hb_lb,  # Obtiene los bytes alto y bajo del valor
+          7: set_hb,  # Escribe un valor en el byte alto
+          8: set_lb  # Escribe un valor en el byte bajo
           }
 
 
-def recursive_conv_f(ops, val, dtype=cte.TYPE_INT, prec=1):
+def recursive_conv_f(ops, val, dtype=TYPE_INT, prec=1):
     """
     Función a aplicar cuando a un determinado registro ModBus hay que
     aplicarle más de una modificación, por ejemplo, dividir por 10 y convertir de
-    ºF a ºC
+    °F a °C
     Params: ops: lista o tupla con las operaciones a realizar sobre el registro
             val: valor leído por ModBus
             dtype: tipo de dato que se requiere devolver
@@ -221,18 +257,24 @@ def group_adrs(regadrs: List) -> List[Tuple]:
     Params: regadrs: Lista ordenada de menor a mayor con las direcciones de los registros a leer
     Returns: Lista de tuplas de 2 elementos en las que se separan los registros que van consecutivos.
     """
+    # print(f"regops - regadrs: {regadrs}")
 
-    adrgroups = [(reg, id - reg) for id, reg in enumerate(regadrs)]
-    # print(adrgroups)
+    adrgroups = [(reg, idx - reg) for idx, reg in enumerate(regadrs)]
+    # print(f"regops - groupadrs: {adrgroups}")
     indexes = list(reversed(sorted(set([x[1] for x in adrgroups]))))
     index_count = [(x, [val[1] for val in adrgroups].count(x)) for x in indexes]
     # print(index_count)
     newgroups = []
+    prev_idx = 0
     for idx, val in enumerate(index_count):
         if idx == 0:
-            newgroups.append((regadrs[idx], val[1]))
+            quan = val[1]
+            newgroups.append((regadrs[idx], quan))
+            prev_idx = quan
         else:
-            newgroups.append((regadrs[idx + index_count[idx - 1][1] - 1], val[1]))
+            # print(f"reg_idx: {prev_idx}")
+            newgroups.append((regadrs[prev_idx], val[1]))
+            prev_idx += val[1]
 
     # print(newgroups)
     return newgroups

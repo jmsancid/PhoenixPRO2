@@ -1,0 +1,129 @@
+{
+  "sistena_sig610": {
+    "name": "Controlador SIG-610 para temperatura de impulsión de agua",
+    "write_ops": [5, 6],
+    "qregsmax": 25,
+    "hr": {
+      "0": {
+        "descr": {
+          "en": "Device ID",
+          "sp": "ID del dispositivo",
+          "po": "ID del dispositivo"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "ModBus address",
+          "sp": "Dirección del dispositivo en el ModBus",
+          "po": "Dirección del dispositivo en el ModBus"
+        }
+      },
+      "2": {
+        "descr": {
+          "en": "On/Off circulating pump circuit 1",
+          "sp": "Marcha/Paro bomba circuladora circuito 1",
+          "po": "Marcha/Paro bomba circuladora circuito 1"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "On/Off circulating pump circuit 2",
+          "sp": "Marcha/Paro bomba circuladora circuito 2",
+          "po": "Marcha/Paro bomba circuladora circuito 2"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "On/Off circulating pump circuit 3",
+          "sp": "Marcha/Paro bomba circuladora circuito 3",
+          "po": "Marcha/Paro bomba circuladora circuito 3"
+        }
+      },
+      "5": {
+        "descr": {
+          "en": "Digital output 4",
+          "sp": "Salida digital 4",
+          "po": "Salida digital 4"
+        }
+      },
+      "6": {
+        "descr": {
+          "en": "Circuit 1 Operating mode (HB) + Setpoint (LB)",
+          "sp": "Modo de funcionamiento F/C (HB) + Consigna circuito 1 (LB)",
+          "po": "Modo de funcionamiento F/C (HB) + Consigna circuito 1 (LB)"
+        },
+        "conv_f_read": [6]
+      },
+      "8": {
+        "descr": {
+          "en": "Circuit 2 Operating mode (HB) + Setpoint (LB)",
+          "sp": "Modo de funcionamiento F/C (HB) + Consigna circuito 2 (LB)",
+          "po": "Modo de funcionamiento F/C (HB) + Consigna circuito 2 (LB)"
+        },
+        "conv_f_read": [6]
+      },
+      "10": {
+        "descr": {
+          "en": "Circuit 3 Operating mode (HB) + Setpoint (LB)",
+          "sp": "Modo de funcionamiento F/C (HB) + Consigna circuito 3 (LB)",
+          "po": "Modo de funcionamiento F/C (HB) + Consigna circuito 3 (LB)"
+        },
+        "conv_f_read": [6]
+      }
+    },
+    "ir": {
+      "12": {
+        "descr": {
+          "en": "Circuit 1 supply water temperature",
+          "sp": "Temperatura de impulsión del circuito 1",
+          "po": "Temperatura de impulsión del circuito 1"
+        },
+        "conv_f_read": [1]
+      },
+      "13": {
+        "descr": {
+          "en": "Circuit 2 supply water temperature",
+          "sp": "Temperatura de impulsión del circuito 2",
+          "po": "Temperatura de impulsión del circuito 2"
+        },
+        "conv_f_read": [1]
+      },
+      "14": {
+        "descr": {
+          "en": "Circuit 3 supply water temperature",
+          "sp": "Temperatura de impulsión del circuito 3",
+          "po": "Temperatura de impulsión del circuito 3"
+        },
+        "conv_f_read": [1]
+      },
+      "15": {
+        "descr": {
+          "en": "Digital input status",
+          "sp": "Estado entrada digital",
+          "po": "Estado entrada digital"
+        }
+      },
+      "16": {
+        "descr": {
+          "en": "Circuit 1 % valve opening",
+          "sp": "% apertura valvula circuito 1",
+          "po": "% apertura valvula circuito 1"
+        }
+      },
+      "17": {
+        "descr": {
+          "en": "Circuit 2 % valve opening",
+          "sp": "% apertura valvula circuito 2",
+          "po": "% apertura valvula circuito 2"
+        }
+      },
+      "18": {
+        "descr": {
+          "en": "Circuit 3 % valve opening",
+          "sp": "% apertura valvula circuito 3",
+          "po": "% apertura valvula circuito 3"
+        }
+      }
+    }
+  }
+}

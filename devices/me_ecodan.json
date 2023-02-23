@@ -1,7 +1,7 @@
 {
   "me_ecodan": {
     "name": "ecodan",
-    "wop": [5, 6, 15, 16],
+    "write_ops": [5, 6, 15, 16],
     "co": {
       "1": {
         "descr": {

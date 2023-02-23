@@ -1,57 +1,43 @@
 #!/usr/bin/env python3
 import asyncio
-import sys
 import time
-from datetime import datetime
 
-import json
-import phoenix_config as cfg
+import phoenix_init as phi
 
-from mb_utils.mb_utils import read_project_device
+from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_all_buses
 
-from publish.publish_results import publish_results
 
+# from publish.publish_results import publish_results
 
 async def main():
-    init_time = datetime.now()
+    init_time = phi.datetime.now()
     print(f"Hora inicio: {str(init_time)}")
-    print(f"\n\t\tAccediendo al controlador {cfg.boardsn}\n")
+    print(f"\n\t\tAccediendo al controlador {phi.boardsn}\n")
 
     id_lectura_actual = 0
     historico_lecturas = {"lecturas": {}}
 
-    while True:
-        cfg.collect()
-        id_lectura_actual += 1
-        print(f"\n************\t INICIANDO LECTURA {id_lectura_actual}\t************\n")
-        hora_lectura = datetime.now()  # Hora actual en formato datetime
+    phi.collect()
+    id_lectura_actual += 1
+    print(f"\n************\t INICIANDO LECTURA {id_lectura_actual}\t************\n")
 
-        # historico_lecturas["lecturas"][id_lectura_actual] = {}
-        lectura_actual = {
-            "id": id_lectura_actual,
-            "hora": str(hora_lectura),
-            "buses": {}
-        }
-        for idbus, bus in cfg.buses.items():
-            lectura_actual["buses"][idbus] = {}
-            for iddevice, device in bus.items():
-                lectura_actual["buses"][idbus][iddevice] = {}
-                lectura_actual["buses"][idbus][iddevice]["slave"]= device.slave
-                # Lee el dispositivo completo y almacena la información en un fichero en memoria StringIO?
-                device_readings = await read_project_device(device)
-                print(f"\n{str(datetime.now())}\nDuración:\t{str(datetime.now() - hora_lectura)}\n")
-                lectura_actual["buses"][idbus][iddevice]["data"]= {}
-                for regtype_readings in device_readings:
-                    for regtype, dev_response in regtype_readings.items():
-                        lectura_actual["buses"][idbus][iddevice]["data"][regtype] = dev_response
-                print(lectura_actual)
-        cfg.datadb = lectura_actual  # Diccionario con todas las lecturas
-        results = repr(cfg.all_rooms.get("1"))
-        # publica(results)
-        print(results)
-        # print(f"Free Memory: {micropython.mem_info(1)}")
-        cfg.collect()
-        time.sleep(5)
+    # Actualizo el diccionario con las lecturas modbus, para recalcular los grupos de habitaciones y otras variables
+    phi.datadb = await read_all_buses(id_lectura_actual)  # Diccionario READING_FILE con la última lectura de
+    # todos los registros
+
+    # Actualizo las lecturas de todas las habitaciones y grupos de habitaciones del proyecto
+    roomgroup_updating_results = await update_roomgroups_values()
+
+    # Propago los valores calculados a los dispositivos del proyecto
+    # TODO: Diseñar módulo para propagar los valores calculados en roomgroups a los dispositivos asociados.
+    bus_updating_results = await update_all_buses()
+
+    # results = repr(all_room_groups.get("Nave 1"))
+    # publica(results)
+    # print(results)
+    # print(f"Free Memory: {micropython.mem_info(1)}")
+    phi.collect()
+    time.sleep(15)
 
 
 if __name__ == "__main__":

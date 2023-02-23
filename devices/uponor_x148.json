@@ -1,7 +1,7 @@
 {
   "uponor_x148": {
     "name": "Controlador Uponor X-148 ModBus",
-    "wop": [5, 6, 15, 16],
+    "write_ops": [5, 6, 15, 16],
     "qregsmax": 25,
     "co": {
       "0": {
