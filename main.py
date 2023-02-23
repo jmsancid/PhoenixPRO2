@@ -29,7 +29,6 @@ async def main():
     roomgroup_updating_results = await update_roomgroups_values()
 
     # Propago los valores calculados a los dispositivos del proyecto
-    # TODO: Diseñar módulo para propagar los valores calculados en roomgroups a los dispositivos asociados.
     bus_updating_results = await update_all_buses()
 
     # results = repr(all_room_groups.get("Nave 1"))

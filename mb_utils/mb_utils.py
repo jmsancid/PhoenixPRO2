@@ -263,7 +263,7 @@ async def update_all_buses():
     """
     Actualiza los datos en todos los dispositivos en función de los valores calculados para los grupos de
     habitaciones
-    Returns: TODO ver qué retorna update_all_buses
+    Returns: 1
     """
     for idbus, bus in phi.buses.items():
         for iddevice, device in bus.items():
