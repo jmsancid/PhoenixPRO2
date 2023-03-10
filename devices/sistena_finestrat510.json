@@ -1,0 +1,196 @@
+{
+  "sistena_finestrat510": {
+    "name": "Controlador SIG-510 para Zonificación por Aire",
+    "write_ops": [5, 6],
+    "qregsmax": 24,
+    "hr": {
+      "0": {
+        "descr": {
+          "en": "Device ID (510)",
+          "sp": "ID del dispositivo (510)",
+          "po": "ID del dispositivo (510)"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "ModBus address",
+          "sp": "Dirección del dispositivo en el ModBus",
+          "po": "Dirección del dispositivo en el ModBus"
+        }
+      },
+      "2": {
+        "descr": {
+          "en": "On/Off Air Zone Manager",
+          "sp": "Marcha/Paro Zonificador",
+          "po": "Marcha/Paro Zonificador"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "Operation Mode: Ventilation:0 / Cooling:1 / Heating:2",
+          "sp": "Modo de funcionamiento: Ventilación:0/ Refrigeración: 1 / Calefacción: 2",
+          "po": "Modo de funcionamiento: Ventilación:0/ Refrigeración: 1 / Calefacción: 2"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "Air Zone Manager Temperature setpoint",
+          "sp": "Consigna de temperatura del Zonificador",
+          "po": "Consigna de temperatura del Zonificador"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "5": {
+        "descr": {
+          "en": "Fancoil stage hysteresys",
+          "sp": "HISTÉRESIS DE ETAPA FAN-COIL (0,5 - 1,0 °C)",
+          "po": "Histéresis de etapa fan-coil"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "6": {
+        "descr": {
+          "en": "Fan speed (0:Low / 1:Medium / 2:High / 3:Auto)",
+          "sp": "Velocidad del ventilador (0:Baja / 1:Media / 2:Alta / 3:Auto)",
+          "po": "Velocidad del ventilador (0:Baja / 1:Media / 2:Alta / 3:Auto)"
+        }
+      },
+      "7": {
+        "descr": {
+          "en": "Auto/Always-on fan operation (0-Auto / 1-Always-on)",
+          "sp": "Funcionamiento Auto/Continuo del ventilador (0-Auto / 1-Continuo)",
+          "po": "Funcionamiento Auto/Continuo del ventilador (0-Auto / 1-Continuo)"
+        }
+      },
+      "8": {
+        "descr": {
+          "en": "Temperature gap between speeds (1,0 - 2,0 °C)",
+          "sp": "Diferencial entre velocidades ventilador (1,0 - 2,0 °C)",
+          "po": "Diferencial entre velocidades ventilador (1,0 - 2,0 °C)"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "9": {
+        "descr": {
+          "en": "Fan speed hysteresys (0,5 - 1,0 °C)",
+          "sp": "Histéresis de velocidades ventilador (0,5 - 1,0 °C)",
+          "po": "Histéresis de velocidades ventilador (0,5 - 1,0 °C)"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "10": {
+        "descr": {
+          "en": "On/Off mode (0:Modbus / 1:Digital input)",
+          "sp": "Selección Marcha/Paro (0:por ModBus / 1: por Entrada digital)",
+          "po": "Selección Marcha/Paro (0:por ModBus / 1: por Entrada digital)"
+        }
+      },
+      "11": {
+        "descr": {
+          "en": "Air Zone Manager Room Temperature",
+          "sp": "Temperatura ambiente del Zonificador",
+          "po": "Temperatura ambiente del Zonificador"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "12": {
+        "descr": {
+          "en": "Zone 1 Temperature Setpoint",
+          "sp": "Consigna de temperatura Zona 1",
+          "po": "Consigna de temperatura Zona 1"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "13": {
+        "descr": {
+          "en": "Zone 1 Temperature Hysteresis",
+          "sp": "Histéresis Zona 1",
+          "po": "Histéresis Zona 1"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "14": {
+        "descr": {
+          "en": "Zone 1 Temperature",
+          "sp": "Temperatura Ambiente Zona 1",
+          "po": "Temperatura Ambiente Zona 1"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "15": {
+        "descr": {
+          "en": "Zone 2 Temperature Setpoint",
+          "sp": "Consigna de temperatura Zona 2",
+          "po": "Consigna de temperatura Zona 2"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "16": {
+        "descr": {
+          "en": "Zone 2 Temperature Hysteresis",
+          "sp": "Histéresis Zona 2",
+          "po": "Histéresis Zona 2"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "17": {
+        "descr": {
+          "en": "Zone 2 Temperature",
+          "sp": "Temperatura Ambiente Zona 2",
+          "po": "Temperatura Ambiente Zona 2"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      }
+    },
+    "ir": {
+      "18": {
+        "descr": {
+          "en": "Current fan status (0:Off / 1:Low speed / 2:Medium speed / 3:High speed)",
+          "sp": "Estado actual del ventilador  (0:Off / 1:Vel Baja / 2:Vel Media / 3:Vel Alta)",
+          "po": "Estado actual del ventilador  (0:Off / 1:Vel Baja / 2:Vel Media / 3:Vel Alta)"
+        }
+      },
+      "19": {
+        "descr": {
+          "en": "Heating / Cooling Demand (0:No demand / 1:Cooling demand / 2:Heating demand)",
+          "sp": "Demanda (0:Sin demanda / 1:Demanda refrigeración / 2:Demanda calefacción)",
+          "po": "Demanda (0:Sin demanda / 1:Demanda refrigeración / 2:Demanda calefacción)"
+        }
+      },
+      "20": {
+        "descr": {
+          "en": "Damper status (HB:Damper 1 / LB:Damper 2)",
+          "sp": "Estado actual de la válvula",
+          "po": "Estado actual de la válvula"
+        },
+        "conv_f_read": [6]
+      },
+      "21": {
+        "descr": {
+          "en": "Remote On/Off digital input",
+          "sp": "Entrada digital para Marcha/Paro remoto",
+          "po": "Entrada digital para Marcha/Paro remoto"
+        }
+      },
+      "22": {
+        "descr": {
+          "en": "Digital Inputs Status (DI1:bit 0 / DI2:bit 1 / DI3:bit 2)",
+          "sp": "Estado Entradas Digitales Auxliares (ED1:bit 0, ED2:bit 1, ED3:bit 2)",
+          "po": "Estado Entradas Digitales Auxliares (ED1:bit 0, ED2:bit 1, ED3:bit 2)"
+        },
+        "conv_f_read": [9]
+      }
+    }
+  }
+}

@@ -11,6 +11,8 @@
       "1": {
         "id": 1,
         "name": "Nave 4",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
             "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
@@ -36,33 +38,39 @@
                 "st_source": {"bus": 1, "device": 1, "datatype": "di", "adr": 0},
                 "af": 0,
                 "aq_source": {},
-                "aqsp_source": {}
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
               },
               "2": {
                 "id": 2,
                 "name": "Habitación 1-2",
                 "groups": ["Son Vell", "Nave 1", "Hab 1-2"],
                 "iv_source": {"bus": 1, "device": 2, "datatype": "co", "adr": 0},
-                "sp_source": {"bus": 1, "device": 2, "datatype": "hr", "adr": 0},
-                "rt_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 1},
-                "rh_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 13},
-                "st_source": {"bus": 1, "device": 2, "datatype": "di", "adr": 1},
+                "sp_source": {"bus": 1, "device": 2, "datatype": "hr", "adr": 1},
+                "rt_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 2},
+                "rh_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 14},
+                "st_source": {"bus": 1, "device": 2, "datatype": "di", "adr": 2},
                 "af": 0,
                 "aq_source": {},
-                "aqsp_source": {}
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
              },
               "3": {
                 "id": 3,
                 "name": "Habitación 1-3",
                 "groups": ["Son Vell", "Nave 1", "Hab 1-3"],
                 "iv_source": {"bus": 1, "device": 3, "datatype": "co", "adr": 0},
-                "sp_source": {"bus": 1, "device": 3, "datatype": "hr", "adr": 0},
-                "rt_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 1},
-                "rh_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 13},
-                "st_source": {"bus": 1, "device": 3, "datatype": "di", "adr": 1},
+                "sp_source": {"bus": 1, "device": 3, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 1, "device": 3, "datatype": "di", "adr": 3},
                 "af": 0,
                 "aq_source": {},
-                "aqsp_source": {}
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
              }
             }
           }
@@ -74,7 +82,7 @@
         "id": 1,
         "name": "bus 1",
         "ip": [127,0,0,1],
-        "port": "/dev/ttySC0",
+        "port": 1,
         "devices": {
           "1": {
             "id": 1,
@@ -85,7 +93,7 @@
             "databits": 8,
             "parity": "E",
             "stopbits": 1,
-            "class": "sensor",
+            "class": "ufhccontroller",
             "brand": "uponor",
             "model": "x148"
           },
@@ -98,7 +106,7 @@
             "databits": 8,
             "parity": "E",
             "stopbits": 1,
-            "class": "sensor",
+            "class": "ufhccontroller",
             "brand": "uponor",
             "model": "x148"
           },
@@ -111,7 +119,7 @@
             "databits": 8,
             "parity": "E",
             "stopbits": 1,
-            "class": "sensor",
+            "class": "ufhccontroller",
             "brand": "uponor",
             "model": "x148"
           },
@@ -127,6 +135,58 @@
             "class": "tempfluidcontroller",
             "brand": "sistena",
             "model": "sig610"
+          },
+          "5": {
+            "id": 5,
+            "name": "Fancoil habitación 1-1",
+            "groups": ["Hab 1-1"],
+            "slave": 2,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "6": {
+            "id": 6,
+            "name": "Fancoil habitación 1-2",
+            "groups": ["Hab 1-2"],
+            "slave": 2,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "7": {
+            "id": 7,
+            "name": "Fancoil habitación 1-3",
+            "groups": ["Hab 1-3"],
+            "slave": 2,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "8": {
+            "id": 8,
+            "name": "Recuperador habitación 1-3",
+            "groups": ["Hab 1-3"],
+            "slave": 2,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
           }
         }
       }

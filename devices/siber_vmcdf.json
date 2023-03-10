@@ -1,0 +1,229 @@
+{
+  "siber_vmcdf": {
+    "name": "Recuperador de calor Siber DF Excellent",
+    "write_ops": [6],
+    "qregsmax": 25,
+    "hr": {
+      "999": {
+        "descr": {
+          "en": "Modbus address",
+          "sp": "Direccion modbus",
+          "po": "Direccion modbus"
+        }
+      },
+      "6000": {
+        "descr": {
+          "en": "Flow rate set point (m³/h)",
+          "sp": "Caudal (m³/h, no puede leerse)",
+          "po": "Caudal (m³/h, no puede leerse)"
+        }
+      },
+      "6001": {
+        "descr": {
+          "en": "Supply fan use (%)",
+          "sp": "Porcentaje uso ventilador de impulsión (%)",
+          "po": "Porcentaje uso ventilador de impulsión (%)"
+        }
+      },
+      "6002": {
+        "descr": {
+          "en": "Exhaust fan use (%)",
+          "sp": "Porcentaje uso ventilador de extracción (%)",
+          "po": "Porcentaje uso ventilador de extracción (%)"
+        }
+      },
+      "6003": {
+        "descr": {
+          "en": "Exhaust/supply unbalance allowed",
+          "sp": "Habilitar desequilibro (0:qimp = qextrac / 1:desequilibrio de caudales habilitado)",
+          "po": "Habilitar desequilibro (0:qimp = qextrac / 1:desequilibrio de caudales habilitado)"
+        }
+      },
+      "6004": {
+        "descr": {
+          "en": "Default unbalance flow rate (m³/h)",
+          "sp": "Desequilibrio predeterminado (m³/h, no puede leerse)",
+          "po": "Desequilibrio predeterminado (m³/h, no puede leerse)"
+        }
+      },
+      "6005": {
+        "descr": {
+          "en": "Bypass operation mode (0:auto / 1:closed / 2:open)",
+          "sp": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)",
+          "po": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)"
+        }
+      },
+      "6006": {
+        "descr": {
+          "en": "Filter alarm reset",
+          "sp": "Resetear alarma filtros (1:reset, no puede leerse)",
+          "po": "Resetear alarma filtros (1:reset, no puede leerse)"
+        }
+      },
+      "6012": {
+        "descr": {
+          "en": "Control module configuration (0:Siber / 1:Modbus)",
+          "sp": "Configuración módulo de control (0:Control Siber / 1:Modbus)",
+          "po": "Configuración módulo de control (0:Control Siber / 1:Modbus)"
+        }
+      }
+    },
+    "ir": {
+      "4001": {
+        "descr": {
+          "en": "Device type",
+          "sp": "Tipo de dispositivo",
+          "po": "Tipo de dispositivo"
+        }
+      },
+      "4003": {
+        "descr": {
+          "en": "Device version",
+          "sp": "Version del dispositivo",
+          "po": "Version del dispositivo"
+        }
+      },
+      "4008": {
+        "descr": {
+          "en": "Outdoor temperature (°C)",
+          "sp": "Temperatura exterior (°C)",
+          "po": "Temperatura exterior (°C)"
+        },
+        "conv_f_read": [10, 1]
+      },
+      "4009": {
+        "descr": {
+          "en": "Room temperature (°C)",
+          "sp": "Temperatura interior (°C)",
+          "po": "Temperatura interior (°C)"
+        },
+        "conv_f_read": [10, 1]
+      },
+      "4010": {
+        "descr": {
+          "en": "Supply duct pressure (Pa)",
+          "sp": "Presion en conducto de impulsion (Pa)",
+          "po": "Presion en conducto de impulsion (Pa)"
+        }
+      },
+      "4011": {
+        "descr": {
+          "en": "Exhaust duct pressure (Pa)",
+          "sp": "Presion en conducto de extraccion (Pa)",
+          "po": "Presion en conducto de extraccion (Pa)"
+        }
+      },
+      "4012": {
+        "descr": {
+          "en": "Default air flow (m³/h)",
+          "sp": "Caudal de aire predeterminado (m³/h)",
+          "po": "Caudal de aire predeterminado (m³/h)"
+        }
+      },
+      "4013": {
+        "descr": {
+          "en": "Default % supply air flow",
+          "sp": "% ventilador impulsión por defecto",
+          "po": "% ventilador impulsión por defecto"
+        }
+      },
+      "4014": {
+        "descr": {
+          "en": "Default % exhaust air flow",
+          "sp": "% ventilador extracción por defecto",
+          "po": "% ventilador extracción por defecto"
+        }
+      },
+      "4020": {
+        "descr": {
+          "en": "Allow exhaust/supplay unbalance air flow",
+          "sp": "Habilitar desequilibro (0:qimp = qextrac / 1:desequilibrio de caudales habilitado)",
+          "po": "Habilitar desequilibro (0:qimp = qextrac / 1:desequilibrio de caudales habilitado)"
+        }
+      },
+      "4026": {
+        "descr": {
+          "en": "Defaul exhaust/supply unbalance value (m³/h)",
+          "sp": "Desequilibrio predeterminado (m³/h)",
+          "po": "Desequilibrio predeterminado (m³/h)"
+        },
+        "conv_f_read": [
+          10
+        ]
+      },
+      "4027": {
+        "descr": {
+          "en": "Supply air flow (m³/h)",
+          "sp": "Caudal de impulsion (m³/h)",
+          "po": "Caudal de impulsion (m³/h)"
+        },
+        "conv_f_read": [
+          10
+        ]
+      },
+      "4028": {
+        "descr": {
+          "en": "Exhaust air flow (m³/h)",
+          "sp": "Caudal de extraccion (m³/h)",
+          "po": "Caudal de extraccion (m³/h)"
+        }
+      },
+      "4029": {
+        "descr": {
+          "en": "Bypass state (0:init/1:opening/2:closing / 3:open / 4:closed / 255:unknown",
+          "sp": "Posicion del bypass (0:iniciando/1:abriendo/2:cerrando / 3:abierto / 4:cerrado / 255:?)",
+          "po": "Posicion del bypass (0:iniciando/1:abriendo/2:cerrando / 3:abierto / 4:cerrado / 255:?)"
+        }
+      },
+      "4030": {
+        "descr": {
+          "en": "Bypass operation mode (0:auto / 1:closed / 2:open)",
+          "sp": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto)",
+          "po": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto)"
+        }
+      },
+      "4035": {
+        "descr": {
+          "en": "Bypass parameter",
+          "sp": "Parámetro del bypass",
+          "po": "Parámetro del bypass"
+        }
+      },
+      "4036": {
+        "descr": {
+          "en": "Preheater state",
+          "sp": "Estado del precalentador (0:iniciando / 1:inactivo / 2:activo / 3:pruebas / 255:?)",
+          "po": "Estado del precalentador (0:iniciando / 1:inactivo / 2:activo / 3:pruebas / 255:?)"
+        }
+      },
+      "4037": {
+        "descr": {
+          "en": "Preheater current power (%)",
+          "sp": "Potencia de precalentamiento (%)",
+          "po": "Potencia de precalentamiento (%)"
+        }
+      },
+      "4038": {
+        "descr": {
+          "en": "Error code",
+          "sp": "Código de error",
+          "po": "Código de error"
+        }
+      },
+      "4039": {
+        "descr": {
+          "en": "Filter states (0:clean / 1:dirty)",
+          "sp": "Estado filtros (0:limpios / 1:sucios)",
+          "po": "Estado filtros (0:limpios / 1:sucios)"
+        }
+      },
+      "4998": {
+        "descr": {
+          "en": "Error message (2, 4, 6 and 7: Comm error / 8:invalid / 9:too low / 10:too high)",
+          "sp": "Mensaje de error (2,4,6,7:Error comunicación/8:no valido/9:muy bajo/10:muy alto)",
+          "po": "Mensaje de error (2,4,6,7:Error comunicación/8:no valido/9:muy bajo/10:muy alto)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "sistena_sig311": {
+    "name": "Controlador SIG-311 para Fancoils",
+    "write_ops": [5, 6],
+    "qregsmax": 25,
+    "hr": {
+      "0": {
+        "descr": {
+          "en": "Device ID",
+          "sp": "ID del dispositivo",
+          "po": "ID del dispositivo"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "ModBus address",
+          "sp": "Dirección del dispositivo en el ModBus",
+          "po": "Dirección del dispositivo en el ModBus"
+        }
+      },
+      "2": {
+        "descr": {
+          "en": "On/Off fancoil",
+          "sp": "Marcha/Paro fancoil",
+          "po": "Marcha/Paro fancoil"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "Operation Mode: Heating:0 / Cooling:1 ",
+          "sp": "Modo de funcionamiento: Calefacción: 0 / Refrigeración: 1",
+          "po": "Modo de funcionamiento: Calefacción: 0 / Refrigeración: 1"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "Temperature setpoint",
+          "sp": "Consigna de temperatura",
+          "po": "Consigna de temperatura"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "5": {
+        "descr": {
+          "en": "Room Temperature",
+          "sp": "Temperatura ambiente",
+          "po": "Temperatura ambiente"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "6": {
+        "descr": {
+          "en": "Fan type: AC(3-speed)-0 / EC(electronic)-1",
+          "sp": "Tipo de ventilador: AC(3-velocidades)-0 / EC(electrónico)-1",
+          "po": "Tipo de ventilador: AC(3-velocidades)-0 / EC(electrónico)-1"
+        }
+      },
+      "7": {
+        "descr": {
+          "en": "Auto/Always-on fan operation (0-Auto / 256-Always-on)",
+          "sp": "Funcionamiento Auto/Continuo del ventilador (0-Auto / 1-Continuo)",
+          "po": "Funcionamiento Auto/Continuo del ventilador (0-Auto / 1-Continuo)"
+        },
+        "conv_f_read": [6]
+      },
+      "8": {
+        "descr": {
+          "en": "Auto/Manual fan speed (Auto-0 / Manual-1)",
+          "sp": "Velocidad ventilador Automática (0) / Manual (1)",
+          "po": "Velocidad ventilador Automática (0) / Manual (1)"
+        }
+      },
+      "9": {
+        "descr": {
+          "en": "Manual set fan speed (HB-AC fan / LB-EC fan)",
+          "sp": "Velocidad manual ventilador (Byte alto-AC / Byte bajo-EC",
+          "po": "Velocidad manual ventilador (Byte alto-AC / Byte bajo-EC"
+        },
+        "conv_f_read": [6]
+      },
+      "10": {
+        "descr": {
+          "en": "Temperature gap between speeds",
+          "sp": "Diferencial entre velocidades ventilador AC",
+          "po": "Diferencial entre velocidades ventilador AC"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "11": {
+        "descr": {
+          "en": "Fan speed hysteresys",
+          "sp": "Histéresis de velocidades ventilador AC",
+          "po": "Histéresis de velocidades ventilador AC"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "12": {
+        "descr": {
+          "en": "AC fan speed limit (HB:max limit / LB:min limit)",
+          "sp": "Límites de velocidad ventilador AC (Byte alto: vel. máx. / Byte bajo: vel. mín.)",
+          "po": "Límites de velocidad ventilador AC (Byte alto: vel. máx. / Byte bajo: vel. mín.)"
+        },
+        "conv_f_read": [6]
+      },
+      "13": {
+        "descr": {
+          "en": "EC fan proportional band",
+          "sp": "Banda proporcional ventilador EC",
+          "po": "Banda proporcional ventilador EC"
+        }
+      },
+      "14": {
+        "descr": {
+          "en": "EC fan speed limit (HB:max limit / LB:min limit)",
+          "sp": "Límites de velocidad ventilador EC (Byte alto: vel. máx. / Byte bajo: vel. mín.)",
+          "po": "Límites de velocidad ventilador EC (Byte alto: vel. máx. / Byte bajo: vel. mín.)"
+        },
+        "conv_f_read": [6]
+      },
+      "15": {
+        "descr": {
+          "en": "Auto/Manual valve operation",
+          "sp": "Funcionamiento Automático/Manual de válvula",
+          "po": "Funcionamiento Automático/Manual de válvula"
+        }
+      },
+      "16": {
+        "descr": {
+          "en": "Manual valve operation (1:Open / 0:Close)",
+          "sp": "Funcionamiento manual de la válvula (1:Apertura / 0:Cierre",
+          "po": "Funcionamiento manual de la válvula (1:Apertura / 0:Cierre"
+        }
+      },
+      "17": {
+        "descr": {
+          "en": "Heating/Cooling hysteresis",
+          "sp": "Histéresis Calefacción / Refrigeración",
+          "po": "Histéresis Calefacción / Refrigeración"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
+      },
+      "18": {
+        "descr": {
+          "en": "On/Off mode (0:Modbus / 1:Digital input",
+          "sp": "Selección Marcha/Paro (0:por ModBus / 1: por Entrada digital",
+          "po": "Selección Marcha/Paro (0:por ModBus / 1: por Entrada digital"
+        }
+      },
+      "19": {
+        "descr": {
+          "en": "Remote On/Off operation mode (0:off with contact open / 1:off with contact closed)",
+          "sp": "Configuración On/Off remoto (0:Para con contacto abierto / 1:Para con contacto cerrado)",
+          "po": "Configuración On/Off remoto (0:Para con contacto abierto / 1:Para con contacto cerrado)"
+        }
+      },
+      "20": {
+        "descr": {
+          "en": "Aux digital output",
+          "sp": "Salida digital auxiliar",
+          "po": "Salida digital auxiliar"
+        }
+      }
+    },
+    "ir": {
+      "22": {
+        "descr": {
+          "en": "Current operation status (HB:operation mode / LB:demand",
+          "sp": "Estado actual de funcionamiento (B alto: 0, 1-Cal, 2-Ref / B bajo: 0-No dem, 1-Dem cal, 2-Dem ref)",
+          "po": "Estado actual de funcionamiento (B alto: 0, 1-Cal, 2-Ref / B bajo: 0-No dem, 1-Dem cal, 2-Dem ref)"
+        },
+        "conv_f_read": [6]
+      },
+      "23": {
+        "descr": {
+          "en": "Current fan status (HB-AC fan / LB-EC fan)",
+          "sp": "Estado actual del ventilador (HB-vent. AC (1-3) / LB-vent EC (0-100))",
+          "po": ""
+        },
+        "conv_f_read": [6]
+      },
+      "24": {
+        "descr": {
+          "en": "Current valve estatus",
+          "sp": "Estado actual de la válvula",
+          "po": "Estado actual de la válvula"
+        }
+      },
+      "25": {
+        "descr": {
+          "en": "Floor temperature",
+          "sp": "Temperatura del pavimento",
+          "po": "Temperatura del pavimento"
+        },
+        "conv_f_read": [1]
+      },
+      "26": {
+        "descr": {
+          "en": "On/Off digital input",
+          "sp": "Entrada digital para Marcha/Paro remoto",
+          "po": "Entrada digital para Marcha/Paro remoto"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "sistena_sig310": {
+    "name": "Controlador SIG-310 para Recuperador de Calor",
+    "write_ops": [5, 6],
+    "qregsmax": 25,
+    "hr": {
+      "0": {
+        "descr": {
+          "en": "Device ID",
+          "sp": "ID del dispositivo",
+          "po": "ID del dispositivo"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "ModBus address",
+          "sp": "Dirección del dispositivo en el ModBus",
+          "po": "Dirección del dispositivo en el ModBus"
+        }
+      },
+      "2": {
+        "descr": {
+          "en": "On/Off fan speed 1",
+          "sp": "Activación/Desactivación velocidad 1 ventilador",
+          "po": "Activación/Desactivación velocidad 1 ventilador"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "On/Off fan speed 2",
+          "sp": "Activación/Desactivación velocidad 2 ventilador",
+          "po": "Activación/Desactivación velocidad 2 ventilador"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "On/Off fan speed 3",
+          "sp": "Activación/Desactivación velocidad 3 ventilador",
+          "po": "Activación/Desactivación velocidad 3 ventilador"
+        }
+      },
+      "5": {
+        "descr": {
+          "en": "Open/Close 3 way valve",
+          "sp": "Apertura/Cierre válvula de 3 vías",
+          "po": "Apertura/Cierre válvula de 3 vías"
+        }
+      },
+      "6": {
+        "descr": {
+          "en": "Open/Close heat recovery unit bypass",
+          "sp": "Apertura/Cierre bypass del recuperador",
+          "po": "Apertura/Cierre bypass del recuperador"
+        }
+      },
+      "7": {
+        "descr": {
+          "en": "Open/Close in/out air dampers",
+          "sp": "Apertura/Cierre compuertas de aire exterior y recirculación",
+          "po": "Apertura/Cierre compuertas de aire exterior y recirculación"
+        }
+      }
+    },
+    "ir": {
+      "8": {
+        "descr": {
+          "en": "Digital input 1: On/Off remote",
+          "sp": "Entrada digital 1: Marcha/Paro remoto",
+          "po": "Entrada digital 1: Marcha/Paro remoto"
+        }
+      },
+      "9": {
+        "descr": {
+          "en": "Digital input 2",
+          "sp": "Entrada digital 2",
+          "po": "Entrada digital 2"
+        }
+      },
+      "10": {
+        "descr": {
+          "en": "Digital input 3",
+          "sp": "Entrada digital 3",
+          "po": "Entrada digital 3"
+        }
+      }
+    }
+  }
+}

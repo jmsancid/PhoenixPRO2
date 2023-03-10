@@ -1,5 +1,5 @@
 pyserial~=3.5
 pip==23.0.1
-wheel~=0.38.4
-setuptools==67.3.3
+wheel~=0.40.0
+setuptools==67.6.1
 modbus_tk~=1.1.3

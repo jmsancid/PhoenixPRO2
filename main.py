@@ -4,7 +4,7 @@ import time
 
 import phoenix_init as phi
 
-from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_all_buses
+from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_all_buses, check_changes_from_web
 
 
 # from publish.publish_results import publish_results
@@ -13,6 +13,8 @@ async def main():
     init_time = phi.datetime.now()
     print(f"Hora inicio: {str(init_time)}")
     print(f"\n\t\tAccediendo al controlador {phi.boardsn}\n")
+
+    changes = await check_changes_from_web()
 
     id_lectura_actual = 0
     historico_lecturas = {"lecturas": {}}
@@ -31,12 +33,9 @@ async def main():
     # Propago los valores calculados a los dispositivos del proyecto
     bus_updating_results = await update_all_buses()
 
-    # results = repr(all_room_groups.get("Nave 1"))
-    # publica(results)
-    # print(results)
     # print(f"Free Memory: {micropython.mem_info(1)}")
     phi.collect()
-    time.sleep(15)
+
 
 
 if __name__ == "__main__":

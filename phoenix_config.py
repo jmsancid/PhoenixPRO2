@@ -12,7 +12,6 @@ from modbus_tk.modbus import ModbusError
 
 from phoenix_constants import *
 
-
 # VARIABLES DEL SISTEMA PHOENIX
 boardsn: str = ""  # Número de serie de la placa
 prj: Dict = {}  # Diccionario generado a partir del JSON con la configuración del proyecto
@@ -20,6 +19,8 @@ datadb: Dict = {}  # Variable para almacenar las lecturas de registros ModBus y 
 all_room_groups: Dict = {}  # Diccionario con todos los grupos de habitaciones. Clave principal es id del grupo
 buses: Dict = {}  # Diccionario con las instancias de los dispositivos ModBus asociados a cada bus
 mbregmaps: Tuple = ()  # Tupla de objetos tipo mapa de registros modbus ModbusRegisterMap.
+
+
 # El mapa de registros es un diccionario cuya clave principal de cada diccionario permite identificar
 # cada dispositivo por marca y modelo
 
@@ -202,6 +203,3 @@ class ModbusRegisterMap:
         None si no hay registros tipo Input Register
         """
         return self.rmap.get(MODBUS_DATATYPES_KEYS[INPUT_REGISTER_ID])
-
-
-

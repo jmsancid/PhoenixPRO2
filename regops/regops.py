@@ -200,6 +200,32 @@ def set_lb(val: int, lb_new_val: int) -> int:
     val_to_ret = hb * 256 + lb_new_val
     return val_to_ret
 
+def get_bits(val: int) -> Tuple[int]:
+    """
+    Devuelve una Tupla con los valores de los 16 bits de 'val'
+    Param:
+        val:
+    Returns: Tupla con los valores de los 16 bits de 'val'
+    """
+    bin_val = bin(val)[2:]  # Elimino los 2 primeros caracteres que devuelve la función bin: '0b'
+    # Completo con 0 hasta 16 bits, del 0 al 15
+    bin_val = '0' * (16 - len(bin_val)) + bin_val
+    # Inverto el orden de los bits y los separo en una lista
+    bits = [int(bit) for bit in bin_val[::-1]]
+    return tuple(bits)
+
+
+def signed_integer(val:int, bits:int = 16) -> int:
+    """
+    Convierte un valor entero con signo en su valor correspondiente, positivo o negativo
+    Param:
+        val: entero con signo leído desde el dispositivo ModBus
+    Returns: entero positivo o negativo en función del valor de val
+    """
+    if (val & (1 << (bits - 1))) != 0:
+        val = val - (1 << bits)
+    return val
+
 
 # DICCIONARIO con las FUNCIONES DE CONVERSIÓN a aplicar a los registros
 regops = {0: x10,  # Multiplica por 10 el valor
@@ -210,7 +236,9 @@ regops = {0: x10,  # Multiplica por 10 el valor
           5: f_to_c,  # Convierte el valor de Farenheit a Celsius
           6: get_hb_lb,  # Obtiene los bytes alto y bajo del valor
           7: set_hb,  # Escribe un valor en el byte alto
-          8: set_lb  # Escribe un valor en el byte bajo
+          8: set_lb,  # Escribe un valor en el byte bajo
+          9: get_bits,  # Devuelve una tupla con los valores de los 16 bits
+          10:signed_integer  # Devuelve el valor positivo o negativo de un signed integer
           }
 
 

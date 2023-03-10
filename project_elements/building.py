@@ -10,15 +10,15 @@ from asyncio import create_task, gather
 from mb_utils.mb_utils import get_value
 
 
-def init_modo_iv() -> bool:
+def init_modo_iv() -> int:
     """
     Inicializa el modo de funcionamiento general en función de la época del año.
     IMPORTANTE que el controlador esté en hora
-    Returns: True <=> 1 entre junio y septiembre, False el resto de los meses
+    Returns: Cooling <=> 1 entre junio y septiembre, Heating <==> 0, el resto de los meses
     """
     mes = phi.datetime.now().month
-    cooling = True if 5 < mes < 10 else False
-    return cooling
+    modo_iv = phi.COOLING if 5 < mes < 10 else phi.HEATING
+    return modo_iv
 
 
 def get_default_t_exterior() -> float:
@@ -66,6 +66,67 @@ def get_temp_exterior(bld: str = "1") -> [float, None]:
         return t_ext_from_mbdev
 
 
+def get_hrel_exterior(bld: str = "1") -> [float, None]:
+    """
+        Obtiene el valor actual de la humedad relativa exterior del edificio según el origen definido en la
+        clave 'o_data.rhe_source' del edificio.
+        Cuando dentro de rh_source existe la clave mbdev, la humedad relativa exterior se lee de la base de
+        datos que almacena las lecturas de los dispositivos ModBus
+        Returns: valor de la temperatura exterior.
+        Si no se conoce, se consideran cte.DEFAULT_TEMP_EXTERIOR_VERANO (35 °C) en modo refrigeración y
+        cte.DEFAULT_TEMP_EXTERIOR_INVIERNO (3 °C) en modo calefacción
+        """
+    bld_data = phi.prj.get("buildings")[bld]
+    if bld_data is None:
+        print(f"ERROR {__file__} - No se ha definido edificio {bld}")
+        sys.exit()
+    o_data = bld_data.get("o_data")
+    if o_data is None:
+        msg = f"WARNING {__file__} - No se indicado origen de lectura de valores exteriores en el " \
+              f"edificio {bld}. Se fija la humedad a 0"
+        print(msg)
+        return 0
+    rh_source = o_data.get("rh_source")
+    if rh_source is None:
+        msg = f"WARNING {__file__} - No se indicado origen de lectura de la humedad relativa exterior en el " \
+              f"edificio {bld}. Se fija la humedad a 0"
+        print(msg)
+        return 0
+    rh_ext_from_mbdev_source = rh_source.get("mbdev")
+    if rh_ext_from_mbdev_source is None:
+        print("La humedad relativa exterior debe obtenerse por un método que aún no está definido")
+        return 0
+    else:
+        rh_ext_from_mbdev = get_value(rh_ext_from_mbdev_source)
+        return rh_ext_from_mbdev
+
+
+def get_h_exterior(bld: str = "1", altitud=phi.ALTITUD) -> [float, None]:
+    """
+    Calcula la entalpia exterior con temp en celsius y hr en %. Por defecto se toma la altitud de Madrid
+    Si no se lee la humedad relativa exterior, se devuelve 0
+    """
+    # print(f"Calculando entalpía de {self.name}")
+    te = get_temp_exterior(bld)
+    rh = get_hrel_exterior(bld)
+    if rh is None or rh == 0:
+        return 0
+    pres_total = 101325 if altitud is None else 101325 * (1 - 2.25577 * 0.00001 * altitud) ** 5.2559
+    nullvalues = ("", None, "false")
+    if any((te in nullvalues, rh in nullvalues)):
+        return
+    pres_vap_sat = 10 ** (7.5 * te / (273.159 + te - 35.85) + 2.7858)  # Pa
+    # print(f"presion vapor saturado: {pres_vap_sat}")
+    pres_vap = pres_vap_sat * rh / 100  # Pa
+    # print(f"presion total: {pres_total}")
+    # print(f"presion vapor: {pres_vap}")
+    pres_aire_seco = pres_total - pres_vap  # Pa
+    # print(f"presion aire seco: {pres_aire_seco}")
+    hum_especifica = 0.621954 * (pres_vap / pres_aire_seco)  # kg agua / hg aire seco
+    entalpia = (1.006 + 1.86 * hum_especifica) * te + 2501 * hum_especifica
+    return round(entalpia, 1)
+
+
 class Room:
     """
     Objeto de clase Room, con información sobre el edificio y la vivienda a la que pertenece,
@@ -88,7 +149,9 @@ class Room:
                  st_source: [dict, None] = None,
                  af: [int, float, None] = None,
                  aq_source: [dict, None] = None,
-                 aqsp_source: [dict, None] = None
+                 aqsp_source: [dict, None] = None,
+                 offsetairref: int = phi.OFFSET_COOLING,  # 2ª etapa refrigeración fancoil/recuperador
+                 offsetaircal: int = phi.OFFSET_HEATING  # 2ª etapa calefacción fancoil/recuperador
                  ):
         self.building_id = building_id
         self.dwelling_id = dwelling_id
@@ -103,30 +166,34 @@ class Room:
         self.af = af  # Caudal de aire asociado a la habitación cuando forma parte de zonificador
         self.aq_source = aq_source
         self.aqsp_source = aqsp_source
+        self.offsetairref = offsetairref
+        self.offsetaircal = offsetaircal
 
     def __repr__(self):
         """
         Para imprimir la información de la habitación
         Returns:
         """
+        modo = "Refrigeración" if self.iv() else "Calefacción"
         sp = self.sp()
         rh = self.rh()
         rt = self.rt()
         st = self.st()
-        tr = self.tr()
+        dp = self.dp()
         h = self.h()
         room_info = f"""Datos de la habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id}
+            Modo: {modo}
             Consigna: {sp}
             Humedad relativa: {rh}
             Temperatura ambiente: {rt}
             Estado actuador: {st}
-            Temperatura de rocío: {tr}
+            Temperatura de rocío: {dp}
             Entalpía: {h}
             """
         if sp < 50:
             return room_info
 
-    def tr(self):
+    def dp(self):
         """
         Calcula el punto de rocío con temp en celsius y hr en %.
         Si la temperatura o la humedad no tienen valores válidos, se devuelve None
@@ -165,20 +232,56 @@ class Room:
     def iv(self):
         """
         Obtiene el modo actual de funcionamiento, calefacción refrigeración de la habitación desde la base de
-        datos que almacena las lecturas
+        datos que almacena las lecturas.
+        Si iv_source es None o la respuesta del iv_source es None, el modo IV se calcula de forma automática.
+        Si iv_source sólo tiene 2 claves: la del bus y la del dispositivo ModBus asociado, quiere decir que el
+        modo IV se lee desde la web y estará almacenado en el archivo 'iv' correspondiente al dispositivo
+        ModBus asociado.
+        Si se lee un 0 el modo será calefacción y si se lee un 1 el modo será refrigeración.
+        El modo IV se puede leer también de un dispositivo tipo Generador. En ese caso, el dispositivo Generador
+        deberá tener implementado un método que devuelva un 0 para calefacción y un 1 para refrigeración.
         Returns: Modo de funcionamiento Calefacción / Refrigeración de la instalación.
         Es un valor booleano asociado a la refrigeración: True = Refrigeración / False = Calefacción
         Si no se dispone del dato, se selecciona automáticamente:
         Junio-Septiembre = Refrigeración
         Resto = Calefacción
         """
-        if self.iv_source is None or not self.iv_source:
-            mes = phi.datetime.now().month
-            cooling = True if 5 < mes < 10 else False  # Refrigeración entre junio y septiembre
-            return cooling
-        else:
-            cooling = get_value(self.iv_source)  # TODO Definir valores para modo Calefacción / Refrigeración
-        return cooling
+        mes = phi.datetime.now().month
+        auto_cooling = phi.COOLING if 5 < mes < 10 else phi.HEATING  # Refrigeración entre junio y septiembre
+
+        if self.iv_source is None or not self.iv_source:  # Modo IV automático
+            return auto_cooling
+
+        if len(self.iv_source.keys()) == 2:  # El modo se lee desde la web. Hay que obtener el nº de esclavo
+            # del dispositivo
+            bus_id = str(
+                self.iv_source.get("bus"))  # En el JSON, el bus_id que conecta la habitación con el dispositivo
+            # se introduce como un entero, pero la clave del diccionario con los datos leídos son str
+            device_id = str(
+                self.iv_source.get("device"))  # # OJO, es el ID del Device en la base de datos, NO EL SLAVE
+            device = phi.buses.get(bus_id).get(device_id)  # Devuelve el dispositivo en el que se va a escribir
+            dev_sl = str(device.slave)  # Esclavo de cuyo archivo tmp leer el modo IV
+            ex_folder_name = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + dev_sl
+            iv_file = ex_folder_name + r"/" + phi.IV
+            try:
+                with open(iv_file, "r") as ivf:
+                    iv_value = ivf.read()
+                    if iv_value in ['1', 1, True, "True"]:
+                        iv_mode = phi.COOLING
+                    elif iv_value in ['0', 0, False, 'False']:
+                        iv_mode = phi.HEATING
+                    else:
+                        print(f"ERROR {__file__} al leer el modo IV desde la web en el archivo {iv_file}.\n"
+                              f"Valor recibido no válido\n{iv_value}")
+                        return auto_cooling
+            except FileNotFoundError as e:
+                print(f"ERROR {__file__} al leer el modo IV desde la web en el archivo {iv_file}\n{e}")
+                return auto_cooling
+
+        else:  # El modo IV se lee de un dispositivo
+            iv_mode = get_value(self.iv_source)
+
+        return iv_mode
 
     def sp(self):
         """
@@ -247,7 +350,7 @@ class Room:
         rt = self.rt()
         rh = self.rh()
         sp = self.sp()
-        tr = self.tr()
+        tr = self.dp()
         h = self.h()
         st = self.st()
         aq = self.aq()
@@ -277,11 +380,15 @@ class RoomGroup:
             roomgroup = []
         self.id_rg = id_rg  # Identificación del grupo
         self.roomgroup = roomgroup  # Lista de objetos del tipo Room con sus atributos de temperaturas, humedad, etc.
-        self.iv = init_modo_iv()  # TODO, resolver como pasar modo iv al grupo.
-        self.demanda = None
-        self.water_sp = None
-        self.air_sp = None
-        self.air_rt = None
+        self.iv = None  # Modo IV del grupo de habitaciones
+        self.demand = None
+        self.water_sp = None  # Consigna impulsión agua del grupo
+        self.air_sp = None  # Consigna impulsión aire del grupo
+        self.air_rt = None  # Temperatura ambiente del grupo
+        self.air_dp = None  # Punto de rocío más alto del grupo
+        self.air_h = None  # Entalpía más alta del grupo
+        self.aq = 0  # Valor de calidad de aire del grupo
+        self.aq_sp = phi.AIR_QUALITY_DEFAULT_SETPOINT  # Valor de consigna calidad de aire del grupo
         self.offsetref = phi.OFFSET_DEMANDA_REFRIGERACION
         self.offsetcal = phi.OFFSET_DEMANDA_CALEFACCION
         self.habbombaref = phi.TMAX_HAB_REFR
@@ -297,30 +404,40 @@ class RoomGroup:
         Returns: diccionario con 4 claves:
         - demanda: vale 0 si no hay demanda, 1 si hay demanda de refrigeración en modo refrigeración, 2 si hay demanda
         de calefacción en modo calefacción
-        - agua_sp: float con la consigna de la temperatura de impulsión de agua
-        - aire_sp: float con la consigna de la temperatura de consigna ambiente (para fancoils)
+        - water_sp: float con la consigna de la temperatura de impulsión de agua
+        - air_sp: float con la consigna de la temperatura de consigna ambiente (para fancoils)
         Recoge la consigna más alta de entre las habitaciones con demanda en calefacción y la más baja en refrigeración
-        -aire_rt: float con el valor de la temperatura ambiente (para fancoils)
+        -air_rt: float con el valor de la temperatura ambiente (para fancoils)
         Recoge el valor de temperatura ambiente más bajo de entre las habitaciones con demanda en modo calefacción
         y la más alta en modo refrigeración.
+        - air_dp: punto de rocío más alto del grupo de habitaciones
+        - air_h: entalía máxima del grupo de habitaciones
+        - aq: Calidad de aire del grupo (se toma el máximo contenido en ppm de CO2
+        - aq_sp: Consigna de calidad de aire del grupo (se toma el nivel mínimo de CO2 de aquellas habitaciones con
+        demanda de ventilación
         """
         # print(f"\t...Calculando temperatura de impulsión para el grupo de habitaciones {self.id_rg}")
         # Obtengo el modo de funcionamiento Calefacción/Refrigeración del con el método iv() de la
         # primera habitación del grupo
+        self.iv = await self.iv_mode()
         cooling = self.iv
-        # Obtengo de la primera habitación de roomgroup el edificio del que leer la temperatura exterior
         if len(self.roomgroup) == 0:
             raise ValueError(f"No se han añadido habitaciones al grupo {self.id_rg}")
         bld = self.roomgroup[0].building_id
         t_exterior = get_temp_exterior(bld)
+        # Inicializo los valores de calidad de aire del grupo
+        group_aq = 0
+        group_aq_sp = phi.AIR_QUALITY_DEFAULT_SETPOINT
+
         # Inicializo consigna temperatura de impulsion
         group_supply_water_setpoint = self.habbombaref if cooling else self.habbombacal
         group_air_temperature_setpoint = None
         group_air_temperature = None
 
-        # Iniciamos la temperatura de rocio a la temperatura mínima de impulsion en refrigeracion
+        # Inicializamos la temperatura de rocio a la temperatura mínima de impulsion en refrigeracion
         min_t_rocio = phi.TMIN_IMPUL_REFR
         t_rocio_lim = min_t_rocio
+        h_max = None  # Inicializo la entalpia del grupo
         demanda = 0
         # Se actualizan los atributos de las habitaciones del grupo según las últimas lecturas
         room_updating_tasks = [create_task(r.update())
@@ -330,18 +447,30 @@ class RoomGroup:
         print(f"Resultado actualización habitaciones {updating_results}.\nDebe ser una tupla de 1's")
         for room in self.roomgroup:
             null_values = ["", None, 0, 0.0, "0", "0.0", "true", "false"]
+            # Calidad de aire
+            room_aq = room.aq() if room.aq() is not None else 0
+            room_aq_sp = room.aqsp() if room.aqsp() is not None else phi.AIR_QUALITY_DEFAULT_SETPOINT
+            group_aq = max(group_aq, room_aq)
+            if room_aq > room_aq_sp:  # Se necesita ventilar
+                group_aq_sp = min(group_aq_sp, room_aq_sp)
 
             # El primer valor a tomar para la temperatura ambiente y la consigna
             # del grupo de habitaciones es el de la primera habitación.
             rt = room.rt()  # Temperatura ambiente del objeto Room
             group_air_temperature = rt if group_air_temperature is None else group_air_temperature
             sp = room.sp()  # Consigna del objeto Room
-            tr = room.tr()
-            group_air_temperature_setpoint = sp if group_air_temperature_setpoint is None \
+            air_sp = sp + room.offsetairref if cooling else sp + room.offsetaircal
+            dp = room.dp()  # Temperatur de rocío del objeto Room
+            h = room.h()  # Entalpia del objeto Room
+
+            group_air_temperature_setpoint = air_sp if group_air_temperature_setpoint is None \
                 else group_air_temperature_setpoint
 
-            t_rocio_hab = min_t_rocio if tr in null_values else tr
+            t_rocio_hab = min_t_rocio if dp in null_values else dp
             t_rocio_lim = max(t_rocio_hab, t_rocio_lim)
+            h_hab = h_max if h in null_values else h
+            if h_hab is not None and h_max is not None:
+                h_max = max(h_hab, h_max)
             if any([rt in null_values, sp in null_values, isinstance(rt, str), isinstance(sp, str)]):
                 continue  # Ignoramos las habitaciones de las que no dispongamos lecturas de temperatura o consigna
 
@@ -350,12 +479,12 @@ class RoomGroup:
                     demanda = 1
                     t_impulsion_temp = sp - self.offsetwspref - (t_exterior -
                                                                  max(phi.RT_LIM_REFR, sp)) / 2
-                    group_air_temperature_setpoint = min(sp, group_air_temperature_setpoint)
+                    group_air_temperature_setpoint = min(air_sp, group_air_temperature_setpoint)
                     group_air_temperature = max(rt, group_air_temperature)
                 elif rt - sp > 0:  # Se puede impulsar agua a una temperatura algo más alta
                     demanda = 1
                     t_impulsion_temp = sp - self.offsetwspref
-                    group_air_temperature_setpoint = min(sp, group_air_temperature_setpoint)
+                    group_air_temperature_setpoint = min(air_sp, group_air_temperature_setpoint)
                     group_air_temperature = max(rt, group_air_temperature)
                 else:  # No hay demanda
                     t_impulsion_temp = sp - self.offsetwspref / 2
@@ -369,12 +498,12 @@ class RoomGroup:
                 if sp - rt > self.offsetcal:  # Se necesita mayor temperatura de impulsion
                     demanda = 2
                     t_impulsion_temp = sp + self.offsetwspcal + (min(sp, phi.RT_LIM_CALEF) - t_exterior) / 2
-                    group_air_temperature_setpoint = max(sp, group_air_temperature_setpoint)
+                    group_air_temperature_setpoint = max(air_sp, group_air_temperature_setpoint)
                     group_air_temperature = min(rt, group_air_temperature)
                 elif sp - rt > 0:  # Se puede impulsar agua a menor temperatura
                     demanda = 2
                     t_impulsion_temp = sp + self.offsetwspcal
-                    group_air_temperature_setpoint = max(sp, group_air_temperature_setpoint)
+                    group_air_temperature_setpoint = max(air_sp, group_air_temperature_setpoint)
                     group_air_temperature = min(rt, group_air_temperature)
                 else:  # No hay demanda
                     t_impulsion_temp = sp + self.offsetwspcal / 2
@@ -390,21 +519,70 @@ class RoomGroup:
         else:
             group_supply_water_setpoint = round(min(phi.TMAX_IMPUL_CALEF, group_supply_water_setpoint), 1)
 
-        self.demanda = demanda
+        self.demand = demanda
         self.water_sp = group_supply_water_setpoint
         self.air_sp = group_air_temperature_setpoint
         self.air_rt = group_air_temperature
+        self.air_dp = t_rocio_lim
+        self.air_h = h_max
+        self.aq = group_aq
+        self.aq_sp = group_aq_sp
         collect()
         print(repr(self))
         return 1
+
+    async def iv_mode(self, new_iv_mode: [int, None] = None):
+        """
+        Procesa el modo de funcionamiento Calefacción (new_iv_mode = 0) / Refrigeración (iv_mode = 1) grupo de
+        habitaciones.
+        El modo IV del grupo de habitaciones se obtiene a partir del modo IV de las habitaciones que lo componen.
+        TODO: Verificar el funcionamiento del modo IV escrito
+        Las habitaciones tomarán su modo de funcionamiento de 3 formas posibles:
+        - La web (archivo intercambiador en /home/pi/var/tmp/reg/<dev>/iv
+        - Algún dispositivo Modbus (iv_source)
+        - TODO Calcular modo IV de manera automática
+        El modo IV del grupo se selecciona tomando el modo IV de la mayoría de las habitaciones que lo componen.
+        Si no se lee el modo IV de ninguna habitación, se toma el modo IV que devuelve init_modo_iv()
+        Param:
+            new_iv_mode:
+                Si None, se devuelve el modo actual
+                Si 1, se activa el modo refrigeración del grupo de habitaciones
+                Si 0, se activa el modo calefacción del grupo de habitaciones
+        Returns:
+            Modo iv o None si falta algún dato
+        """
+        q_hab_cooling = 0  # Contador de habitaciones en modo Cooling
+        q_hab_heating = 0  # Contador de habitaciones en modo Heating
+        n_hab = len(self.roomgroup)  # nº de habitaciones del grupo
+        for room in self.roomgroup:
+            room_modo_iv = room.iv()  # Obtengo el modo IV de la habitación
+            if room_modo_iv in ['1', 1, True, 'True']:
+                q_hab_cooling += 1
+            elif room_modo_iv in ['0', 0, False, 'False']:
+                q_hab_heating += 1
+
+        modo_iv = phi.COOLING if q_hab_cooling > q_hab_heating else phi.HEATING
+
+        if new_iv_mode in [0, 1]:  # Se fuerza el modo IV. TODO Comprobar si esta opción tiene sentido.
+            self.iv = new_iv_mode
+        elif q_hab_cooling + q_hab_heating == 0:  # No se ha leído el modo IV de ninguna habitación
+            self.iv = init_modo_iv()
+        else:
+            self.iv = modo_iv
+
+        return self.iv
 
     def __repr__(self):
         # self.get_consignas()
         demanda_str = ("No hay demanda", "Demanda de Refrigeración", "Demanda de Calefacción")
 
         results = f"""Datos calculados para el grupo {self.id_rg}:
-                        Demanda: {demanda_str[self.demanda]}
+                        Demanda: {demanda_str[self.demand]}
                         Temperatura impulsión de agua: {self.water_sp}
                         Temperatura ambiente grupo: {self.air_rt}
-                        Temperatura consigna aire grupo: {self.air_sp}"""
+                        Temperatura consigna aire grupo: {self.air_sp}
+                        Punto de rocío grupo: {self.air_dp}
+                        Entalpia grupo: {self.air_h}
+                        Nivel CO2 grupo: {self.aq}
+                        Consigna nivel CO2 grupo: {self.aq_sp}"""
         return results

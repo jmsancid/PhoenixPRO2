@@ -1,11 +1,82 @@
 #!/usr/bin/env python3
 import json
 import sys
-from gc import collect
+import pickle
+from gc import \
+    collect
 from phoenix_config import *
 from phoenix_constants import *
 from project_elements.building import Room, RoomGroup
 from devices.devices import SYSTEM_CLASSES
+
+
+# system_classes = list(SYSTEM_CLASSES.values())  # Clases de dispositivos del sistema
+def create_device_files(device) -> int:
+    """
+    Se crea una carpeta (si no existe) en el directorio phoenix_constants.EXCHANGE_FOLDER (/home/pi/var/tmp/reg/)
+    con el nombre 'slave, y se crean, si no existen, los archivos de intercambio correspondientes según
+    aparecen en phoenix_constants.'dev_class'_FILES, que son tuplas con los nombres de los archivos a crear.
+    Params:
+        device: dispositivo ModBus
+    Returns:
+        0 - Si no se pueden crear los archivos
+        1 - Si se pueden crear los archivos
+    """
+    bus_id = device.bus_id
+    slave = str(device.slave)
+    dev_class = device.__class__.__name__
+
+    file_names = EXCHANGE_R_FILES.get(dev_class)
+    if file_names is None:
+        return 0
+    # Compruebo si existe el directorio de intercambio de registros:
+    reg_folder_exists = os.path.isdir(EXCHANGE_FOLDER)
+    if not reg_folder_exists:
+        try:
+            os.mkdir(EXCHANGE_FOLDER)
+        except OSError:
+            print(f"ERROR Creando el directorio de intercambio con la web: {EXCHANGE_FOLDER}")
+        else:
+            print(f"\n\n\tDirectorio de intercambio con la web {EXCHANGE_R_FILES}  -  CREADO\n")
+    else:
+        print(f"\n\tEl fichero de intercambio, {EXCHANGE_FOLDER}, ya existe.")
+    bus_folder_name = EXCHANGE_FOLDER + r"/" + bus_id
+    bus_folder_exists = os.path.isdir(bus_folder_name)
+    if not bus_folder_exists:
+        try:
+            os.mkdir(bus_folder_name)
+        except OSError:
+            print(f"\n\tERROR Creando el directorio de intercambio con la web: {bus_folder_name} para el "
+                  f"bus {bus_id}\n")
+            return 0
+        else:
+            print(f"\n\t\t...directorio para bus {bus_id} en {bus_folder_name}  -  CREADO")
+    sl_folder_name = bus_folder_name + r"/" + slave
+    print(f"\t\tProcesando carpeta {sl_folder_name}")
+    sl_folder_exists = os.path.isdir(sl_folder_name)
+    if not sl_folder_exists:
+        try:
+            os.mkdir(sl_folder_name)
+        except OSError:
+            print(f"\n\tERROR Creando el directorio de intercambio con la web: {sl_folder_name} para el "
+                  f"esclavo {slave}\n")
+        else:
+            print(f"\n\t\t...directorio para esclavo {slave} en {sl_folder_name}  -  CREADO")
+    contador_archivos_creados = 0
+    for exc_filename in file_names:
+        exc_file_path = sl_folder_name + r"/" + exc_filename
+        print(f"\t\t\tProcesando archivo {exc_file_path}")
+        exc_file_exists = os.path.isfile(exc_file_path)
+        if not exc_file_exists:
+            try:
+                open(exc_file_path, 'w').close()
+            except OSError:
+                print(f"\n\n\tERROR creando el fichero de intercambio {exc_file_path} para el esclavo {slave}")
+            else:
+                contador_archivos_creados += 1
+                print(f"\n\t...creado el archivo de intercambio nº {contador_archivos_creados}: {exc_file_path} "
+                      f"para el esclavo {slave}")
+    return 1
 
 
 def get_boardsn() -> str:
@@ -61,7 +132,7 @@ def load_roomgroups():
     Dichas clases se almacenan en el módulo "building.py"
     Se considera que tanto cada vivienda como cada edificio son RoomGroups formados por distintas habitaciones
     Returns: Diccionario con todos los grupos de habitaciones siendo la clave el "id" del grupo de habitaciones y
-    el valor una lista formada por los objetos RoomGroup del edificio, siendo uno de los atributos de dichos objetos
+    el valor los objetos RoomGroup del edificio, siendo uno de los atributos de dichos objetos
     una lista de los objetos Room que componen el grupo.
     """
     print(f"\n(load_roomgroups)\tPROCESANDO GRUPOS DE HABITACIONES\n")
@@ -101,8 +172,11 @@ def load_roomgroups():
                     st_source=room.get("st_source"),
                     af=room.get("af"),
                     aq_source=room.get("aq_source"),
-                    aqsp_source=room.get("aqsp_source")
+                    aqsp_source=room.get("aqsp_source"),
+                    offsetairref=room.get("offsetairref"),
+                    offsetaircal=room.get("offsetaircal")
                 )
+                # print(f"DEBUGGING {__file__} - Atributos Room\n{new_room.__dict__}")
                 for idx, group in enumerate(groups):
                     print(f"\t\t(load_roomgroups) Procesando grupo {idx} con 'id': {group}")
                     # Compruebo si existe el grupo de habitaciones
@@ -127,7 +201,17 @@ def load_roomgroups():
     return roomgroups
 
 
-all_room_groups = load_roomgroups()  # Diccionario con todos los grupos de habitaciones. Clave principal es id del grupo
+if not os.path.isdir(TEMP_FOLDER):
+    os.makedirs(TEMP_FOLDER)
+if not os.path.isfile(ROOMGROUPS_INSTANCES_FILE):
+    all_room_groups = load_roomgroups()  # Diccionario con todos los grupos de habitaciones.
+    # Clave principal es id del grupo
+    with open(ROOMGROUPS_INSTANCES_FILE, "wb") as rgf:
+        pickle.dump(all_room_groups, rgf)
+else:
+    # Ya se habían creado los grupos de habitaciones
+    with open(ROOMGROUPS_INSTANCES_FILE, "rb") as rgf:
+        all_room_groups = pickle.load(rgf)
 
 
 # print(all_rooms)
@@ -135,6 +219,11 @@ all_room_groups = load_roomgroups()  # Diccionario con todos los grupos de habit
 def load_buses():
     """
     Genera un diccionario con los dispositivos ModBus físicos del sistema.
+    Además, se crearán los archivos de intercambio de datos con la web para cada esclavo en función del
+    tipo de dispositivo de que se trate.
+    Se crea una carpeta (si no existe) en el directorio phoenix_constants.EXCHANGE_FOLDER (/home/pi/var/tmp/reg/)
+    con el nombre del esclavo, y se crean, si no existen, los archivos de intercambio correspondientes según
+    aparecen en phoenix_constants.xxx_FILES, que son tuplas con los nombres de los archivos a crear.
     Los dispositivos deben existir como clase en el paquete "devices" y se importarán al proyecto
     las clases que formen parte del mismo.
     Los dispositivos están definidos bajo los identificadores de cada bus.
@@ -153,7 +242,8 @@ def load_buses():
     for bus in prj_buses:
         # Extraigo los dispositivos del bus
         bus_devices = prj_buses[bus].get("devices")
-        bus_port = prj_buses[bus].get("port")
+        bus_key = prj_buses[bus].get("port")
+        bus_port = SERIAL_PORTS.get(bus_key)
         # bus_id = prj_buses[bus].get('id')
         bus_id = bus
         bus_name = prj_buses[bus].get('name')
@@ -201,6 +291,11 @@ def load_buses():
 
             devices[bus][device] = mbdevice
             print(f"\t\t\t... dispositivo {dev_id} - {name}: clase {cls} (esclavo {slave}) CREADO")
+            print(f"\t... creando los archivos de intercambio del dispositivo {mbdevice.slave} - {cls}")
+            ex_file_creation = create_device_files(mbdevice)
+            if not ex_file_creation:
+                print(f"ERROR - No se han podido crear los archivos de intercambio del esclavo "
+                      f"{mbdevice.slave}, de la clase {cls}")
             collect()
 
     if not devices:
@@ -214,7 +309,16 @@ def load_buses():
     return devices
 
 
-buses = load_buses()
+# buses = load_buses()
+if not os.path.isfile(BUSES_INSTANCES_FILE):
+    buses = load_buses()  # Diccionario con todos los buses.
+    # Clave principal es id del grupo
+    with open(BUSES_INSTANCES_FILE, "wb") as bf:
+        pickle.dump(buses, bf)
+else:
+    # Ya se habían creado los grupos de habitaciones
+    with open(BUSES_INSTANCES_FILE, "rb") as bf:
+        buses = pickle.load(bf)
 
 
 def load_regmapfiles() -> Tuple:
@@ -238,7 +342,8 @@ def load_regmapfiles() -> Tuple:
             model = bus_devices[device].model
             if brand is None or model is None:
                 continue
-            devregmapfilename = f"./devices/{brand}_{model}.json"  # Debe haber un fichero brand_model.json
+            devregmapfilerelpath = f"/devices/{brand}_{model}.json"
+            devregmapfilename = MODULE_PATH + devregmapfilerelpath  # Debe haber un fichero brand_model.json
             # por cada dispositivo
             if devregmapfilename not in regmapfilenames:
                 regmapfilenames.add(devregmapfilename)
@@ -263,7 +368,16 @@ def load_regmapfiles() -> Tuple:
     return tuple(regmaps)
 
 
-mbregmaps = load_regmapfiles()
+# mbregmaps = load_regmapfiles()
+if not os.path.isfile(REGMAP_INSTANCES_FILE):
+    mbregmaps = load_regmapfiles()  # Diccionario con todos los buses.
+    # Clave principal es id del grupo
+    with open(REGMAP_INSTANCES_FILE, "wb") as rmf:
+        pickle.dump(mbregmaps, rmf)
+else:
+    # Ya se habían creado los grupos de habitaciones
+    with open(REGMAP_INSTANCES_FILE, "rb") as rmf:
+        mbregmaps = pickle.load(rmf)
 
 
 def config_devices():
@@ -326,7 +440,9 @@ def config_devices():
                     # Hay que actualizar el atributo porque está vacío
                     new_val = devtypes[dev_data_key].get(attr)
                     # print(f"Actualizando atributo {attr} con el valor {new_val}")
-                    setattr(dev_to_config, attr, new_val)
+                    if new_val is not None:  # Se evalúa esta condición por si el MBDevice tuviera atributos no
+                        # definidos en el fichero de configuración
+                        setattr(dev_to_config, attr, new_val)
             print(f"\t\t... configuración del dispositivo {dev_to_config.name} FINALIZADA\n")
             collect()
             # print(f"Configurando dispositivo:\n{dev_to_config.__dict__}")

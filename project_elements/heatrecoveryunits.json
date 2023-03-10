@@ -1,0 +1,31 @@
+{
+  "heatrecoveryunits": {
+    "sistena_sig310": {
+      "name": "Controlador de Recuperador Modelo Son Vell 310",
+      "speed1_source": ["hr", 2],
+      "speed2_source": ["hr", 3],
+      "speed3_source": ["hr", 4],
+      "manual_valv_source": ["hr", 5],
+      "bypass_source": ["hr", 6],
+      "dampers_source": ["hr", 7],
+      "remote_onoff_st_source": ["ir", 8],
+      "aux_ed2_source": ["ir", 9],
+      "aux_ed3_source": ["ir", 10]
+    },
+    "siber_vmcdf": {
+      "name": "Recuperador siber df excellent/sky",
+      "flow_target": ["hr", 6000],
+      "supply_flow_source": ["ir", 4027],
+      "exhaust_flow_source": ["ir", 4028],
+      "otemp_source": ["ir", 4008],
+      "itemp_source": ["ir", 4009],
+      "supply_pres_source": ["ir", 4010],
+      "exhaust_pres_source": ["ir", 4011],
+      "bypass_target": ["hr", 6005],
+      "bypass_source": ["ir", 4029],
+      "filter_st_source": ["ir", 4039],
+      "error_source": ["ir", 4998],
+      "max_airflow": 370
+    }
+  }
+}

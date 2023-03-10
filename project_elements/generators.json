@@ -2,28 +2,23 @@
   "generators": {
     "me_ecodan": {
       "name": "ecodan",
-      "on_info": ["hr", 12, 1],
-      "off_info": ["hr", 12, 0 ],
-      "demanda_info": ["hr", 12, 1],
-      "sp_info": ["hr", 32000],
-      "iv_info": ["hr", 127, 0, 1],
-      "t_ext_info": ["hr", 32001],
-      "t_inercia": ["hr", 32002],
-      "water_flow_info": ["hr", 32003],
-      "energia_electrica_consumida": ["hr", 32004],
-      "energia_evaporacion_consumida": ["hr", 32005],
-      "energia_condensacion_consumida": ["hr", 32006],
-      "cop": ["hr", 32004],
-      "eer": ["hr", 32004],
-      "alarm_info": {
-        "type": "hr",
-        "adr": 12,
-        "val": {
-          "1": "Alarma 1",
-          "2": "Alarma 2",
-          "3": "Alarma 3",
-          "4": "Alarma 4"
-        }
+      "onoff_source": ["hr", 25],
+      "on_value": 1,
+      "off_value": 0,
+      "demanda_source": ["di", 5],
+      "sp_source":  ["hr", 28],
+      "dhwsp_source":  ["hr", 31],
+      "iv_target": ["hr", 26],
+      "iv_source": ["hr", 58],
+      "heating_value": 1,
+      "cooling_value": 3,
+      "alarm_source":  [],
+      "t_ext_source": ["hr", 99],
+      "supply_water_temp_source": ["hr", 101],
+      "return_water_temp_source": ["hr", 103],
+      "dwh_temp_source": ["hr", 105],
+      "t_inercia_source":  [],
+      "water_flow_source": ["hr", 299]
       }
     }
   }

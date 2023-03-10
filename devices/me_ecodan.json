@@ -2,89 +2,205 @@
   "me_ecodan": {
     "name": "ecodan",
     "write_ops": [5, 6, 15, 16],
-    "co": {
-      "1": {
-        "descr": {
-          "en": "System ON/OFF",
-          "sp": "Marcha/Paro del Sistema",
-          "po": "Marcha/Paro del Sistema"
-        }
-      }
-    },
-    "di": {
-      "0": {
-        "descr": {
-          "en": "Room Thermo 1 (IN1)",
-          "sp": "Termostato ambiente 1 (IN1)",
-          "po": "Termostato ambiente 1 (IN1)"
-        }
-      },
-      "1": {
-        "descr": {
-          "en": "Room Thermo 2 (IN6)",
-          "sp": "Termostato ambiente 2 (IN6)",
-          "po": "Termostato ambiente 2 (IN6)"
-        }
-      },
-      "2": {
-        "descr": {
-          "en": "Flow SW1 (IN2)",
-          "sp": "Interruptor de flujo 1 (IN2)",
-          "po": "Interruptor de flujo 1 (IN2)"
-        }
-      },
-      "3": {
-        "descr": {
-          "en": "Flow SW2 (IN3)",
-          "sp": "Interruptor de flujo 2 (IN3)",
-          "po": "Interruptor de flujo 2 (IN3)"
-        }
-      },
-      "4": {
-        "descr": {
-          "en": "Flow SW3 (IN7)",
-          "sp": "Interruptor de flujo 3 (IN7)",
-          "po": "Interruptor de flujo 3 (IN7)"
-        }
-      },
-      "5": {
-        "descr": {
-          "en": "Demand (IN4)",
-          "sp": "Demanda (IN4)",
-          "po": "Demanda (IN4)"
-        }
-      },
-      "6": {
-        "descr": {
-          "en": "Outdoor Thermo (IN5)",
-          "sp": "Termostato Exterior (IN5)",
-          "po": "Termostato Exterior (IN5)"
-        }
-      },
-      "7": {
-        "descr": {
-          "en": "Heat Pump Master ON/OFF",
-          "sp": "Marcha/Paro Bomba de Calor Maestra",
-          "po": "Marcha/Paro Bomba de Calor Maestra"
-        }
-      }
-    },
     "hr": {
-      "0": {
+      "12": {
         "descr": {
-          "en": "",
-          "sp": "",
-          "po": ""
+          "en": "Fault Code (decimal)",
+          "sp": "Código de fallo (decimal): 8000=No Fallo / 6999=Error comunicación entre unidad y A1M",
+          "po": "Código de fallo (decimal): 8000=No Fallo / 6999=Error comunicación entre unidad y A1M"
+        }
+      },
+      "25": {
+        "descr": {
+          "en": "System On/Off",
+          "sp": "Marcha/Paro Unidad",
+          "po": "Marcha/Paro Unidad"
+        }
+      },
+      "26": {
+        "descr": {
+          "en": "Operating Mode (0=Stop / 1=ACS / 2=Heating / 3=Cooling",
+          "sp": "Modo de funcionamiento (0=Stop / 1=ACS / 2=Calefacción / 3=Refrigeración",
+          "po": "Modo de funcionamiento (0=Stop / 1=ACS / 2=Calefacción / 3=Refrigeración"
+        }
+      },
+      "27": {
+        "descr": {
+          "en": "Operating Mode (DHW) - 0:Normal / 1:ECO",
+          "sp": "Modo de funcionamiento (ACS) - 0:Normal / 1:ECO",
+          "po": "Modo de funcionamiento (ACS) - 0:Normal / 1:ECO"
+        }
+      },
+      "28": {
+        "descr": {
+          "en": "A/C Mode – Zone 1 (0:Heating / 3: Cooling)",
+          "sp": "Modo climatización - Zona 1 (0:Calefacción / 3:Refrigeración",
+          "po": "Modo climatización - Zona 1 (0:Calefacción / 3:Refrigeración"
+        }
+      },
+      "29": {
+        "descr": {
+          "en": "A/C Mode – Zone 2 (0:Heating / 3: Cooling)",
+          "sp": "Modo climatización - Zona 2 (0:Calefacción / 3:Refrigeración",
+          "po": "Modo climatización - Zona 2 (0:Calefacción / 3:Refrigeración"
+        }
+      },
+      "31": {
+        "descr": {
+          "en": "Set Tank Water Temperature",
+          "sp": "Consigna temperatura ACS",
+          "po": "Consigna temperatura ACS"
         },
-        "conv_f_read": [1, 5],
-        "conv_f_write": [0]
+        "conv_f_read": [3],
+        "conv_f_write": [2]
+      },
+      "33": {
+        "descr": {
+          "en": "SH/C Thermostat Target\nTemperature – Zone 1",
+          "sp": "Consigna impulsión climatización - Zona 1",
+          "po": "Consigna impulsión climatización - Zona 1"
+        },
+        "conv_f_read": [3],
+        "conv_f_write": [2]
+      },
+      "35": {
+        "descr": {
+          "en": "SH/C Thermostat Target\nTemperature – Zone 2",
+          "sp": "Consigna impulsión climatización - Zona 2",
+          "po": "Consigna impulsión climatización - Zona 2"
+        },
+        "conv_f_read": [3],
+        "conv_f_write": [2]
+      },
+      "58": {
+        "descr": {
+          "en": "HC Control Type",
+          "sp": "Modo actual de funcionamiento (0:Calefacción / 1:Refrigeración",
+          "po": "Modo actual de funcionamiento (0:Calefacción / 1:Refrigeración"
+        }
+      },
+      "99": {
+        "descr": {
+          "en": "Outdoor Ambient Temperature",
+          "sp": "Temperatura exterior",
+          "po": "Temperatura exterior"
+        },
+        "conv_f_read": [10, 1]
+      },
+      "101": {
+        "descr": {
+          "en": "Water Outlet Temperature",
+          "sp": "Temperatura de impulsión de agua",
+          "po": "Temperatura de impulsión de agua"
+        },
+        "conv_f_read": [10, 3]
+      },
+      "103": {
+        "descr": {
+          "en": "Water Inlet Temperature",
+          "sp": "Temperatura de retorno de agua",
+          "po": "Temperatura de retorno de agua"
+        },
+        "conv_f_read": [10, 3]
+      },
+      "105": {
+        "descr": {
+          "en": "Tank Water Temperature",
+          "sp": "Temperatura depósito de ACS",
+          "po": "Temperatura depósito de ACS"
+        },
+        "conv_f_read": [10, 3]
+      },
+      "107": {
+        "descr": {
+          "en": "Flow Temperature – Zone 1",
+          "sp": "Temperatura de impulsión de agua - Zona 1",
+          "po": "Temperatura de impulsión de agua - Zona 1"
+        },
+        "conv_f_read": [10, 3]
+      },
+      "109": {
+        "descr": {
+          "en": "Return Temperature – Zone 1",
+          "sp": "Temperatura de retorno de agua - Zona 1",
+          "po": "Temperatura de retorno de agua - Zona 1"
+        },
+        "conv_f_read": [10, 3]
+      },
+      "111": {
+        "descr": {
+          "en": "Flow Temperature – Zone 2",
+          "sp": "Temperatura de impulsión de agua - Zona 2",
+          "po": "Temperatura de impulsión de agua - Zona 2"
+        },
+        "conv_f_read": [10, 3]
+      },
+      "113": {
+        "descr": {
+          "en": "Return Temperature – Zone 2",
+          "sp": "Temperatura de retorno de agua - Zona 2",
+          "po": "Temperatura de retorno de agua - Zona 2"
+        },
+        "conv_f_read": [10, 3]
+      },
+      "292": {
+        "descr": {
+          "en": "Last Measured Heating Energy – kWh part",
+          "sp": "Ultima lectura energía calefacción - parte de kWh",
+          "po": "Ultima lectura energía calefacción - parte de kWh"
+        }
+      },
+      "293": {
+        "descr": {
+          "en": "Last Measured Heating Energy – Wh part",
+          "sp": "Ultima lectura energía calefacción - parte de Wh",
+          "po": "Ultima lectura energía calefacción - parte de Wh"
+        }
+      },
+      "294": {
+        "descr": {
+          "en": "Last Measured Cooling Energy – kWh part",
+          "sp": "Ultima lectura energía refrigeración - parte de kWh",
+          "po": "Ultima lectura energía refrigeración - parte de kWh"
+        }
+      },
+      "295": {
+        "descr": {
+          "en": "Last Measured Cooling Energy – Wh part",
+          "sp": "Ultima lectura energía refrigeración - parte de Wh",
+          "po": "Ultima lectura energía refrigeración - parte de Wh"
+        }
+      },
+      "296": {
+        "descr": {
+          "en": "Last Measured DWG Energy – kWh part",
+          "sp": "Ultima lectura energía ACS - parte de kWh",
+          "po": "Ultima lectura energía ACS - parte de kWh"
+        }
+      },
+      "297": {
+        "descr": {
+          "en": "Last Measured DWH Energy – Wh part",
+          "sp": "Ultima lectura energía ACS - parte de Wh",
+          "po": "Ultima lectura energía ACS - parte de Wh"
+        }
+      },
+      "299": {
+        "descr": {
+          "en": "Flow rate (l/min)",
+          "sp": "Caudal (l/min)",
+          "po": "Caudal (l/min)"
+        }
       }
-
     },
     "ir": {
-
+      "26": {
+        "descr": {
+          "en": "Defrost (0 = Normal\n1 = Standby\n2 = Defrost\n3 = Waiting Restart)",
+          "sp": "Desescarche (0 = Normal\n1 = Pausa\n2 = Desescarche\n3 = Esperando reinicio)",
+          "po": "Desescarche (0 = Normal\n1 = Pausa\n2 = Desescarche\n3 = Esperando reinicio)"
+        }
+      }
     }
   }
-
-
 }

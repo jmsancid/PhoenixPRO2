@@ -1,0 +1,41 @@
+{
+  "airzonemanagers": {
+    "sistena_finestrat510": {
+      "name": "Controlador de Fancoil Zonificador Modelo Finestrat 510",
+      "onoff_target": ["hr", 2],
+      "iv_source": ["hr", 3],
+      "sp_source": ["hr", 4],
+      "rt_source": ["hr", 11],
+      "fan_speed_target": ["hr", 6],
+      "fan_auto_cont_source": ["hr", 7],
+      "fan_st_source": ["ir", 18],
+      "remote_onoff_source": ["hr", 10],
+      "sp1_source": ["hr", 12],
+      "rt1_source": ["hr", 14],
+      "sp2_source": ["hr", 15],
+      "rt2_source": ["hr", 17],
+      "demanda_st_source": ["ir", 19],
+      "damper_st_source": ["ir", 20],
+      "remote_onoff_st_source": ["ir", 21],
+      "aux_eds_source": ["ir", 22]
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
