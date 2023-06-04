@@ -150,8 +150,8 @@ class Room:
                  af: [int, float, None] = None,
                  aq_source: [dict, None] = None,
                  aqsp_source: [dict, None] = None,
-                 offsetairref: int = phi.OFFSET_COOLING,  # 2ª etapa refrigeración fancoil/recuperador
-                 offsetaircal: int = phi.OFFSET_HEATING  # 2ª etapa calefacción fancoil/recuperador
+                 offsetairref: float = phi.OFFSET_COOLING,  # 2ª etapa refrigeración fancoil/recuperador
+                 offsetaircal: float = phi.OFFSET_HEATING  # 2ª etapa calefacción fancoil/recuperador
                  ):
         self.building_id = building_id
         self.dwelling_id = dwelling_id
@@ -446,6 +446,7 @@ class RoomGroup:
         updating_results = await gather(*room_updating_tasks)
         print(f"Resultado actualización habitaciones {updating_results}.\nDebe ser una tupla de 1's")
         for room in self.roomgroup:
+            print(f"Calculando consignas del grupo {self.id_rg}. Datos habitación {room.name}")
             null_values = ["", None, 0, 0.0, "0", "0.0", "true", "false"]
             # Calidad de aire
             room_aq = room.aq() if room.aq() is not None else 0
@@ -459,8 +460,10 @@ class RoomGroup:
             rt = room.rt()  # Temperatura ambiente del objeto Room
             group_air_temperature = rt if group_air_temperature is None else group_air_temperature
             sp = room.sp()  # Consigna del objeto Room
+            if sp is None:
+                continue
             air_sp = sp + room.offsetairref if cooling else sp + room.offsetaircal
-            dp = room.dp()  # Temperatur de rocío del objeto Room
+            dp = room.dp()  # Temperatura de rocío del objeto Room
             h = room.h()  # Entalpia del objeto Room
 
             group_air_temperature_setpoint = air_sp if group_air_temperature_setpoint is None \

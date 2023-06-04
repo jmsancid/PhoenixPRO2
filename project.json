@@ -15,10 +15,12 @@
         "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+            "mbdev": {},
+            "file": 1000
           },
           "rh_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+            "mbdev": {},
+            "file": 2000
           },
           "aq_source": {}
         },
@@ -248,10 +250,12 @@
         "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+            "mbdev": {},
+            "file": 1000
           },
           "rh_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+            "mbdev": {},
+            "file": 2000
           },
           "aq_source": {}
         },
@@ -481,10 +485,12 @@
         "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+            "mbdev": {},
+            "file": 1000
           },
           "rh_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+            "mbdev": {},
+            "file": 2000
           },
           "aq_source": {}
         },
@@ -714,10 +720,12 @@
         "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+            "mbdev": {},
+            "file": 1000
           },
           "rh_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+            "mbdev": {},
+            "file": 2000
           },
           "aq_source": {}
         },
@@ -947,10 +955,12 @@
         "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+            "mbdev": {},
+            "file": 1000
           },
           "rh_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+            "mbdev": {},
+            "file": 2000
           },
           "aq_source": {}
         },
@@ -1108,10 +1118,12 @@
         "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+            "mbdev": {},
+            "file": 1000
           },
           "rh_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+            "mbdev": {},
+            "file": 2000
           },
           "aq_source": {}
         },
@@ -1161,10 +1173,12 @@
         "iv_source": {"bus": 1, "device": 1},
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+            "mbdev": {},
+            "file": 1000
           },
           "rh_source": {
-            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+            "mbdev": {},
+            "file": 2000
           },
           "aq_source": {}
         },
