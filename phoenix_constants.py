@@ -5,8 +5,8 @@ Lista de constantes del sistema
 import os
 
 # SERIAL COMMUNICATION PORT
-SERIAL_PORTS = {1: "/dev/ttyUSB0"}
-# SERIAL_PORT = "/dev/ttySC0"
+# SERIAL_PORTS = {1: "/dev/ttyUSB0"}
+SERIAL_PORTS = {1: "/dev/ttySC0"}
 
 #   CONVERSION FUNCTION CONSTANTS
 
@@ -48,7 +48,7 @@ IV = "iv"  # Archivo para almacenar el modo de funcionamiento calefacción/refri
 
 # JSON DE CONFIGURACIÓN DEL PROYECTO
 MODULE_PATH = os.path.realpath(os.path.dirname(__file__))
-CONFIG_FILE = MODULE_PATH + r"/temp_project.json"
+CONFIG_FILE = MODULE_PATH + r"/project.json"
 DEVICES_FOLDER = MODULE_PATH + r"/devices/"
 TEMP_FOLDER = "/home/pi/var/tmp/phoenix/"
 READINGS_FILE = TEMP_FOLDER + "modbus_readings.json"
@@ -150,7 +150,7 @@ SPLIT_RW_FILES = ()
 HEATRECOVERYUNIT_R_FILES = ("onoff", "manual", "manual_speed", "hru_mode", "man_hru_mode_st", "man_hru_mode", "speed",
                             "manual_airflow", "supply_flow", "exhaust_flow", "valv_st", "bypass_st", "dampers_st",
                             "remote_onoff", "aux_ed2_st", "aux_ed3_st")
-HEATRECOVERYUNIT_RW_FILES = ("onoff", "manual", "manual_speed", "manual_airflow", "man_hrm_mode_st", "hru_mode",
+HEATRECOVERYUNIT_RW_FILES = ("onoff", "manual", "manual_speed", "manual_airflow", "man_hru_mode_st", "hru_mode",
                              "man_hru_mode_st", "man_hru_mode")
 
 AIRZONEMANAGER_R_FILES = ("iv", "sp", "rt", "sp1", "rt1", "sp2", "rt2",
@@ -166,6 +166,8 @@ TEMPFLUIDCONTROLLER_RW_FILES = ('iv1', 'act_man_st1', 'man_st1', 'act_man_sp1', 
                                 'iv2', 'act_man_st2', 'man_st2', 'act_man_sp2', 'man_sp2',
                                 'iv3', 'act_man_st3', 'man_st3', 'act_man_sp3', 'man_sp3',
                                 'st4')
+DATASOURCE_R_FILES = ('dato1', 'dato2', 'dato3', 'dato4', 'dato5', 'dato6', 'dato7', 'dato8', 'dato9', 'dato10')
+DATASOURCE_RW_FILES = ()
 # ARCHIVOS DE INTERCAMBIO DE INFORMACIÓN CON LA WEB
 EXCHANGE_R_FILES = {
     "UFHCController": UFHCCONTROLLER_R_FILES,
@@ -174,7 +176,8 @@ EXCHANGE_R_FILES = {
     "Split": SPLIT_R_FILES,
     "HeatRecoveryUnit": HEATRECOVERYUNIT_R_FILES,
     "AirZoneManager": AIRZONEMANAGER_R_FILES,
-    "TempFluidController": TEMPFLUIDCONTROLLER_R_FILES
+    "TempFluidController": TEMPFLUIDCONTROLLER_R_FILES,
+    "DataSource": DATASOURCE_R_FILES
 }
 EXCHANGE_RW_FILES = {
     "UFHCController": UFHCCONTROLLER_RW_FILES,
@@ -183,5 +186,6 @@ EXCHANGE_RW_FILES = {
     "Split": SPLIT_RW_FILES,
     "HeatRecoveryUnit": HEATRECOVERYUNIT_RW_FILES,
     "AirZoneManager": AIRZONEMANAGER_RW_FILES,
-    "TempFluidController": TEMPFLUIDCONTROLLER_RW_FILES
+    "TempFluidController": TEMPFLUIDCONTROLLER_RW_FILES,
+    "DataSource": DATASOURCE_RW_FILES
 }

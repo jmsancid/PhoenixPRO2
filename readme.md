@@ -173,3 +173,16 @@ Necesidades
 <li style="margin:1.5cm">.</li>
 </ul>
 
+DESPLIEGUE DEL SOFTWARE
+Ejecutar en la centralita de destino:
+chema@techbase:~/PhoenixPRO $ python3 -m pip install --upgrade pip  # Actualizo pip
+# Editar .bashrc y añadir al PATH la ubicación de pip3.xx con el comando
+# export PATH="/home/chema/.local/bin:$PATH"
+chema@techbase:~/PhoenixPRO $ pip3 install virtualenv  # Instala virtualenv
+chema@techbase:~/PhoenixPRO $ virtualenv venv  # creal el virtualenvironment "venv"
+chema@techbase:~/PhoenixPRO $ source venv/bin/activate
+(venv) chema@techbase:~/PhoenixPRO $ pip install -r requirements.txt 
+
+ACTUALIZACIÓN DEL SOFTWARE
+Ejecutar desde mi portátil linux:
+chema@upolnx: $ sudo rsync -ravz -e ssh PhoenixPRO chema@10.6.1.10:/home/chema/

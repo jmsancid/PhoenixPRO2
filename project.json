@@ -1,41 +1,1770 @@
 {
   "project": {
     "id": 1,
-    "name": "Descripción",
+    "name": "Hotel Rural SON VELL",
     "country": "España",
-    "region": "Comunidad",
-    "city": "Ciudad",
-    "address": "Dirección",
-    "zp": "Código postal",
+    "region": "Menorca, Islas Baleares",
+    "city": "Ciudadela",
+    "address": "Son Vell",
+    "zp": "",
     "buildings": {
       "1": {
         "id": 1,
-        "name": "Edificio 1",
+        "name": "Nave 1",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
         "dwellings": {
           "1": {
             "id": 1,
-            "name": "Vivienda 1",
+            "name": "Habitación 1.1",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Habitacion 1",
-                "groups": [1, 100100, 100101],
-                "sp": [0, 0, 0, 0, 0, 0],
-                "rt": [0, 0, 0, 0, 0, 0],
-                "st": [0, 0, 0, 0, 0, 0],
-                "aq": [0, 0, 0, 0, 0, 0],
-                "aqsp": [0, 0, 0, 0, 0, 0]
+                "name": "Dormitorio 1 H-1.1",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.1", "Dorm1.1"],
+                "iv_source": {"bus": 1, "device": 1, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 1, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 1, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
               },
               "2": {
+                "id": 2,
+                "name": "Baño 1 H-1.1",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.1", "B1.1"],
+                "iv_source": {"bus": 1, "device": 1, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 1, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 1, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "2": {
+            "id": 2,
+            "name": "Habitación 1.2",
+            "rooms": {
+              "1": {
                 "id": 1,
-                "name": "Habitacion 2",
-                "groups": [1, 100100, 100102],
-                "sp": [0, 0, 0, 0, 0, 0],
-                "rt": [0, 0, 0, 0, 0, 0],
-                "st": [0, 0, 0, 0, 0, 0],
-                "aq": [0, 0, 0, 0, 0, 0],
-                "aqsp": [0, 0, 0, 0, 0, 0]
-             }
+                "name": "Dormitorio 1 H-1.2",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.2", "Dorm1.2"],
+                "iv_source": {"bus": 1, "device": 2, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 2, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 2, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-1.2",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.2", "B1.2"],
+                "iv_source": {"bus": 1, "device": 2, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 2, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 2, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "3": {
+            "id": 1,
+            "name": "Habitación 1.3",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-1.3",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.3", "Dorm1.3"],
+                "iv_source": {"bus": 1, "device": 3, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 3, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 3, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-1.3",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.3", "B1.3"],
+                "iv_source": {"bus": 1, "device": 3, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 3, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 3, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "4": {
+            "id": 1,
+            "name": "Habitación 1.4",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-1.4",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.4", "Dorm1.4"],
+                "iv_source": {"bus": 1, "device": 4, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 4, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 4, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 4, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 4, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-1.4",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.4", "B1.4"],
+                "iv_source": {"bus": 1, "device": 4, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 4, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 4, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 4, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 4, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "5": {
+            "id": 1,
+            "name": "Habitación 1.5",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-1.5",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.5", "Dorm1.5"],
+                "iv_source": {"bus": 1, "device": 5, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 5, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 5, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 5, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 5, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-1.5",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.5", "B1.5"],
+                "iv_source": {"bus": 1, "device": 5, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 5, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 5, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 5, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 5, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "6": {
+            "id": 1,
+            "name": "Habitación 1.6",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-1.6",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.6", "Dorm1.6"],
+                "iv_source": {"bus": 1, "device": 6, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 6, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 6, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 6, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 6, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-1.6",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.6", "B1.6"],
+                "iv_source": {"bus": 1, "device": 6, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 6, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 6, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 6, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 6, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          }
+        }
+      },
+      "2": {
+        "id": 2,
+        "name": "Nave 2",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Habitación 2.1",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-2.1",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.1", "Dorm2.1"],
+                "iv_source": {"bus": 1, "device": 7, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 7, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 7, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 7, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 7, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-2.1",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.1", "B2.1"],
+                "iv_source": {"bus": 1, "device": 7, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 7, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 7, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 7, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 7, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "2": {
+            "id": 2,
+            "name": "Habitación 2.2",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-2.2",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.2", "Dorm2.2"],
+                "iv_source": {"bus": 1, "device": 8, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 8, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 8, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 8, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 8, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-2.2",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.2", "B2.2"],
+                "iv_source": {"bus": 1, "device": 8, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 8, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 8, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 8, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 8, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "3": {
+            "id": 3,
+            "name": "Habitación 2.3",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-2.3",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.3", "Dorm2.3"],
+                "iv_source": {"bus": 1, "device": 9, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 9, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 9, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 9, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 9, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-2.3",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.3", "B2.3"],
+                "iv_source": {"bus": 1, "device": 9, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 9, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 9, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 9, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 9, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "4": {
+            "id": 4,
+            "name": "Habitación 2.4",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-2.4",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.4", "Dorm2.4"],
+                "iv_source": {"bus": 1, "device": 10, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 10, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 10, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 10, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 10, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-2.4",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.4", "B2.4"],
+                "iv_source": {"bus": 1, "device": 10, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 10, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 10, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 10, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 10, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "5": {
+            "id": 5,
+            "name": "Habitación 2.5",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-2.5",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.5", "Dorm2.5"],
+                "iv_source": {"bus": 1, "device": 11, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 11, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 11, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 11, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 11, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-2.5",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.5", "B2.5"],
+                "iv_source": {"bus": 1, "device": 11, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 11, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 11, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 11, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 11, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "6": {
+            "id": 6,
+            "name": "Habitación 2.6",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-2.6",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.6", "Dorm2.6"],
+                "iv_source": {"bus": 1, "device": 12, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 12, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 12, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 12, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 12, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-2.6",
+                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.6", "B2.6"],
+                "iv_source": {"bus": 1, "device": 12, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 12, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 12, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 12, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 12, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          }
+        }
+      },
+      "3": {
+        "id": 3,
+        "name": "Nave 3",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Habitación 3.1",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-3.1",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.1", "Dorm3.1"],
+                "iv_source": {"bus": 1, "device": 13, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 13, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 13, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 13, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 13, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-3.1",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.1", "B3.1"],
+                "iv_source": {"bus": 1, "device": 13, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 13, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 13, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 13, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 13, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "2": {
+            "id": 2,
+            "name": "Habitación 3.2",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-3.2",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.2", "Dorm3.2"],
+                "iv_source": {"bus": 1, "device": 14, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 14, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 14, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 14, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 14, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-3.2",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.2", "B3.2"],
+                "iv_source": {"bus": 1, "device": 14, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 14, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 14, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 14, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 14, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "3": {
+            "id": 3,
+            "name": "Habitación 3.3",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-3.3",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.3", "Dorm3.3"],
+                "iv_source": {"bus": 1, "device": 15, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 15, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 15, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 15, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 15, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-3.3",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.3", "B3.3"],
+                "iv_source": {"bus": 1, "device": 15, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 15, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 15, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 15, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 15, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "4": {
+            "id": 4,
+            "name": "Habitación 3.4",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-3.4",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.4", "Dorm3.4"],
+                "iv_source": {"bus": 1, "device": 16, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 16, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 16, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 16, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 16, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-3.4",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.4", "B3.4"],
+                "iv_source": {"bus": 1, "device": 16, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 16, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 16, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 16, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 16, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "5": {
+            "id": 5,
+            "name": "Habitación 3.5",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-3.5",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.5", "Dorm3.5"],
+                "iv_source": {"bus": 1, "device": 17, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 17, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 17, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 17, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 17, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-3.5",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.5", "B3.5"],
+                "iv_source": {"bus": 1, "device": 17, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 17, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 17, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 17, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 17, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "6": {
+            "id": 6,
+            "name": "Habitación 3.6",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-3.6",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.6", "Dorm3.6"],
+                "iv_source": {"bus": 1, "device": 18, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 18, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 18, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 18, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 18, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-3.6",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.6", "B3.6"],
+                "iv_source": {"bus": 1, "device": 18, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 18, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 18, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 18, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 18, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          }
+        }
+      },
+      "4": {
+        "id": 4,
+        "name": "Nave 4",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Habitación 4.1",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-4.1",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.1", "Dorm4.1"],
+                "iv_source": {"bus": 1, "device": 19, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 19, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 19, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 19, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 19, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-4.1",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.1", "B4.1"],
+                "iv_source": {"bus": 1, "device": 19, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 19, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 19, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 19, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 19, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "2": {
+            "id": 2,
+            "name": "Habitación 4.2",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-4.2",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.2", "Dorm4.2"],
+                "iv_source": {"bus": 1, "device": 20, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 20, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 20, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 20, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 20, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-4.2",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.2", "B4.2"],
+                "iv_source": {"bus": 1, "device": 20, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 20, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 20, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 20, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 20, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "3": {
+            "id": 3,
+            "name": "Habitación 4.3",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-4.3",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.3", "Dorm4.3"],
+                "iv_source": {"bus": 1, "device": 21, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 21, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 21, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 21, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 21, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-4.3",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.3", "B4.3"],
+                "iv_source": {"bus": 1, "device": 21, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 21, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 21, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 21, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 21, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "4": {
+            "id": 4,
+            "name": "Habitación 4.4",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-4.4",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.4", "Dorm4.4"],
+                "iv_source": {"bus": 1, "device": 22, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 22, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 22, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 22, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 22, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-4.4",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.4", "B4.4"],
+                "iv_source": {"bus": 1, "device": 22, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 22, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 22, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 22, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 22, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "5": {
+            "id": 5,
+            "name": "Habitación 4.5",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-4.5",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.5", "Dorm4.5"],
+                "iv_source": {"bus": 1, "device": 23, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 23, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 23, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 23, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 23, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-4.5",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.5", "B4.5"],
+                "iv_source": {"bus": 1, "device": 23, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 23, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 23, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 23, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 23, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "6": {
+            "id": 6,
+            "name": "Habitación 4.6",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-4.6",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.6", "Dorm4.6"],
+                "iv_source": {"bus": 1, "device": 24, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 24, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 1, "device": 24, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 1, "device": 24, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 1, "device": 24, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-4.6",
+                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.6", "B4.6"],
+                "iv_source": {"bus": 1, "device": 24, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 1, "device": 24, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 1, "device": 24, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 1, "device": 24, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 1, "device": 24, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          }
+        }
+      },
+      "5": {
+        "id": 5,
+        "name": "Boyera 1",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Habitación BY1.1",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-BY1.1",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.1", "Dorm_BY1.1"],
+                "iv_source": {"bus": 2, "device": 25, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 25, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 25, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 25, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 25, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-BY1.1",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.1", "B_BY1.1"],
+                "iv_source": {"bus": 2, "device": 25, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 25, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 2, "device": 25, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 2, "device": 25, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 2, "device": 25, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "2": {
+            "id": 2,
+            "name": "Habitación BY1.2",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-BY1.2",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.2", "Dorm_BY1.2"],
+                "iv_source": {"bus": 2, "device": 26, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 26, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 26, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 26, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 26, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-BY1.2",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.2", "B_BY1.2"],
+                "iv_source": {"bus": 2, "device": 26, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 26, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 2, "device": 26, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 2, "device": 26, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 2, "device": 26, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "3": {
+            "id": 3,
+            "name": "Habitación BY1.3",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-BY1.3",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.3", "Dorm_BY1.3"],
+                "iv_source": {"bus": 2, "device": 27, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 27, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 27, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 27, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 27, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-BY1.3",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.3", "B_BY1.3"],
+                "iv_source": {"bus": 2, "device": 27, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 27, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 2, "device": 27, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 2, "device": 27, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 2, "device": 27, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "4": {
+            "id": 4,
+            "name": "Habitación BY1.4",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-BY1.4",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.4", "Dorm_BY1.4"],
+                "iv_source": {"bus": 2, "device": 28, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 28, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 28, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 28, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 28, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño 1 H-BY1.4",
+                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.4", "B_BY1.4"],
+                "iv_source": {"bus": 2, "device": 28, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 28, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 2, "device": 28, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 2, "device": 28, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 2, "device": 28, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          }
+        }
+      },
+      "6": {
+        "id": 6,
+        "name": "Boyera 2",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Restaurante",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Restaurante - Zona Cocina",
+                "groups": ["Son_Vell", "Boyeras", "Restaurante", "Zona_Cocina"],
+                "iv_source": {"bus": 2, "device": 29, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 29, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 29, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 29, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 29, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Restaurante - Zona Baño",
+                "groups": ["Son_Vell", "Boyeras", "Restaurante", "Zona_Baño"],
+                "iv_source": {"bus": 2, "device": 30, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 30, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 30, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 30, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 30, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          }
+        }
+      },
+      "7": {
+        "id": 7,
+        "name": "Casa Principal",
+        "onoff_source": {"bus": 1, "device": 1},
+        "iv_source": {"bus": 1, "device": 1},
+        "o_data": {
+          "te_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1}
+          },
+          "rh_source": {
+            "mbdev": {"bus": 1, "device": 1, "datatype": "ir", "adr": 13}
+          },
+          "aq_source": {}
+        },
+        "dwellings": {
+          "1": {
+            "id": 1,
+            "name": "Planta Baja Casa Principal",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "C.P.PB Baño Minusválidos",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C1_CPPB", "CPPB_B_Minusv"],
+                "iv_source": {"bus": 2, "device": 31, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 31, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 31, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "C.P.PB Salón TV",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C1_CPPB", "CPPB_SalonTV"],
+                "iv_source": {"bus": 2, "device": 31, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 31, "datatype": "hr", "adr": 1},
+                "rt_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 2},
+                "rh_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 14},
+                "st_source": {"bus": 2, "device": 31, "datatype": "di", "adr": 1},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "3": {
+                "id": 3,
+                "name": "C.P.PB Zona Común Escalera",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C1_CPPB", "CPPB_Escalera"],
+                "iv_source": {"bus": 2, "device": 31, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 31, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 31, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "4": {
+                "id": 4,
+                "name": "C.P.PB Actividades",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C1_CPPB", "CPPB_Actividades"],
+                "iv_source": {"bus": 2, "device": 31, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 31, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 2, "device": 31, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 2, "device": 31, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "5": {
+                "id": 5,
+                "name": "C.P.PB Oficina",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C2_CPPB", "CPPB_Oficina"],
+                "iv_source": {"bus": 2, "device": 32, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 32, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 32, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "6": {
+                "id": 6,
+                "name": "C.P.PB Recepción",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C2_CPPB", "CPPB_Recepcion"],
+                "iv_source": {"bus": 2, "device": 32, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 32, "datatype": "hr", "adr": 1},
+                "rt_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 2},
+                "rh_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 14},
+                "st_source": {"bus": 2, "device": 32, "datatype": "di", "adr": 1},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "7": {
+                "id": 7,
+                "name": "C.P.PB Hall",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C2_CPPB", "CPPB_Hall"],
+                "iv_source": {"bus": 2, "device": 32, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 32, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 32, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "8": {
+                "id": 8,
+                "name": "C.P.PB Sala de Lectura",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C2_CPPB", "CPPB_Sala_Lect"],
+                "iv_source": {"bus": 2, "device": 32, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 32, "datatype": "hr", "adr": 4},
+                "rt_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 5},
+                "rh_source": {"bus": 2, "device": 32, "datatype": "ir", "adr": 17},
+                "st_source": {"bus": 2, "device": 32, "datatype": "di", "adr": 4},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "9": {
+                "id": 9,
+                "name": "C.P.PB Aseos Salon 3",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C3_CPPB", "CPPB_Aseos_S3"],
+                "iv_source": {"bus": 2, "device": 33, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 33, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 33, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 33, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 33, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "10": {
+                "id": 10,
+                "name": "C.P.PB Salón 3",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C3_CPPB", "CPPB_Salon3"],
+                "iv_source": {"bus": 2, "device": 33, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 33, "datatype": "hr", "adr": 1},
+                "rt_source": {"bus": 2, "device": 33, "datatype": "ir", "adr": 2},
+                "rh_source": {"bus": 2, "device": 33, "datatype": "ir", "adr": 14},
+                "st_source": {"bus": 2, "device": 33, "datatype": "di", "adr": 1},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "11": {
+                "id": 11,
+                "name": "C.P.PB Salon 1 Este",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C3_CPPB", "CPPB_Salon1_E"],
+                "iv_source": {"bus": 2, "device": 33, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 33, "datatype": "hr", "adr": 4},
+                "rt_source": {"bus": 2, "device": 33, "datatype": "ir", "adr": 5},
+                "rh_source": {"bus": 2, "device": 33, "datatype": "ir", "adr": 17},
+                "st_source": {"bus": 2, "device": 33, "datatype": "di", "adr": 4},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "12": {
+                "id": 12,
+                "name": "C.P.PB Salón 1 - Oeste",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C4_CPPB", "CPPB_Salon1_W"],
+                "iv_source": {"bus": 2, "device": 34, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 34, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 34, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 34, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 34, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "13": {
+                "id": 13,
+                "name": "C.P.PB Salón 2 - Bar",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C4_CPPB", "CPPB_Bar"],
+                "iv_source": {"bus": 2, "device": 34, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 34, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 34, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 34, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 34, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "14": {
+                "id": 14,
+                "name": "C.P.PB Aseo Bar",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_Baja", "C4_CPPB", "CPPB_Aseo_Bar"],
+                "iv_source": {"bus": 2, "device": 34, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 34, "datatype": "hr", "adr": 5},
+                "rt_source": {"bus": 2, "device": 34, "datatype": "ir", "adr": 6},
+                "rh_source": {"bus": 2, "device": 34, "datatype": "ir", "adr": 18},
+                "st_source": {"bus": 2, "device": 34, "datatype": "di", "adr": 5},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "2": {
+            "id": 2,
+            "name": "Habitación 1 Planta Primera Casa Principal",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-CPP1.1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.1", "Dorm_CPP1.1"],
+                "iv_source": {"bus": 2, "device": 36, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 36, "datatype": "hr", "adr": 1},
+                "rt_source": {"bus": 2, "device": 36, "datatype": "ir", "adr": 2},
+                "rh_source": {"bus": 2, "device": 36, "datatype": "ir", "adr": 14},
+                "st_source": {"bus": 2, "device": 36, "datatype": "di", "adr": 1},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño H-CPP1.1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.1", "B_CPP1.1"],
+                "iv_source": {"bus": 2, "device": 36, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 36, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 36, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 36, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 36, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "3": {
+            "id": 3,
+            "name": "Habitación 2 Planta Primera Casa Principal",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-CPP1.2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.2", "Dorm_CPP1.2"],
+                "iv_source": {"bus": 2, "device": 38, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 38, "datatype": "hr", "adr": 1},
+                "rt_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 2},
+                "rh_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 14},
+                "st_source": {"bus": 2, "device": 38, "datatype": "di", "adr": 1},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño H-CPP1.2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.2", "B_CPP1.2"],
+                "iv_source": {"bus": 2, "device": 38, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 38, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 38, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "3": {
+                "id": 3,
+                "name": "Vestibulo Norte CPP1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Z_Comunes_CPP1"],
+                "iv_source": {"bus": 2, "device": 38, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 38, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 38, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "4": {
+            "id": 4,
+            "name": "Habitación 3 Planta Primera Casa Principal",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-CPP1.3",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.3", "Dorm_CPP1.3"],
+                "iv_source": {"bus": 2, "device": 35, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 35, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 2, "device": 35, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Sala H-CPP1.3",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.3", "Sala_CPP1.3"],
+                "iv_source": {"bus": 2, "device": 35, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 35, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 35, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "3": {
+                "id": 3,
+                "name": "Baño H-CPP1.3",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.3", "B_CPP1.3"],
+                "iv_source": {"bus": 2, "device": 35, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 35, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 35, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "5": {
+            "id": 5,
+            "name": "Habitación 4 Planta Primera Casa Principal",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 H-CPP1.4",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.4", "Dorm_CPP1.4"],
+                "iv_source": {"bus": 2, "device": 37, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 37, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 37, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Sala H-CPP1.3",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.4", "Sala_CPP1.4"],
+                "iv_source": {"bus": 2, "device": 37, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 37, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 37, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "3": {
+                "id": 3,
+                "name": "Baño H-CPP1.3",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.4", "B_CPP1.4"],
+                "iv_source": {"bus": 2, "device": 37, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 37, "datatype": "hr", "adr": 6},
+                "rt_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 7},
+                "rh_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 19},
+                "st_source": {"bus": 2, "device": 37, "datatype": "di", "adr": 6},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "4": {
+                "id": 4,
+                "name": "Vestibulo Sur CPP1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Z_Comunes_CPP1"],
+                "iv_source": {"bus": 2, "device": 38, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 38, "datatype": "hr", "adr": 4},
+                "rt_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 5},
+                "rh_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 17},
+                "st_source": {"bus": 2, "device": 38, "datatype": "di", "adr": 4},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "6": {
+            "id": 6,
+            "name": "Habitación 5 Suite Planta Segunda Casa Principal",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Vestidor - HS5-CPP2.1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "Vest_CPP2.1"],
+                "iv_source": {"bus": 2, "device": 39, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 39, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 39, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 39, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 39, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Baño Principal HS5-CPP2.1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "BPpal_CPP2.1"],
+                "iv_source": {"bus": 2, "device": 39, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 39, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 39, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 39, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 39, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "3": {
+                "id": 3,
+                "name": "Estudio HS5-CPP2.1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "Vest_CPP2.1"],
+                "iv_source": {"bus": 2, "device": 42, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 42, "datatype": "hr", "adr": 4},
+                "rt_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 5},
+                "rh_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 17},
+                "st_source": {"bus": 2, "device": 42, "datatype": "di", "adr": 4},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "4": {
+                "id": 4,
+                "name": "Baño B HS5-CPP2.1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "B2_CPP2.1"],
+                "iv_source": {"bus": 2, "device": 42, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 42, "datatype": "hr", "adr": 3},
+                "rt_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 4},
+                "rh_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 16},
+                "st_source": {"bus": 2, "device": 42, "datatype": "di", "adr": 3},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "5": {
+                "id": 5,
+                "name": "Salón HS5-CPP2.1",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "Salon_CPP2.1"],
+                "iv_source": {"bus": 2, "device": 42, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 42, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 42, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
+          },
+          "7": {
+            "id": 7,
+            "name": "Habitación 6 Suite Planta Segunda Casa Principal",
+            "rooms": {
+              "1": {
+                "id": 1,
+                "name": "Dormitorio 1 - HS6-CPP2.2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Dorm_CPP2.2"],
+                "iv_source": {"bus": 2, "device": 41, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 41, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 41, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 41, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 41, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "2": {
+                "id": 2,
+                "name": "Jacuzzi HS6-CPP2.2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Jacuzzi_CPP2.2"],
+                "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 0},
+                "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 1},
+                "rh_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 13},
+                "st_source": {"bus": 2, "device": 40, "datatype": "di", "adr": 0},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "3": {
+                "id": 3,
+                "name": "Salón HS6-CPP2.2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Salon_CPP2.2"],
+                "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 2},
+                "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 3},
+                "rh_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 15},
+                "st_source": {"bus": 2, "device": 40, "datatype": "di", "adr": 2},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "4": {
+                "id": 4,
+                "name": "Estudio HS6-CPP2.2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Estudio_CPP2.2"],
+                "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 5},
+                "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 6},
+                "rh_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 18},
+                "st_source": {"bus": 2, "device": 40, "datatype": "di", "adr": 5},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "5": {
+                "id": 5,
+                "name": "Baño Estudio HS6-CPP2.2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "B2_CPP2.2"],
+                "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 7},
+                "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 8},
+                "rh_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 20},
+                "st_source": {"bus": 2, "device": 40, "datatype": "di", "adr": 7},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              },
+              "6": {
+                "id": 6,
+                "name": "Distribuidor CPP2",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Z_Comunes_CPP2"],
+                "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
+                "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 9},
+                "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 10},
+                "rh_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 22},
+                "st_source": {"bus": 2, "device": 40, "datatype": "di", "adr": 9},
+                "af": 0,
+                "aq_source": {},
+                "aqsp_source": {},
+                "offsetairref": 0.5,
+                "offsetaircal": -1.0
+              }
+            }
           }
         }
       }
@@ -43,40 +1772,1194 @@
     "buses": {
       "1": {
         "id": 1,
-        "name": "bus 1",
+        "name": "Bus Naves",
         "ip": [127,0,0,1],
-        "port": "ttyUSB0",
+        "port": 1,
         "devices": {
           "1": {
             "id": 1,
-            "name": "Dispositivo 1 del bus 1",
-            "sl": 1,
-            "type": "generator",
-            "brand": "me"
+            "name": "Centralita UFHC Hab 1.1",
+            "groups": ["Hab_1.1"],
+            "slave": 11,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
           },
           "2": {
             "id": 2,
-            "name": "Dispositivo 2 del bus 1",
-            "sl": 2,
-            "type": "fancoil",
-            "brand": "sistena"
+            "name": "Centralita UFHC Hab 1.2",
+            "groups": ["Hab_1.2"],
+            "slave": 12,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "3": {
+            "id": 3,
+            "name": "Centralita UFHC Hab 1.3",
+            "groups": ["Hab_1.3"],
+            "slave": 13,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "4": {
+            "id": 4,
+            "name": "Centralita UFHC Hab 1.4",
+            "groups": ["Hab_1.4"],
+            "slave": 14,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "5": {
+            "id": 5,
+            "name": "Centralita UFHC Hab 1.5",
+            "groups": ["Hab_1.5"],
+            "slave": 15,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "6": {
+            "id": 6,
+            "name": "Centralita UFHC Hab 1.6",
+            "groups": ["Hab_1.6"],
+            "slave": 16,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "7": {
+            "id": 7,
+            "name": "Centralita UFHC Hab 2.1",
+            "groups": ["Hab_2.1"],
+            "slave": 21,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "8": {
+            "id": 8,
+            "name": "Centralita UFHC Hab 2.2",
+            "groups": ["Hab_2.2"],
+            "slave": 22,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "9": {
+            "id": 9,
+            "name": "Centralita UFHC Hab 2.3",
+            "groups": ["Hab_2.3"],
+            "slave": 23,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "10": {
+            "id": 10,
+            "name": "Centralita UFHC Hab 2.4",
+            "groups": ["Hab_2.4"],
+            "slave": 24,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "11": {
+            "id": 11,
+            "name": "Centralita UFHC Hab 2.5",
+            "groups": ["Hab_2.5"],
+            "slave": 25,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "12": {
+            "id": 12,
+            "name": "Centralita UFHC Hab 2.6",
+            "groups": ["Hab_2.6"],
+            "slave": 26,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "13": {
+            "id": 13,
+            "name": "Centralita UFHC Hab 3.1",
+            "groups": ["Hab_3.1"],
+            "slave": 31,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "14": {
+            "id": 14,
+            "name": "Centralita UFHC Hab 3.2",
+            "groups": ["Hab_3.2"],
+            "slave": 32,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "15": {
+            "id": 15,
+            "name": "Centralita UFHC Hab 3.3",
+            "groups": ["Hab_3.3"],
+            "slave": 33,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "16": {
+            "id": 16,
+            "name": "Centralita UFHC Hab 3.4",
+            "groups": ["Hab_3.4"],
+            "slave": 34,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "17": {
+            "id": 17,
+            "name": "Centralita UFHC Hab 3.5",
+            "groups": ["Hab_3.5"],
+            "slave": 35,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "18": {
+            "id": 18,
+            "name": "Centralita UFHC Hab 3.6",
+            "groups": ["Hab_3.6"],
+            "slave": 36,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "19": {
+            "id": 19,
+            "name": "Centralita UFHC Hab 4.1",
+            "groups": ["Hab_4.1"],
+            "slave": 41,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "20": {
+            "id": 20,
+            "name": "Centralita UFHC Hab 4.2",
+            "groups": ["Hab_4.2"],
+            "slave": 42,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "21": {
+            "id": 21,
+            "name": "Centralita UFHC Hab 4.3",
+            "groups": ["Hab_4.3"],
+            "slave": 43,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "22": {
+            "id": 22,
+            "name": "Centralita UFHC Hab 4.4",
+            "groups": ["Hab_4.4"],
+            "slave": 44,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "23": {
+            "id": 23,
+            "name": "Centralita UFHC Hab 4.5",
+            "groups": ["Hab_4.5"],
+            "slave": 45,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "24": {
+            "id": 24,
+            "name": "Centralita UFHC Hab 4.6",
+            "groups": ["Hab_4.6"],
+            "slave": 46,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "25": {
+            "id": 25,
+            "name": "Centralita UFHC Hab BY1.1",
+            "groups": ["Hab_BY1.1"],
+            "slave": 51,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "26": {
+            "id": 26,
+            "name": "Centralita UFHC Hab BY1.2",
+            "groups": ["Hab_BY1.2"],
+            "slave": 52,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "27": {
+            "id": 27,
+            "name": "Centralita UFHC Hab BY1.3",
+            "groups": ["Hab_BY1.3"],
+            "slave": 53,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "28": {
+            "id": 28,
+            "name": "Centralita UFHC Hab BY1.4",
+            "groups": ["Hab_BY1.4"],
+            "slave": 54,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "29": {
+            "id": 29,
+            "name": "Centralita 1 UFHC Restaurante - zona Cocina",
+            "groups": ["Zona_Cocina"],
+            "slave": 61,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "30": {
+            "id": 30,
+            "name": "Centralita 2 UFHC Restaurante - zona Baño",
+            "groups": ["Zona_Baño"],
+            "slave": 62,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "31": {
+            "id": 31,
+            "name": "Centralita 1 UFHC PB Casa Ppal (TV)",
+            "groups": ["C1_CPPB"],
+            "slave": 71,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "32": {
+            "id": 32,
+            "name": "Centralita 2 UFHC PB Casa Ppal (Recepcion)",
+            "groups": ["C2_CPPB"],
+            "slave": 72,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "33": {
+            "id": 33,
+            "name": "Centralita 3 UFHC PB Casa Ppal (Salón 3)",
+            "groups": ["C3_CPPB"],
+            "slave": 73,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "34": {
+            "id": 34,
+            "name": "Centralita 4 UFHC PB Casa Ppal (Bar)",
+            "groups": ["C4_CPPB"],
+            "slave": 74,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "35": {
+            "id": 35,
+            "name": "Centralita UFHC Habitación 3 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.3"],
+            "slave": 75,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "36": {
+            "id": 36,
+            "name": "Centralita UFHC Habitación 1 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.1"],
+            "slave": 76,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "37": {
+            "id": 37,
+            "name": "Centralita UFHC Habitación 4 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.4"],
+            "slave": 77,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "38": {
+            "id": 38,
+            "name": "Centralita UFHC Habitación 2 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.2"],
+            "slave": 78,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "39": {
+            "id": 39,
+            "name": "Centralita 1 UFHC Suite 5 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.1"],
+            "slave": 79,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "42": {
+            "id": 42,
+            "name": "Centralita 2 UFHC Suite 5 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.1"],
+            "slave": 82,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "41": {
+            "id": 41,
+            "name": "Centralita 1 UFHC Suite 6 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.2"],
+            "slave": 81,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "40": {
+            "id": 40,
+            "name": "Centralita 2 UFHC Suite 6 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.2"],
+            "slave": 82,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "43": {
+            "id": 43,
+            "name": "Recuperador Hab 1.1",
+            "groups": ["Hab_1.1"],
+            "slave": 111,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "44": {
+            "id": 44,
+            "name": "Recuperador Hab 1.2",
+            "groups": ["Hab_1.2"],
+            "slave": 112,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "45": {
+            "id": 45,
+            "name": "Recuperador Hab 1.3",
+            "groups": ["Hab_1.3"],
+            "slave": 113,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "46": {
+            "id": 46,
+            "name": "Recuperador Hab 1.4",
+            "groups": ["Hab_1.4"],
+            "slave": 114,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "47": {
+            "id": 47,
+            "name": "Recuperador Hab 1.5",
+            "groups": ["Hab_1.5"],
+            "slave": 115,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "48": {
+            "id": 48,
+            "name": "Recuperador Hab 1.6",
+            "groups": ["Hab_1.6"],
+            "slave": 116,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "49": {
+            "id": 49,
+            "name": "Recuperador Hab 2.1",
+            "groups": ["Hab_2.1"],
+            "slave": 121,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "50": {
+            "id": 50,
+            "name": "Recuperador Hab 2.2",
+            "groups": ["Hab_2.2"],
+            "slave": 122,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "51": {
+            "id": 51,
+            "name": "Recuperador Hab 2.3",
+            "groups": ["Hab_2.3"],
+            "slave": 123,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "52": {
+            "id": 52,
+            "name": "Recuperador Hab 2.4",
+            "groups": ["Hab_2.4"],
+            "slave": 124,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "53": {
+            "id": 53,
+            "name": "Recuperador Hab 2.5",
+            "groups": ["Hab_2.5"],
+            "slave": 125,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "54": {
+            "id": 54,
+            "name": "Recuperador Hab 2.6",
+            "groups": ["Hab_2.6"],
+            "slave": 126,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "55": {
+            "id": 55,
+            "name": "Recuperador Hab 3.1",
+            "groups": ["Hab_3.1"],
+            "slave": 131,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "56": {
+            "id": 56,
+            "name": "Recuperador Hab 3.2",
+            "groups": ["Hab_3.2"],
+            "slave": 132,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "57": {
+            "id": 57,
+            "name": "Recuperador Hab 3.3",
+            "groups": ["Hab_3.3"],
+            "slave": 133,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "58": {
+            "id": 58,
+            "name": "Recuperador Hab 3.4",
+            "groups": ["Hab_3.4"],
+            "slave": 134,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "59": {
+            "id": 59,
+            "name": "Recuperador Hab 3.5",
+            "groups": ["Hab_3.5"],
+            "slave": 135,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "60": {
+            "id": 60,
+            "name": "Recuperador Hab 3.6",
+            "groups": ["Hab_3.6"],
+            "slave": 136,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "61": {
+            "id": 61,
+            "name": "Recuperador Hab 4.1",
+            "groups": ["Hab_4.1"],
+            "slave": 141,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "62": {
+            "id": 62,
+            "name": "Recuperador Hab 4.2",
+            "groups": ["Hab_4.2"],
+            "slave": 142,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "63": {
+            "id": 63,
+            "name": "Recuperador Hab 4.3",
+            "groups": ["Hab_4.3"],
+            "slave": 143,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "64": {
+            "id": 64,
+            "name": "Recuperador Hab 4.4",
+            "groups": ["Hab_4.4"],
+            "slave": 144,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "65": {
+            "id": 65,
+            "name": "Recuperador Hab 4.5",
+            "groups": ["Hab_4.5"],
+            "slave": 145,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "66": {
+            "id": 66,
+            "name": "Recuperador Hab 4.6",
+            "groups": ["Hab_4.6"],
+            "slave": 146,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "67": {
+            "id": 67,
+            "name": "Recuperador Hab BY1.1",
+            "groups": ["Hab_BY1.1"],
+            "slave": 151,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "68": {
+            "id": 68,
+            "name": "Recuperador Hab BY1.2",
+            "groups": ["Hab_BY1.2"],
+            "slave": 152,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "69": {
+            "id": 69,
+            "name": "Recuperador Hab BY1.3",
+            "groups": ["Hab_BY1.3"],
+            "slave": 153,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "70": {
+            "id": 70,
+            "name": "Recuperador Hab BY1.4",
+            "groups": ["Hab_BY1.4"],
+            "slave": 154,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "71": {
+            "id": 71,
+            "name": "Recuperador PB Casa Ppal (TV)",
+            "groups": ["Planta_Baja"],
+            "slave": 172,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "72": {
+            "id": 72,
+            "name": "Recuperador PB Casa Ppal (Recepcion)",
+            "groups": ["Planta_Baja"],
+            "slave": 171,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "73": {
+            "id": 73,
+            "name": "Recuperador Habitación 1 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.1"],
+            "slave": 175,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "74": {
+            "id": 74,
+            "name": "Recuperador Habitación 2 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.2"],
+            "slave": 176,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "75": {
+            "id": 75,
+            "name": "Recuperador Habitación 3 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.3"],
+            "slave": 177,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "76": {
+            "id": 76,
+            "name": "Recuperador Habitación 4 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.4"],
+            "slave": 178,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "77": {
+            "id": 77,
+            "name": "Recuperador Suite 5 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.1"],
+            "slave": 179,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "78": {
+            "id": 78,
+            "name": "Recuperador Suite 6 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.2"],
+            "slave": 180,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "79": {
+            "id": 79,
+            "name": "Recuperador Zonas Comunes P2 - Casa Principal",
+            "groups": ["Z_Comunes_CPP2"],
+            "slave": 181,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "80": {
+            "id": 80,
+            "name": "Recuperador Zonas Comunes P1 - Casa Principal",
+            "groups": ["Z_Comunes_CPP1"],
+            "slave": 182,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "81": {
+            "id": 81,
+            "name": "Fancoil 1 Restaurante Zona Cocina",
+            "groups": ["Zona_Cocina"],
+            "slave": 161,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "82": {
+            "id": 82,
+            "name": "Fancoil 2 Restaurante Zona Cocina",
+            "groups": ["Zona_Cocina"],
+            "slave": 162,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "83": {
+            "id": 83,
+            "name": "Fancoil Restaurante Zona Baño",
+            "groups": ["Zona_Baño"],
+            "slave": 163,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "84": {
+            "id": 84,
+            "name": "Fancoil Planta Baja",
+            "groups": ["Planta_Baja"],
+            "slave": 174,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "85": {
+            "id": 85,
+            "name": "Controlador tª impulsion agua Nave 1",
+            "groups": ["Nave_1"],
+            "slave": 201,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "86": {
+            "id": 86,
+            "name": "Controlador tª impulsion agua Nave 2",
+            "groups": ["Nave_2"],
+            "slave": 202,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "87": {
+            "id": 87,
+            "name": "Controlador tª impulsion agua Nave 3",
+            "groups": ["Nave_3"],
+            "slave": 203,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "88": {
+            "id": 88,
+            "name": "Controlador tª impulsion agua Nave 4",
+            "groups": ["Nave_4"],
+            "slave": 204,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "89": {
+            "id": 89,
+            "name": "Controlador tª impulsion agua Boyera 1",
+            "groups": ["Boyera_1"],
+            "slave": 205,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "90": {
+            "id": 90,
+            "name": "Controlador tª impulsion agua Restaurante",
+            "groups": ["Restaurante"],
+            "slave": 206,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "91": {
+            "id": 91,
+            "name": "Controlador tª impulsion agua Casa Principal",
+            "groups": ["Casa_Principal"],
+            "slave": 207,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
           }
         }
-        }
-      }
-    },
-    "generators": {
-      "1": {
-        "id": 1,
-        "name": "Generador 1",
-        "brand": "me"
-      }
-    },
-    "fancoils": {
-      "1": {
-        "id": 1,
-        "name": "Fancoil 1",
-        "brand": "sistena"
       }
     }
   }

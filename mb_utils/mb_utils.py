@@ -266,6 +266,9 @@ async def read_all_buses(id_lectura: int = 0):
                 continue
             # lectura_actual["buses"][idbus][iddevice]["data"] = {}
             for regtype_readings in device_readings:
+                if regtype_readings is None:
+                    print(f"DEBBUGGING {__file__}: El dispositivo {device.name} no tiene registros: {regtype_readings}")
+                    continue  # JSC Modification on SETUP
                 for regtype, dev_response in regtype_readings.items():
                     lectura_actual["buses"][idbus][iddevice]["data"][regtype] = dev_response
 

@@ -2813,6 +2813,45 @@ class Fancoil(phi.MBDevice):
         return dev_info
 
 
+class DataSource(phi.MBDevice):
+    """
+    Dispositivo ModBus de sólo lectura.
+    Se utiliza para integrar dispositivos de los que sólo se necesita leer algún registro
+    NOTA: LOS ATRIBUTOS DE ESTA CLASE DEBEN COINCIDIR CON LAS CLAVES DEL JSON DATASOURCE.JSON EN LA
+    CARPETA DE PROJECT_ELEMENTS.
+    Param: device: dispositivo ModBus con el mapa de registros a mapear
+    """
+
+    def __init__(self,
+                 bus_id: str = "",
+                 device_id: str = "",
+                 name: str = "",
+                 groups: [phi.List, None] = None,
+                 brand: str = "",
+                 model: str = ""):
+        super().__init__()
+        if groups is None:
+            groups = []
+        self.bus_id = bus_id
+        self.device_id = device_id
+        self.name = name
+        self.groups = groups
+        self.brand = brand
+        self.model = model
+
+    async def update(self):
+        """
+        Se actualizan los valores leídos del DataSource
+        """
+        raise NotImplementedError(f"ERROR {__file__}. Método UPDATE no implementado en DataSources")
+    def __repr__(self):
+        """
+        Para imprimir la información actual del DataSource
+        :return:
+        """
+        raise NotImplementedError(f"ERROR {__file__}. Método __REPR__ no implementado en DataSources")
+
+
 # DICCIONARIO CON LAS CLASES DE DISPOSITIVOS DEL SISTEMA
 SYSTEM_CLASSES = {
     "mbdevice": phi.MBDevice,
@@ -2823,5 +2862,6 @@ SYSTEM_CLASSES = {
     "fancoil": Fancoil,
     "split": Split,
     "heatrecoveryunit": HeatRecoveryUnit,
-    "airzonemanager": AirZoneManager
+    "airzonemanager": AirZoneManager,
+    "datasource": DataSource
 }
