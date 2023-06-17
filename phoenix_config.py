@@ -28,7 +28,7 @@ mbregmaps: Tuple = ()  # Tupla de objetos tipo mapa de registros modbus ModbusRe
 class MBDevice:
     port: Union[None, str] = None  # Puerto de comunicaciones
     name: Union[None, str] = ""  # Descripción del dispositivo en el proyecto
-    slave: Union[None, int] = None  # Dirección en en el ModBus
+    slave: Union[None, int] = None  # Dirección en el ModBus
     baudrate: int = 9600
     databits: int = 8
     parity: Union[str, int] = PARITY_EVEN  # Por defecto, paridad PAR
@@ -87,33 +87,43 @@ class MBDevice:
         else:
             readings = [(adr, quan)]
         total_readings = []
-        try:
-            self.conn = await self.connect()
-            for reading in readings:
-                if mbop not in [cst.READ_COILS,
-                                cst.READ_DISCRETE_INPUTS,
-                                cst.READ_HOLDING_REGISTERS,
-                                cst.READ_INPUT_REGISTERS]:
-                    print(f'Operación de lectura, {mbop}, no válida')
-                    return
-                # print(f"lectura Modbus\n\t{self.__dict__}")
-                print(f'{datetime.now()} -\tIntentando leer {reading[1]} registros desde el registro {reading[0]} '
-                      f'del esclavo {self.slave} con la operación {mbop} en el puerto {self.port}')
-                tries = 0
-                while tries < READING_TRIES:
+        # try:
+        self.conn = await self.connect()
+        print("\n... abriendo conexión con el dispositivo Modbus")
+        for reading in readings:
+            if mbop not in [cst.READ_COILS,
+                            cst.READ_DISCRETE_INPUTS,
+                            cst.READ_HOLDING_REGISTERS,
+                            cst.READ_INPUT_REGISTERS]:
+                print(f'Operación de lectura, {mbop}, no válida')
+                return
+            # print(f"lectura Modbus\n\t{self.__dict__}")
+            tries = 0
+            # self.conn = await self.connect()
+            while tries < READING_TRIES:
+                try:
+                    tries += 1
+                    print(f'{datetime.now()} -\tIntentando leer {reading[1]} registros desde el registro {reading[0]} '
+                          f'del esclavo {self.slave} con la operación {mbop} en el '
+                          f'puerto {self.port} ==> Intento {tries}')
                     reading = self.conn.execute(self.slave, mbop, reading[0], reading[1])
                     if reading:
                         break
                     sleep(0.5)
-                    tries += 1
-                total_readings += reading
-            return tuple(total_readings)
-        except Exception as e:
-            print(f'{str(datetime.now())} -\tNo se ha podido realizar la lectura de {quan} registros desde la '
-                  f'dirección {adr} del esclavo {self.slave} con la operación {mbop} en el puerto {self.port}\n{e}')
-            return
-        finally:
-            self.conn.close()
+                except Exception as e:
+                    print(f"Error lectura intento {tries}\n{e}")
+
+            else:
+                print(f'{str(datetime.now())} -\tNo se ha podido realizar la lectura de {quan} registros desde la '
+                      f'dirección {adr} del esclavo {self.slave} con la operación {mbop} en el puerto {self.port}\n')
+                print("... cerrando conexión con el dispositivo Modbus\n")
+                self.conn.close()
+                return
+
+            total_readings += reading
+        print("... cerrando conexión con el dispositivo Modbus\n")
+        self.conn.close()
+        return tuple(total_readings)
 
     async def write(self, mbop: int, adr: int, *output_value: Union[int, Tuple[int], List[int]]):
 

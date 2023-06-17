@@ -58,8 +58,8 @@ class Generator(phi.MBDevice):
         self.dhwsp = None  # Consigna ACS
         self.iv_source = None  # Registro para leer el modo actual de funcionamiento, calefacción o refrigeración
         self.iv_target = None  # Registro para fijar el modo actual de funcionamiento, calefacción o refrigeración
-        self.heating_value = None # Valor para pasar el generador a calefacción en iv_target
-        self.cooling_value = None # Valor para pasar el generador a refrigeración en iv_target
+        self.heating_value = None  # Valor para pasar el generador a calefacción en iv_target
+        self.cooling_value = None  # Valor para pasar el generador a refrigeración en iv_target
         self.iv = None  # Modo de funcionamiento del sistema Phoenix (calefacción: 0 o refrigeración: 1)
         self.manual_iv_mode = 1  # Si vale 0, el modo calefacción refrigereación de la bomba de calor puede fijarse
         # en la Web
@@ -88,7 +88,6 @@ class Generator(phi.MBDevice):
         self.cop = None
         self.eer_source = None
         self.eer = None
-
 
     async def onoff(self, new_st_value: [int, None] = None):
         """
@@ -125,8 +124,7 @@ class Generator(phi.MBDevice):
 
         return self.onoff_st
 
-
-    async def iv_mode(self, new_iv_mode:[int, None] = None):
+    async def iv_mode(self, new_iv_mode: [int, None] = None):
         """
         Fija el modo iv del generador.
         EN PHOENIX MODO CALEFACCIÓN=0 Y MODO REFRIGERACIÓN=1.
@@ -174,12 +172,11 @@ class Generator(phi.MBDevice):
             res = await set_value(target, self.cooling_value)
             self.iv = phi.COOLING
         else:
-            print(f"ERROR {__file__}\m\tValor no válido, {new_iv_mode}, para modo Calefacción/Refrigeración "
+            print(f"ERROR {__file__}\n\tValor no válido, {new_iv_mode}, para modo Calefacción/Refrigeración "
                   f"en {self.name}. Ver JSON {self.brand}-{self.model}.JSON")
             self.iv = current_iv_mode
 
         return self.iv
-
 
     async def set_sp(self, new_sp: [int, float, None] = None) -> [int, None]:
         """
@@ -211,7 +208,6 @@ class Generator(phi.MBDevice):
                 res = await set_value(source, new_sp)  # Escritura Modbus
                 self.sp = new_sp
         return self.sp
-
 
     async def set_dhwsp(self, new_dhwsp: [int, None] = None) -> [int, None]:
         """
@@ -245,7 +241,6 @@ class Generator(phi.MBDevice):
             self.dhwsp = current_dhwsp
 
         return self.dhwsp
-
 
     async def get_generator_info(self):
         """
@@ -285,7 +280,6 @@ class Generator(phi.MBDevice):
                 self.__setattr__(v, current_attr_val)
                 print(f"{self.name}. Valor de {v}:\t{current_attr_val}")
         return 1
-
 
     async def update(self):
         """
@@ -343,10 +337,10 @@ class Generator(phi.MBDevice):
         for idx in range(3):
             circuito = idx + 1
             st = self.__getattribute__(onoff_st[idx])
-            iv =self.__getattribute__(iv_modes[idx])
-            sp =self.__getattribute__(setpoints[idx])
-            ti =self.__getattribute__(t_imps[idx])
-            valv =self.__getattribute__(valv_st[idx])
+            iv = self.__getattribute__(iv_modes[idx])
+            sp = self.__getattribute__(setpoints[idx])
+            ti = self.__getattribute__(t_imps[idx])
+            valv = self.__getattribute__(valv_st[idx])
             dev_info += f"\nCIRCUITO {circuito}"
             dev_info += f"\n=========="
             dev_info += f"\n\tEstado bomba: {onoff_values.get(st)}"
@@ -355,7 +349,7 @@ class Generator(phi.MBDevice):
             dev_info += f"\n\tTemperatura de impulusión: {ti} ºC"
             dev_info += f"\n\tApertura válvula: {valv}%"
 
-        dev_info += f"\n\nEstado salida digital 4 {active_values.get(self.get_st4())}"
+        # dev_info += f"\n\nEstado salida digital 4 {active_values.get(self.get_st4())}"
         return dev_info
 
 
@@ -396,7 +390,9 @@ class UFHCController(phi.MBDevice):
         for attr in self.attr_list:
             self.__setattr__(attr, None)
         self.iv_source = None  # Origen del dato para el modo calefacción / refrigeración
+        self.iv = None
         self.pump_source = None
+        self.pump = None
         self.ch1_source = None
         self.ch1 = {"sp": None, "rt": None, "rh": None, "ft": None, "st": None, "coff": None}
         self.ch2_source = None
@@ -422,7 +418,7 @@ class UFHCController(phi.MBDevice):
         self.ch12_source = None
         self.ch12 = {"sp": None, "rt": None, "rh": None, "ft": None, "st": None, "coff": None}
 
-    async def iv_mode(self, new_iv_mode:[int, None] = None):
+    async def iv_mode(self, new_iv_mode: [int, None] = None):
         """
         Fija el modo iv de la centralita de suelo radiante.
         Si new_iv_mode es None, devuelve el modo actual
@@ -443,7 +439,6 @@ class UFHCController(phi.MBDevice):
             self.iv = new_iv_mode
         return self.iv
 
-
     async def pump_st(self):
         """
         Devuelve el estado del relé de bomba.
@@ -462,7 +457,6 @@ class UFHCController(phi.MBDevice):
         self.pump = get_value(source)
 
         return self.pump
-
 
     async def set_channel_info(self, channel: int) -> [phi.Dict, None]:
         """
@@ -502,7 +496,7 @@ class UFHCController(phi.MBDevice):
         channel_dp = None
 
         if rt is not None and rh not in [None, '0', 0]:
-            if float(rt) < 100 and float(rt) > -100:
+            if 100 > float(rt) > -100:
                 channel_h = await get_h(float(rt), float(rh))
                 channel_dp = await get_dp(float(rt), float(rh))
         self.__setattr__(channel_h_attr, channel_h)
@@ -663,7 +657,6 @@ class HeatRecoveryUnit(phi.MBDevice):
         self.supply_flow, self.exhaust_flow = values
         return self.supply_flow, self.exhaust_flow
 
-
     async def set_airflow(self, new_airflow: [int, None] = None):
         """
         Aplica al recuperador el caudal 'new_airflow'.
@@ -693,7 +686,6 @@ class HeatRecoveryUnit(phi.MBDevice):
             self.supply_flow = new_airflow
             self.exhaust_flow = new_airflow
         return self.supply_flow, self.exhaust_flow
-
 
     async def set_speed(self, new_speed: [int, None] = None):
         """
@@ -739,7 +731,6 @@ class HeatRecoveryUnit(phi.MBDevice):
 
         return self.speed
 
-
     async def set_manual_speed(self):
         """
         Aplica al recuperador la velocidad self.manual_speed cuando se activa el modo manual
@@ -770,7 +761,6 @@ class HeatRecoveryUnit(phi.MBDevice):
                 res = await set_value(target, phi.OFF)
 
         return self.speed
-
 
     async def set_manual_airflow(self):
         """
@@ -925,12 +915,11 @@ class HeatRecoveryUnit(phi.MBDevice):
         group_id = self.groups[0]  # El recuperador sólo puede estar asociado a un grupo de habitaciones
         group = phi.all_room_groups.get(group_id)
         group_cooling_mode = group.iv  # Modo calefacción (False) o refrigeración (True) del grupo
-        group_rt = (float(room.rt()) for room in group.roomgroup if room.rt() is not None)  # Generador con las
-        # temperaturas de las habitaciones
+        group_rt = [float(room.rt()) for room in group.roomgroup if room.rt() is not None]  # Tª de las habitaciones
         group_sp = group.air_sp  # Consigna de ambiente calculada para el grupo
         print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tConsignas:\t{group_sp} \n\t"
-              f"temperaturas:\t{group_rt}\t{[x for x in group_rt]}")
-        if not group_sp or not [x for x in group_rt]:  # Si no leo temperaturas o consignas,
+              f"temperaturas:\t{group_rt}")
+        if not group_sp or not group_rt:  # Si no leo temperaturas o consignas,
             # activo Modo Ventilación
             print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tFaltan consignas ({group_sp} o "
                   f"temperaturas{group_rt}")
@@ -938,7 +927,6 @@ class HeatRecoveryUnit(phi.MBDevice):
         else:
             print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tConsignas y temp válidas ({group_sp} "
                   f"temperaturas{group_rt}")
-
 
         group_dp = group.air_dp  # Punto de rocío del grupo
         group_h = group.air_h  # Entalpía del grupo
@@ -949,11 +937,11 @@ class HeatRecoveryUnit(phi.MBDevice):
                     self.hru_mode = phi.DESHUMIDIFICACION
             building = group.roomgroup[0].building_id  # Edificio al que pertenece el grupo de habitaciones
             t_ext = get_temp_exterior(building)  # Temperatura exterior
-            rh_ext = get_hrel_exterior(building)
+            rh_ext = get_hrel_exterior(building)  # Humedad relativa Exterior
             if rh_ext == 0 or rh_ext is None:  # El freecooling debe ser térmico
                 if t_ext < min(group_rt):  # Se activa el freecooling térmico
                     freecooling_mode = True
-            else:  # Se comprueba si se puede habilitar el free-cooling entálpico
+            elif group_h is not None:  # Se comprueba si se puede habilitar el free-cooling entálpico
                 h_ext = get_h_exterior()  # Entalpía exterior
                 if h_ext < group_h:
                     freecooling_mode = True
@@ -1070,7 +1058,8 @@ class HeatRecoveryUnit(phi.MBDevice):
                 airflow_limits = list(map(lambda x: int(group_aq_sp + (group_aq_sp * 1.2 - group_aq_sp) / 9 * x),
                                           range(10)))
                 max_af_pct = bisect(airflow_limits, group_aq) / 10
-                ventilation_airflow = int(self.max_airflow * max_af_pct)  # Se fija el caudal de aire en función de la calidad.
+                ventilation_airflow = int(
+                    self.max_airflow * max_af_pct)  # Se fija el caudal de aire en función de la calidad.
                 # Se impulsa el caudal máximo cuando la calidad de aire supera en un 20% la consigna de calidad de aire
             res = await self.set_airflow(ventilation_airflow)
             return ventilation_airflow
@@ -1105,7 +1094,6 @@ class HeatRecoveryUnit(phi.MBDevice):
         if self.man_hru_mode_st == phi.ON:  # Modo manual de funcionamiento del recuperador activado
             rest = await self.activate_op_mode(self.man_hru_mode)
             self.hru_mode = self.man_hru_mode
-
 
     async def activate_op_mode(self, new_op_mode: [int, None] = None):
         """
@@ -1184,7 +1172,6 @@ class HeatRecoveryUnit(phi.MBDevice):
             self.hru_mode = await self.activate_op_mode()  # Modo de funcionamiento seleccionado
         await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
         # correspondiente
-
 
     def __repr__(self):
         """
@@ -1830,7 +1817,7 @@ class TempFluidController(phi.MBDevice):
         if new_man_mode is not None:
             if new_man_mode not in [phi.OFF, phi.ON]:
                 print(f"\n{self.name}: Error activando modo manual para la bomba del circuito {circuit} con el "
-                  f"valor {new_man_mode}")
+                      f"valor {new_man_mode}")
             else:
                 # Actualizo el estado de activación del modo manual
                 self.__setattr__(manual_states_attributes[idx], new_man_mode)
@@ -1986,7 +1973,7 @@ class TempFluidController(phi.MBDevice):
             await self.sp(circuit, current_man_val)
 
         return current_man_st, current_man_val
-    
+
     async def ti(self, circuit: int = 1):
         """
         Devuelve el valor de la temperatura de impulsión del circuito 'circuit'
@@ -2135,10 +2122,10 @@ class TempFluidController(phi.MBDevice):
         for idx in range(3):
             circuito = idx + 1
             st = self.__getattribute__(onoff_st[idx])
-            iv =self.__getattribute__(iv_modes[idx])
-            sp =self.__getattribute__(setpoints[idx])
-            ti =self.__getattribute__(t_imps[idx])
-            valv =self.__getattribute__(valv_st[idx])
+            iv = self.__getattribute__(iv_modes[idx])
+            sp = self.__getattribute__(setpoints[idx])
+            ti = self.__getattribute__(t_imps[idx])
+            valv = self.__getattribute__(valv_st[idx])
             dev_info += f"\nCIRCUITO {circuito}"
             dev_info += f"\n=========="
             dev_info += f"\n\tEstado bomba: {onoff_values.get(st)}"
@@ -2214,7 +2201,7 @@ class Fancoil(phi.MBDevice):
         self.manual_valv_position_source = None  # Tipo registro y direccion modbus apertura/cierre manual de la
         # válvula del fancoil
         self.manual_valv_st = None  # Estado de operación manual de la válvula
-        self.man_pos_valv = phi.OPEN  # Posición de la válvula en modo manual
+        self.manual_valv_pos = phi.OPEN  # Posición de la válvula en modo manual
         self.valv_st_source = None  # Tupla con el estado de la válvula
         self.valv_st = None  # Estado actual de la válvula
         self.remote_onoff_source = None  # Tipo registro y direccion modbus para on/off remoto del fancoil
@@ -2510,7 +2497,7 @@ class Fancoil(phi.MBDevice):
         current_man_speed = man_speed_ac if fan_type == "AC" else man_speed_ec
         current_manual_speed_value = man_speed_ac * 256 + man_speed_ec
         current_speed = await self.get_fan_speed()
-        if not man_speed is None:
+        if man_speed is not None:
             if (fan_type == "AC" and man_speed not in AC_FAN_SPEED) or \
                     (fan_type == "EC" and man_speed not in EC_FAN_SPEED):
                 print(f"La velocidad seleccionada, {man_speed}, para el fancoil {self.name} de tipo {fan_type} "
@@ -2609,8 +2596,8 @@ class Fancoil(phi.MBDevice):
         current_max, current_min = get_value(value_source=source)
         current_limits = current_max * 256 + current_min
 
-        if (not max_speed is None and not max_speed in SPEED_VALUES.get(fan_type)) or \
-                (not min_speed is None and not min_speed in SPEED_VALUES.get(fan_type)):
+        if (max_speed is not None and max_speed not in SPEED_VALUES.get(fan_type)) or \
+                (min_speed is not None and min_speed not in SPEED_VALUES.get(fan_type)):
             print(f"ERROR - Algún valor límite introducido no es válido para el fancoil {self.name}\n\t"
                   f"Rango válido: {SPEED_VALUES.get(fan_type)[0]}-{SPEED_VALUES.get(fan_type)[-1]}")
             print("\tSe mantienen los valores actuales")
@@ -2681,7 +2668,7 @@ class Fancoil(phi.MBDevice):
         current_manual_operation = get_value(value_source=source)
         # Recojo el valor actual de la posición manual
         current_manual_position = get_value(value_source=target)
-        if not new_position is None:
+        if new_position is not None:
             if new_position not in [phi.CLOSED, phi.OPEN]:
                 print(f"La posición seleccionada, {new_position}, para la válvula del fancoil {self.name} "
                       f"no es válida. Debe ser 1 (abierta) o 0 (cerrada). \n"
@@ -2826,7 +2813,7 @@ class Fancoil(phi.MBDevice):
         modo = {0: "Calefacción", 1: "Refrigeración"}
         demanda = {0: "No hay demanda", 1: "Demanda de calor", 2: "Demanda de frío"}
         manual = {0: "Automático", 1: "Manual"}
-        if None in [self.manual_fan,]:
+        if None in [self.manual_fan, ]:
             msg = f"DEBUGGING {__file__} __repr__: Error leyendo fancoil {self.name}"
             return msg
         estado_manual_ventilador = self.manual_fan[0]
@@ -2873,6 +2860,7 @@ class DataSource(phi.MBDevice):
         Se actualizan los valores leídos del DataSource
         """
         raise NotImplementedError(f"ERROR {__file__}. Método UPDATE no implementado en DataSources")
+
     def __repr__(self):
         """
         Para imprimir la información actual del DataSource

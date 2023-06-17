@@ -123,9 +123,9 @@ def get_h_exterior(bld: str = "1", altitud=phi.ALTITUD) -> [float, None]:
     Calcula la entalpia exterior con temp en celsius y hr en %. Por defecto se toma la altitud de Madrid
     Si no se lee la humedad relativa exterior, se devuelve 0
     """
-    # print(f"Calculando entalpía de {self.name}")
     te = get_temp_exterior(bld)
     rh = get_hrel_exterior(bld)
+    print(f"Calculando entalpía exterior con temperatura:{te} y humedad relativa {rh}")
     if rh is None or rh == 0:
         return 0
     pres_total = 101325 if altitud is None else 101325 * (1 - 2.25577 * 0.00001 * altitud) ** 5.2559
@@ -505,8 +505,8 @@ class RoomGroup:
             t_rocio_hab = min_t_rocio if dp in null_values else dp
             t_rocio_lim = max(t_rocio_hab, t_rocio_lim)
             h_hab = h_max if h in null_values else h
-            if h_hab is not None and h_max is not None:
-                h_max = max(h_hab, h_max)
+            if h_hab is not None:
+                h_max = h_hab if h_max is None else max(h_hab, h_max)
             if any([rt in null_values, sp in null_values, isinstance(rt, str), isinstance(sp, str)]):
                 continue  # Ignoramos las habitaciones de las que no dispongamos lecturas de temperatura o consigna
 

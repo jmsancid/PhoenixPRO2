@@ -102,7 +102,7 @@ async def set_value(value_source: [dict, None], new_value: [int, float]) -> [int
     return res
 
 
-async def get_h(temp:[int, float], rel_hum:[int, float], altitud=phi.ALTITUD) -> [float, None]:
+async def get_h(temp: [int, float], rel_hum: [int, float], altitud=phi.ALTITUD) -> [float, None]:
     """
     Calcula la entalpia a partir de un valor de temp en celsius y hr en %. Por defecto se toma la altitud de Madrid
     Si no se lee la humedad relativa, se devuelve 0
@@ -126,16 +126,16 @@ async def get_h(temp:[int, float], rel_hum:[int, float], altitud=phi.ALTITUD) ->
     return round(entalpia, 1)
 
 
-async def get_dp(temp:[int, float], rel_hum:[int, float]) -> [float, None]:
-        """
+async def get_dp(temp: [int, float], rel_hum: [int, float]) -> [float, None]:
+    """
         Calcula el punto de rocío a partir de una temp en celsius y hr en %.
         Si la temperatura o la humedad no tienen valores válidos, se devuelve None
         """
-        nullvalues = ("", None, "false", 0)
-        if any((temp in nullvalues, rel_hum in nullvalues)):
-            return
-        t_rocio = (rel_hum / 100) ** (1 / 8) * (112 + 0.9 * temp) + 0.1 * temp - 112
-        return round(t_rocio, 1)
+    nullvalues = ("", None, "false", 0)
+    if any((temp in nullvalues, rel_hum in nullvalues)):
+        return
+    t_rocio = (rel_hum / 100) ** (1 / 8) * (112 + 0.9 * temp) + 0.1 * temp - 112
+    return round(t_rocio, 1)
 
 
 def get_regmap(device: phi.MBDevice) -> [dict, None]:
@@ -165,7 +165,6 @@ async def read_device_datatype(device: phi.MBDevice, regmap: dict, dtype: int) -
     regs = regmap.get(
         phi.MODBUS_DATATYPES_KEYS.get(dtype))  # Diccionario con todos los datos de tipo "dtype" del dispositivo
     # modbus_operation = MODBUS_DATATYPES_KEYS.get(dtype)
-    # regs = regmap.get(modbus_operation)  # Diccionario con todos los datos de tipo "dtype" del dispositivo
     if regs is not None:  # El dispositivo tiene registros del tipo "dtype"
         addresses = sorted([int(adr) for adr in regs.keys()])  # Lista ordenada de registros a leer
         # print(f"Registros del JSON: {addresses}")
@@ -205,7 +204,7 @@ async def read_device_datatype(device: phi.MBDevice, regmap: dict, dtype: int) -
             # print(f"read_device_datatype: {results}")
             return results
         else:
-            return  # Si el dispositivo no ha devuelto nada, se devuelve None
+            return
     else:
         results = {phi.MODBUS_DATATYPES_KEYS.get(dtype): None}
         return results  # Si no hay registros del tipo "dtype" devuelve None para ese tipo de registro
@@ -225,7 +224,7 @@ async def read_project_device(device: phi.MBDevice) -> [str, None]:
     """
     rmap = get_regmap(device)
     name = rmap.get("name")
-    print(f"Nombre del dispositivo: {name}")
+    print(f"\nNombre del dispositivo: {name}")
     reading_tasks = [create_task(read_device_datatype(device, rmap, datatype))
                      for datatype in tuple(phi.MODBUS_DATATYPES.keys())]
 
@@ -259,15 +258,22 @@ async def read_all_buses(id_lectura: int = 0):
             # Lee el dispositivo completo y almacena la información en un fichero en memoria StringIO?
             device_readings = await read_project_device(device)  # Lectura ModBus
             # print(f"\n\tLECTURA DISPOSITIVO\t{device.name}\n\t\t{device_readings}")
-            print(f"\n{str(phi.datetime.now())}\nDuración:\t{str(phi.datetime.now() - hora_lectura)}\n")
-            print(f"device_readings: {device_readings}")
+            print(f"\n{str(phi.datetime.now())}\nDuración:\t{str(phi.datetime.now() - hora_lectura)}")
+            print(f"\ndevice_readings: {device_readings}")
             if all([x is None for x in device_readings]):
                 print(f"No hay lecturas del dispositivo {device.name}")
                 continue
             # lectura_actual["buses"][idbus][iddevice]["data"] = {}
-            for regtype_readings in device_readings:
+            for idx, regtype_readings in enumerate(device_readings):
+                regtypename = phi.MODBUS_DATATYPES.get(idx + 1)
                 if regtype_readings is None:
-                    print(f"DEBBUGGING {__file__}: El dispositivo {device.name} no tiene registros: {regtype_readings}")
+                    print(f"DEBBUGGING {__file__}: El dispositivo no ha devuelto lecturas de "
+                          f"registros del tipo: {regtypename}")
+                    continue  # JSC Modification on SETUP
+                if isinstance(regtype_readings, dict) and \
+                        len(regtype_readings.values()) == 1 and \
+                        list(regtype_readings.values())[0] is None:
+                    print(f"El dispositivo no tiene registros del tipo {regtypename}")
                     continue  # JSC Modification on SETUP
                 for regtype, dev_response in regtype_readings.items():
                     lectura_actual["buses"][idbus][iddevice]["data"][regtype] = dev_response
@@ -278,7 +284,7 @@ async def read_all_buses(id_lectura: int = 0):
     return lectura_actual
 
 
-def get_f_modif_timestamp(path_to_file:str) -> [str, None]:
+def get_f_modif_timestamp(path_to_file: str) -> [str, None]:
     """
     Devuelve la fecha de la última modificación del archivo o None si el archivo no existe.
     Se utiliza en el intercambio de datos con la web para ver si hay que escribir en el archivo de intercambio
@@ -319,7 +325,7 @@ async def check_changes_from_web() -> int:
         with open(phi.READINGS_FILE, "r") as rf:
             last_reading = phi.json.load(rf)
             last_reading_time = last_reading.get("hora")
-            print (f"\nComprobando cambios desde la WEB:\n\tHora de la última lectura: {last_reading_time}")
+            print(f"\nComprobando cambios desde la WEB:\n\tHora de la última lectura: {last_reading_time}")
 
     # Recorro todos los esclavos para ver si hay que actualizar algún valor
     attr_mod = {}
@@ -349,22 +355,22 @@ async def check_changes_from_web() -> int:
                 last_mod_time = get_f_modif_timestamp(file_to_check)
                 current_value = getattr(dev, f)  # el nombre del fichero f coincide con el atributo a comprobar
                 if any([x is None for x in (last_mod_time, last_reading_time)]):
-                    print (f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
-                           f"Última modificación: {last_mod_time}\n\t"
-                           f"Última lectura: {last_reading_time}")
+                    print(f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
+                          f"Última modificación: {last_mod_time}\n\t"
+                          f"Última lectura: {last_reading_time}")
                     continue
                 if last_mod_time > last_reading_time:  # Ha habido modificaciones desde la Web
                     with open(file_to_check, "r") as modf:
                         new_value = modf.read()
-                    print(f"Se ha modoficado desde la Web el fichero:\n\t{file_to_check}\n"
+                    print(f"Se ha modificado desde la Web el fichero:\n\t{file_to_check}\n"
                           f"Valor anterior:\t{current_value} (tipo {type(getattr(dev, f))})\n"
                           f"Valor desde web:\t{new_value} (tipo {type(new_value)})")
                     attr_mod[file_to_check] = new_value
                     if new_value is not None:
-                        if '(' in new_value: # Is Tuple
+                        if '(' in new_value:  # Is Tuple
                             val_to_write = tuple(map(int, new_value.strip('()').split(', ')))
                             setattr(dev, f, val_to_write)
-                        elif '.' in new_value: # Is float
+                        elif '.' in new_value:  # Is float
                             setattr(dev, f, float(new_value))
                         elif new_value.isdecimal():  # Is int
                             setattr(dev, f, int(new_value))
@@ -528,8 +534,3 @@ async def update_devices_from_xch_files(device):
                     attr_value_in_file = attr_value_in_device
             if attr_value_in_file is not None:
                 setattr(device, attr, attr_value_in_file)
-
-
-
-
-

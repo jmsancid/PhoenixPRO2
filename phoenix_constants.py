@@ -123,18 +123,18 @@ TEMP_EXT_FILE = EXCHANGE_FOLDER + "/1/1000/temp"
 HR_EXT_FILE = EXCHANGE_FOLDER + "/1/2000/humd"
 
 UFHCCONTROLLER_R_FILES = ('iv', 'pump',
-                  'sp1', 'sp2', 'sp3', 'sp4', 'sp5', 'sp6', 'sp7', 'sp8', 'sp9', 'sp10', 'sp11', 'sp12',
-                  'rt1', 'rt2', 'rt3', 'rt4', 'rt5', 'rt6', 'rt7', 'rt8', 'rt9', 'rt10', 'rt11', 'rt12',
-                  'rh1', 'rh2', 'rh3', 'rh4', 'rh5', 'rh6', 'rh7', 'rh8', 'rh9', 'rh10', 'rh11', 'rh12',
-                  'ft1', 'ft2', 'ft3', 'ft4', 'ft5', 'ft6', 'ft7', 'ft8', 'ft9', 'ft10', 'ft11', 'ft12',
-                  'st1', 'st2', 'st3', 'st4', 'st5', 'st6', 'st7', 'st8', 'st9', 'st10', 'st11', 'st12',
-                  'coff1', 'coff2', 'coff3', 'coff4', 'coff5', 'coff6', 'coff7', 'coff8', 'coff9',
-                  'coff10', 'coff11', 'coff12',
-                  'dp1', 'dp2', 'dp3', 'dp4', 'dp5', 'dp6', 'dp7', 'dp8', 'dp9', 'dp10', 'dp11', 'dp12',
-                  'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12')
+                          'sp1', 'sp2', 'sp3', 'sp4', 'sp5', 'sp6', 'sp7', 'sp8', 'sp9', 'sp10', 'sp11', 'sp12',
+                          'rt1', 'rt2', 'rt3', 'rt4', 'rt5', 'rt6', 'rt7', 'rt8', 'rt9', 'rt10', 'rt11', 'rt12',
+                          'rh1', 'rh2', 'rh3', 'rh4', 'rh5', 'rh6', 'rh7', 'rh8', 'rh9', 'rh10', 'rh11', 'rh12',
+                          'ft1', 'ft2', 'ft3', 'ft4', 'ft5', 'ft6', 'ft7', 'ft8', 'ft9', 'ft10', 'ft11', 'ft12',
+                          'st1', 'st2', 'st3', 'st4', 'st5', 'st6', 'st7', 'st8', 'st9', 'st10', 'st11', 'st12',
+                          'coff1', 'coff2', 'coff3', 'coff4', 'coff5', 'coff6', 'coff7', 'coff8', 'coff9',
+                          'coff10', 'coff11', 'coff12',
+                          'dp1', 'dp2', 'dp3', 'dp4', 'dp5', 'dp6', 'dp7', 'dp8', 'dp9', 'dp10', 'dp11', 'dp12',
+                          'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12')
 UFHCCONTROLLER_RW_FILES = ('iv', 'sp1', 'sp2', 'sp3', 'sp4', 'sp5', 'sp6', 'sp7', 'sp8', 'sp9', 'sp10', 'sp11', 'sp12',
-                   'coff1', 'coff2', 'coff3', 'coff4', 'coff5', 'coff6', 'coff7', 'coff8', 'coff9',
-                   'coff10', 'coff11', 'coff12')
+                           'coff1', 'coff2', 'coff3', 'coff4', 'coff5', 'coff6', 'coff7', 'coff8', 'coff9',
+                           'coff10', 'coff11', 'coff12')
 GENERATOR_R_FILES = ("onoff_st", "manual_onoff_mode", "manual_onoff", "sp", "manual_sp_mode", "manual_sp",
                      "dhwsp", "iv", "manual_iv_mode", "manual_iv", "alarm", "t_ext", "supply_water_temp",
                      "return_water_temp", "t_inercia", "water_flow",

@@ -200,6 +200,7 @@ def set_lb(val: int, lb_new_val: int) -> int:
     val_to_ret = hb * 256 + lb_new_val
     return val_to_ret
 
+
 def get_bits(val: int) -> Tuple[int]:
     """
     Devuelve una Tupla con los valores de los 16 bits de 'val'
@@ -215,7 +216,7 @@ def get_bits(val: int) -> Tuple[int]:
     return tuple(bits)
 
 
-def signed_integer(val:int, bits:int = 16) -> int:
+def signed_integer(val: int, bits: int = 16) -> int:
     """
     Convierte un valor entero con signo en su valor correspondiente, positivo o negativo
     Param:
@@ -238,7 +239,7 @@ regops = {0: x10,  # Multiplica por 10 el valor
           7: set_hb,  # Escribe un valor en el byte alto
           8: set_lb,  # Escribe un valor en el byte bajo
           9: get_bits,  # Devuelve una tupla con los valores de los 16 bits
-          10:signed_integer  # Devuelve el valor positivo o negativo de un signed integer
+          10: signed_integer  # Devuelve el valor positivo o negativo de un signed integer
           }
 
 
