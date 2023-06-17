@@ -4,6 +4,7 @@ Definición de las clases que definen los objetos del edificio: Edificio,
 Viviendas, Habitaciones, Grupos de habitaciones...
 """
 import sys
+from os import path
 from gc import collect
 import phoenix_init as phi
 from asyncio import create_task, gather
@@ -58,12 +59,20 @@ def get_temp_exterior(bld: str = "1") -> [float, None]:
         print(msg)
         return get_default_t_exterior()
     t_ext_from_mbdev_source = te_source.get("mbdev")
-    if t_ext_from_mbdev_source is None:
-        print("La temperatura exterior debe obtenerse por un método que aún no está definido")
-        return get_default_t_exterior()
+    t_ext_from_file_source = te_source.get("file")
+    if t_ext_from_mbdev_source not in [None, {}]:
+        print("La temperatura exterior se lee de un dispositivo ModBus")
+        t_ext = get_value(t_ext_from_mbdev_source)
+        return t_ext
+    elif t_ext_from_file_source:
+        print("La temperatura exterior se lee de un archivo")
+        t_ext_file = phi.EXCHANGE_FOLDER + t_ext_from_file_source
+        if path.isfile(t_ext_file):
+            with open(t_ext_file, "r") as txf:
+                t_ext = float(txf.read())
+                return t_ext
     else:
-        t_ext_from_mbdev = get_value(t_ext_from_mbdev_source)
-        return t_ext_from_mbdev
+        return get_default_t_exterior()
 
 
 def get_hrel_exterior(bld: str = "1") -> [float, None]:
@@ -93,12 +102,20 @@ def get_hrel_exterior(bld: str = "1") -> [float, None]:
         print(msg)
         return 0
     rh_ext_from_mbdev_source = rh_source.get("mbdev")
-    if rh_ext_from_mbdev_source is None:
-        print("La humedad relativa exterior debe obtenerse por un método que aún no está definido")
-        return 0
+    rh_ext_from_file_source = rh_source.get("file")
+    if rh_ext_from_mbdev_source not in [None, {}]:
+        print("La humedad relativa exterior se lee de un dispositivo ModBus")
+        hr_ext = get_value(rh_ext_from_mbdev_source)
+        return hr_ext
+    elif rh_ext_from_file_source:
+        print("La humedad relativa exterior se lee de un archivo")
+        hr_ext_file = phi.EXCHANGE_FOLDER + rh_ext_from_file_source
+        if path.isfile(hr_ext_file):
+            with open(hr_ext_file, "r") as hrxf:
+                hr_ext = float(hrxf.read())
+                return hr_ext
     else:
-        rh_ext_from_mbdev = get_value(rh_ext_from_mbdev_source)
-        return rh_ext_from_mbdev
+        return 0
 
 
 def get_h_exterior(bld: str = "1", altitud=phi.ALTITUD) -> [float, None]:
@@ -190,8 +207,12 @@ class Room:
             Temperatura de rocío: {dp}
             Entalpía: {h}
             """
-        if sp < 50:
+        if None not in (sp, rt) and sp < 50 and rt < 50:
             return room_info
+        else:
+            msg = f"Habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id} " \
+                  f"tiene una consigna o una temperatura no válidas"
+            return msg
 
     def dp(self):
         """
@@ -212,12 +233,13 @@ class Room:
         Calcula la entalpia con temp en celsius y hr en %. Por defecto se toma la altitud de Madrid
         """
         # print(f"Calculando entalpía de {self.name}")
+        entalpia = None
         rt = self.rt()
         rh = self.rh()
         pres_total = 101325 if altitud is None else 101325 * (1 - 2.25577 * 0.00001 * altitud) ** 5.2559
-        nullvalues = ("", None, "false")
-        if any((rt in nullvalues, rh in nullvalues)):
-            return
+        print(f"DEBUGGING {__file__} Calculando entalpia: {rt} / {rh}")
+        if None in (rt, rh) or rh == 0.0:
+            return entalpia
         pres_vap_sat = 10 ** (7.5 * rt / (273.159 + rt - 35.85) + 2.7858)  # Pa
         # print(f"presion vapor saturado: {pres_vap_sat}")
         pres_vap = pres_vap_sat * rh / 100  # Pa
@@ -289,7 +311,11 @@ class Room:
         Returns: valor de la consigna actual de la habitación
         """
         # print(f"leyendo consigna de {self.name}")
-        setpoint = get_value(self.sp_source) if self.sp_source is not None and self.sp_source else None
+        if self.sp_source is None:
+            return
+        setpoint = get_value(self.sp_source)
+        if setpoint is None or setpoint < 0 or setpoint > 55:
+            return
         return setpoint
 
     def rh(self):
@@ -298,7 +324,8 @@ class Room:
         Returns: valor de la humedad relativa actual de la habitación
         """
         # print(f"leyendo humedad relativa de {self.name}")
-        relative_humidity = get_value(self.rh_source) if self.rh_source is not None and self.rh_source else None
+        rh_read = get_value(self.rh_source)  # La HR del X148 se obtiene como tupla HB y LB y la HR es el LB
+        relative_humidity = rh_read if rh_read is None else rh_read[1]
         return relative_humidity
 
     def rt(self):
@@ -307,8 +334,12 @@ class Room:
         Returns: valor de la temperatura actual de la habitación
         """
         # print(f"leyendo temperatura ambiente de {self.name}")
-        room_temperature = get_value(self.rt_source) if self.rt_source is not None and self.rt_source else None
-        return room_temperature
+        if self.rt_source is None:
+            return
+        rt_read = get_value(self.rt_source)
+        if rt_read is None or rt_read < 0 or rt_read > 55:
+            return
+        return rt_read
 
     def st(self):
         """
@@ -458,10 +489,12 @@ class RoomGroup:
             # El primer valor a tomar para la temperatura ambiente y la consigna
             # del grupo de habitaciones es el de la primera habitación.
             rt = room.rt()  # Temperatura ambiente del objeto Room
-            group_air_temperature = rt if group_air_temperature is None else group_air_temperature
             sp = room.sp()  # Consigna del objeto Room
-            if sp is None:
+            if None in [sp, rt]:
+                print(f"DEBUGGING {__file__}. La consigna {sp} o la temperatura {rt} del grupo {self.roomgroup} "
+                      f"son nulos")
                 continue
+            group_air_temperature = rt if group_air_temperature is None else group_air_temperature
             air_sp = sp + room.offsetairref if cooling else sp + room.offsetaircal
             dp = room.dp()  # Temperatura de rocío del objeto Room
             h = room.h()  # Entalpia del objeto Room
@@ -478,10 +511,11 @@ class RoomGroup:
                 continue  # Ignoramos las habitaciones de las que no dispongamos lecturas de temperatura o consigna
 
             if cooling:  # Modo refrigeracion
+                print(f"DEBUGGING {__file__}: sp: {sp} / offsetwspref {self.offsetwspref} / "
+                      f"t_exterior {t_exterior} / RT_LIM_REFR {phi.RT_LIM_REFR}")
                 if rt - sp > self.offsetref:  # Se necesita la temperatura de impulsion más baja
                     demanda = 1
-                    t_impulsion_temp = sp - self.offsetwspref - (t_exterior -
-                                                                 max(phi.RT_LIM_REFR, sp)) / 2
+                    t_impulsion_temp = sp - self.offsetwspref - (t_exterior - max(phi.RT_LIM_REFR, sp)) / 2
                     group_air_temperature_setpoint = min(air_sp, group_air_temperature_setpoint)
                     group_air_temperature = max(rt, group_air_temperature)
                 elif rt - sp > 0:  # Se puede impulsar agua a una temperatura algo más alta

@@ -6,7 +6,7 @@ import os
 
 # SERIAL COMMUNICATION PORT
 # SERIAL_PORTS = {1: "/dev/ttyUSB0"}
-SERIAL_PORTS = {1: "/dev/ttySC0"}
+SERIAL_PORTS = {1: "/dev/ttySC0", 2: "/dev/ttySC0"}
 
 #   CONVERSION FUNCTION CONSTANTS
 
@@ -119,6 +119,9 @@ VENTILACION = 8
 
 # DIRECTORIO PARA ALMACENAR LOS ARCHIVOS DE INTERCAMBIO CON LA WEB DE SIGEEN:
 EXCHANGE_FOLDER = r"/home/pi/var/tmp/reg"
+TEMP_EXT_FILE = EXCHANGE_FOLDER + "/1/1000/temp"
+HR_EXT_FILE = EXCHANGE_FOLDER + "/1/2000/humd"
+
 UFHCCONTROLLER_R_FILES = ('iv', 'pump',
                   'sp1', 'sp2', 'sp3', 'sp4', 'sp5', 'sp6', 'sp7', 'sp8', 'sp9', 'sp10', 'sp11', 'sp12',
                   'rt1', 'rt2', 'rt3', 'rt4', 'rt5', 'rt6', 'rt7', 'rt8', 'rt9', 'rt10', 'rt11', 'rt12',

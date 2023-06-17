@@ -41,16 +41,16 @@
       },
       "5": {
         "descr": {
-          "en": "Open/Close 3 way valve",
-          "sp": "Apertura/Cierre válvula de 3 vías",
-          "po": "Apertura/Cierre válvula de 3 vías"
+          "en": "Open/Close heat recovery unit bypass",
+          "sp": "Apertura/Cierre bypass del recuperador",
+          "po": "Apertura/Cierre bypass del recuperador"
         }
       },
       "6": {
         "descr": {
-          "en": "Open/Close heat recovery unit bypass",
-          "sp": "Apertura/Cierre bypass del recuperador",
-          "po": "Apertura/Cierre bypass del recuperador"
+          "en": "Open/Close 3 way valve",
+          "sp": "Apertura/Cierre válvula de 3 vías",
+          "po": "Apertura/Cierre válvula de 3 vías"
         }
       },
       "7": {

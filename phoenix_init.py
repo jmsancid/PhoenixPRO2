@@ -263,7 +263,7 @@ def load_buses():
             brand = dev_info.get("brand")
             model = dev_info.get("model")
             groups = dev_info.get("groups")
-            print(f"\t\t... procesando el dispositivo {dev_id} - {name}: clase {cls} (esclavo {slave})")
+            print(f"\n\t\t... procesando el dispositivo {dev_id} - {name}: clase {cls} (esclavo {slave})")
             dev_parity = PARITY.get(dev_info.get("parity"))
             # print(f"(phoenix-config) - Paridad del dispositivo: {dev_parity}")
             if cls is None:

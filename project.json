@@ -16,11 +16,11 @@
         "o_data": {
           "te_source": {
             "mbdev": {},
-            "file": 1000
+            "file": "/1/1000/temp"
           },
           "rh_source": {
             "mbdev": {},
-            "file": 2000
+            "file": "/1/2000/humd"
           },
           "aq_source": {}
         },
@@ -251,11 +251,11 @@
         "o_data": {
           "te_source": {
             "mbdev": {},
-            "file": 1000
+            "file": "/1/1000/temp"
           },
           "rh_source": {
             "mbdev": {},
-            "file": 2000
+            "file": "/1/2000/humd"
           },
           "aq_source": {}
         },
@@ -486,11 +486,11 @@
         "o_data": {
           "te_source": {
             "mbdev": {},
-            "file": 1000
+            "file": "/1/1000/temp"
           },
           "rh_source": {
             "mbdev": {},
-            "file": 2000
+            "file": "/1/2000/humd"
           },
           "aq_source": {}
         },
@@ -721,11 +721,11 @@
         "o_data": {
           "te_source": {
             "mbdev": {},
-            "file": 1000
+            "file": "/1/1000/temp"
           },
           "rh_source": {
             "mbdev": {},
-            "file": 2000
+            "file": "/1/2000/humd"
           },
           "aq_source": {}
         },
@@ -956,11 +956,11 @@
         "o_data": {
           "te_source": {
             "mbdev": {},
-            "file": 1000
+            "file": "/1/1000/temp"
           },
           "rh_source": {
             "mbdev": {},
-            "file": 2000
+            "file": "/1/2000/humd"
           },
           "aq_source": {}
         },
@@ -1119,11 +1119,11 @@
         "o_data": {
           "te_source": {
             "mbdev": {},
-            "file": 1000
+            "file": "/1/1000/temp"
           },
           "rh_source": {
             "mbdev": {},
-            "file": 2000
+            "file": "/1/2000/humd"
           },
           "aq_source": {}
         },
@@ -1174,11 +1174,11 @@
         "o_data": {
           "te_source": {
             "mbdev": {},
-            "file": 1000
+            "file": "/1/1000/temp"
           },
           "rh_source": {
             "mbdev": {},
-            "file": 2000
+            "file": "/1/2000/humd"
           },
           "aq_source": {}
         },
@@ -2102,240 +2102,6 @@
             "brand": "uponor",
             "model": "x148"
           },
-          "25": {
-            "id": 25,
-            "name": "Centralita UFHC Hab BY1.1",
-            "groups": ["Hab_BY1.1"],
-            "slave": 51,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "26": {
-            "id": 26,
-            "name": "Centralita UFHC Hab BY1.2",
-            "groups": ["Hab_BY1.2"],
-            "slave": 52,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "27": {
-            "id": 27,
-            "name": "Centralita UFHC Hab BY1.3",
-            "groups": ["Hab_BY1.3"],
-            "slave": 53,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "28": {
-            "id": 28,
-            "name": "Centralita UFHC Hab BY1.4",
-            "groups": ["Hab_BY1.4"],
-            "slave": 54,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "29": {
-            "id": 29,
-            "name": "Centralita 1 UFHC Restaurante - zona Cocina",
-            "groups": ["Zona_Cocina"],
-            "slave": 61,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "30": {
-            "id": 30,
-            "name": "Centralita 2 UFHC Restaurante - zona Baño",
-            "groups": ["Zona_Baño"],
-            "slave": 62,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "31": {
-            "id": 31,
-            "name": "Centralita 1 UFHC PB Casa Ppal (TV)",
-            "groups": ["C1_CPPB"],
-            "slave": 71,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "32": {
-            "id": 32,
-            "name": "Centralita 2 UFHC PB Casa Ppal (Recepcion)",
-            "groups": ["C2_CPPB"],
-            "slave": 72,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "33": {
-            "id": 33,
-            "name": "Centralita 3 UFHC PB Casa Ppal (Salón 3)",
-            "groups": ["C3_CPPB"],
-            "slave": 73,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "34": {
-            "id": 34,
-            "name": "Centralita 4 UFHC PB Casa Ppal (Bar)",
-            "groups": ["C4_CPPB"],
-            "slave": 74,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "35": {
-            "id": 35,
-            "name": "Centralita UFHC Habitación 3 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.3"],
-            "slave": 75,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "36": {
-            "id": 36,
-            "name": "Centralita UFHC Habitación 1 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.1"],
-            "slave": 76,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "37": {
-            "id": 37,
-            "name": "Centralita UFHC Habitación 4 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.4"],
-            "slave": 77,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "38": {
-            "id": 38,
-            "name": "Centralita UFHC Habitación 2 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.2"],
-            "slave": 78,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "39": {
-            "id": 39,
-            "name": "Centralita 1 UFHC Suite 5 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.1"],
-            "slave": 79,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "42": {
-            "id": 42,
-            "name": "Centralita 2 UFHC Suite 5 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.1"],
-            "slave": 82,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "41": {
-            "id": 41,
-            "name": "Centralita 1 UFHC Suite 6 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.2"],
-            "slave": 81,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
-          "40": {
-            "id": 40,
-            "name": "Centralita 2 UFHC Suite 6 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.2"],
-            "slave": 82,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "ufhccontroller",
-            "brand": "uponor",
-            "model": "x148"
-          },
           "43": {
             "id": 43,
             "name": "Recuperador Hab 1.1",
@@ -2648,6 +2414,300 @@
             "brand": "sistena",
             "model": "sig310"
           },
+          "86": {
+            "id": 86,
+            "name": "Controlador tª impulsion agua Nave 1",
+            "groups": ["Nave_1"],
+            "slave": 201,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "87": {
+            "id": 87,
+            "name": "Controlador tª impulsion agua Nave 2",
+            "groups": ["Nave_2"],
+            "slave": 202,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "88": {
+            "id": 88,
+            "name": "Controlador tª impulsion agua Nave 3",
+            "groups": ["Nave_3"],
+            "slave": 203,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          },
+          "89": {
+            "id": 89,
+            "name": "Controlador tª impulsion agua Nave 4",
+            "groups": ["Nave_4"],
+            "slave": 204,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "tempfluidcontroller",
+            "brand": "sistena",
+            "model": "sig610"
+          }
+        }
+      },
+      "2": {
+        "id": 2,
+        "name": "Bus Boyeras y Casa Principal",
+        "ip": [127,0,0,1],
+        "port": 2,
+        "devices": {
+          "25": {
+            "id": 25,
+            "name": "Centralita UFHC Hab BY1.1",
+            "groups": ["Hab_BY1.1"],
+            "slave": 51,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "26": {
+            "id": 26,
+            "name": "Centralita UFHC Hab BY1.2",
+            "groups": ["Hab_BY1.2"],
+            "slave": 52,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "27": {
+            "id": 27,
+            "name": "Centralita UFHC Hab BY1.3",
+            "groups": ["Hab_BY1.3"],
+            "slave": 53,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "28": {
+            "id": 28,
+            "name": "Centralita UFHC Hab BY1.4",
+            "groups": ["Hab_BY1.4"],
+            "slave": 54,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "29": {
+            "id": 29,
+            "name": "Centralita 1 UFHC Restaurante - zona Cocina",
+            "groups": ["Zona_Cocina"],
+            "slave": 63,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "30": {
+            "id": 30,
+            "name": "Centralita 2 UFHC Restaurante - zona Baño",
+            "groups": ["Zona_Baño"],
+            "slave": 62,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "31": {
+            "id": 31,
+            "name": "Centralita 1 UFHC PB Casa Ppal (TV)",
+            "groups": ["C1_CPPB"],
+            "slave": 71,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "32": {
+            "id": 32,
+            "name": "Centralita 2 UFHC PB Casa Ppal (Recepcion)",
+            "groups": ["C2_CPPB"],
+            "slave": 72,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "33": {
+            "id": 33,
+            "name": "Centralita 3 UFHC PB Casa Ppal (Salón 3)",
+            "groups": ["C3_CPPB"],
+            "slave": 73,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "34": {
+            "id": 34,
+            "name": "Centralita 4 UFHC PB Casa Ppal (Bar)",
+            "groups": ["C4_CPPB"],
+            "slave": 74,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "35": {
+            "id": 35,
+            "name": "Centralita UFHC Habitación 3 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.3"],
+            "slave": 75,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "36": {
+            "id": 36,
+            "name": "Centralita UFHC Habitación 1 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.1"],
+            "slave": 76,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "37": {
+            "id": 37,
+            "name": "Centralita UFHC Habitación 4 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.4"],
+            "slave": 77,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "38": {
+            "id": 38,
+            "name": "Centralita UFHC Habitación 2 P1 - Casa Principal",
+            "groups": ["Hab_CPP1.2"],
+            "slave": 78,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "39": {
+            "id": 39,
+            "name": "Centralita 1 UFHC Suite 5 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.1"],
+            "slave": 79,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "42": {
+            "id": 42,
+            "name": "Centralita 2 UFHC Suite 5 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.1"],
+            "slave": 82,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "41": {
+            "id": 41,
+            "name": "Centralita 1 UFHC Suite 6 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.2"],
+            "slave": 81,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
+          "40": {
+            "id": 40,
+            "name": "Centralita 2 UFHC Suite 6 P2 - Casa Principal",
+            "groups": ["Hab_CPP2.2"],
+            "slave": 82,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "ufhccontroller",
+            "brand": "uponor",
+            "model": "x148"
+          },
           "67": {
             "id": 67,
             "name": "Recuperador Hab BY1.1",
@@ -2702,6 +2762,58 @@
           },
           "71": {
             "id": 71,
+            "name": "Fancoil 1 Restaurante Zona Baño",
+            "groups": ["Zona_Baño"],
+            "slave": 163,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "72": {
+            "id": 72,
+            "name": "Recuperador Restaurante Zona Baño",
+            "groups": ["Zona_Baño"],
+            "slave": 162,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "73": {
+            "id": 73,
+            "name": "Fancoil 2 Restaurante Zona Cocina",
+            "groups": ["Zona_Cocina"],
+            "slave": 163,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "fancoil",
+            "brand": "sistena",
+            "model": "sig311"
+          },
+          "74": {
+            "id": 74,
+            "name": "Recuperador Restaurante Zona Cocina",
+            "groups": ["Zona_Cocina"],
+            "slave": 164,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "heatrecoveryunit",
+            "brand": "sistena",
+            "model": "sig310"
+          },
+          "75": {
+            "id": 75,
             "name": "Recuperador PB Casa Ppal (TV)",
             "groups": ["Planta_Baja"],
             "slave": 172,
@@ -2713,8 +2825,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "72": {
-            "id": 72,
+          "76": {
+            "id": 76,
             "name": "Recuperador PB Casa Ppal (Recepcion)",
             "groups": ["Planta_Baja"],
             "slave": 171,
@@ -2726,8 +2838,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "73": {
-            "id": 73,
+          "77": {
+            "id": 77,
             "name": "Recuperador Habitación 1 P1 - Casa Principal",
             "groups": ["Hab_CPP1.1"],
             "slave": 175,
@@ -2739,8 +2851,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "74": {
-            "id": 74,
+          "78": {
+            "id": 78,
             "name": "Recuperador Habitación 2 P1 - Casa Principal",
             "groups": ["Hab_CPP1.2"],
             "slave": 176,
@@ -2752,8 +2864,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "75": {
-            "id": 75,
+          "79": {
+            "id": 79,
             "name": "Recuperador Habitación 3 P1 - Casa Principal",
             "groups": ["Hab_CPP1.3"],
             "slave": 177,
@@ -2765,8 +2877,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "76": {
-            "id": 76,
+          "80": {
+            "id": 80,
             "name": "Recuperador Habitación 4 P1 - Casa Principal",
             "groups": ["Hab_CPP1.4"],
             "slave": 178,
@@ -2778,8 +2890,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "77": {
-            "id": 77,
+          "81": {
+            "id": 81,
             "name": "Recuperador Suite 5 P2 - Casa Principal",
             "groups": ["Hab_CPP2.1"],
             "slave": 179,
@@ -2791,8 +2903,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "78": {
-            "id": 78,
+          "82": {
+            "id": 82,
             "name": "Recuperador Suite 6 P2 - Casa Principal",
             "groups": ["Hab_CPP2.2"],
             "slave": 180,
@@ -2804,8 +2916,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "79": {
-            "id": 79,
+          "83": {
+            "id": 83,
             "name": "Recuperador Zonas Comunes P2 - Casa Principal",
             "groups": ["Z_Comunes_CPP2"],
             "slave": 181,
@@ -2817,8 +2929,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "80": {
-            "id": 80,
+          "84": {
+            "id": 84,
             "name": "Recuperador Zonas Comunes P1 - Casa Principal",
             "groups": ["Z_Comunes_CPP1"],
             "slave": 182,
@@ -2830,47 +2942,8 @@
             "brand": "sistena",
             "model": "sig310"
           },
-          "81": {
-            "id": 81,
-            "name": "Fancoil 1 Restaurante Zona Cocina",
-            "groups": ["Zona_Cocina"],
-            "slave": 161,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "fancoil",
-            "brand": "sistena",
-            "model": "sig311"
-          },
-          "82": {
-            "id": 82,
-            "name": "Fancoil 2 Restaurante Zona Cocina",
-            "groups": ["Zona_Cocina"],
-            "slave": 162,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "fancoil",
-            "brand": "sistena",
-            "model": "sig311"
-          },
-          "83": {
-            "id": 83,
-            "name": "Fancoil Restaurante Zona Baño",
-            "groups": ["Zona_Baño"],
-            "slave": 163,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "fancoil",
-            "brand": "sistena",
-            "model": "sig311"
-          },
-          "84": {
-            "id": 84,
+          "85": {
+            "id": 85,
             "name": "Fancoil Planta Baja",
             "groups": ["Planta_Baja"],
             "slave": 174,
@@ -2882,60 +2955,8 @@
             "brand": "sistena",
             "model": "sig311"
           },
-          "85": {
-            "id": 85,
-            "name": "Controlador tª impulsion agua Nave 1",
-            "groups": ["Nave_1"],
-            "slave": 201,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "tempfluidcontroller",
-            "brand": "sistena",
-            "model": "sig610"
-          },
-          "86": {
-            "id": 86,
-            "name": "Controlador tª impulsion agua Nave 2",
-            "groups": ["Nave_2"],
-            "slave": 202,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "tempfluidcontroller",
-            "brand": "sistena",
-            "model": "sig610"
-          },
-          "87": {
-            "id": 87,
-            "name": "Controlador tª impulsion agua Nave 3",
-            "groups": ["Nave_3"],
-            "slave": 203,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "tempfluidcontroller",
-            "brand": "sistena",
-            "model": "sig610"
-          },
-          "88": {
-            "id": 88,
-            "name": "Controlador tª impulsion agua Nave 4",
-            "groups": ["Nave_4"],
-            "slave": 204,
-            "baudrate": 9600,
-            "databits": 8,
-            "parity": "E",
-            "stopbits": 1,
-            "class": "tempfluidcontroller",
-            "brand": "sistena",
-            "model": "sig610"
-          },
-          "89": {
-            "id": 89,
+          "90": {
+            "id": 90,
             "name": "Controlador tª impulsion agua Boyera 1",
             "groups": ["Boyera_1"],
             "slave": 205,
@@ -2947,8 +2968,8 @@
             "brand": "sistena",
             "model": "sig610"
           },
-          "90": {
-            "id": 90,
+          "91": {
+            "id": 91,
             "name": "Controlador tª impulsion agua Restaurante",
             "groups": ["Restaurante"],
             "slave": 206,
@@ -2960,8 +2981,8 @@
             "brand": "sistena",
             "model": "sig610"
           },
-          "91": {
-            "id": 91,
+          "92": {
+            "id": 92,
             "name": "Controlador tª impulsion agua Casa Principal",
             "groups": ["Casa_Principal"],
             "slave": 207,

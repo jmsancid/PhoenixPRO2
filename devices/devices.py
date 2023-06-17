@@ -495,7 +495,7 @@ class UFHCController(phi.MBDevice):
         self.__setattr__(channel_attr, channel_info)
         # Si los valores de rt y rh son válidos, se calcula el punto de rocío y la entalpía del canal
         rt = self.__getattribute__(channel_val_attrs.get("rt"))
-        rh = self.__getattribute__(channel_val_attrs.get("rt"))
+        rh = self.__getattribute__(channel_val_attrs.get("rt"))  # Se toma solo el byte bajo
         channel_h_attr = f"h{channel}"
         channel_dp_attr = f"dp{channel}"
         channel_h = 0
@@ -532,8 +532,10 @@ class UFHCController(phi.MBDevice):
         iv_mode = ["Calefacción", "Refrigeración"]
         pump_st = ["Parada", "En Marcha"]
         dev_info = f"\nControlador para suelo radiante {self.name}"
-        dev_info += f"\n\tModo de funcionamiento: {iv_mode[self.iv]}"
-        dev_info += f"\n\tEstado bomba circuladora: {pump_st[self.pump]}"
+        if self.iv is not None:
+            dev_info += f"\n\tModo de funcionamiento: {iv_mode[self.iv]}"
+        if self.pump is not None:
+            dev_info += f"\n\tEstado bomba circuladora: {pump_st[self.pump]}"
         for ch in range(12):
             channel_source_attr = f"ch{ch + 1}_source"
             attr_value = self.__getattribute__(channel_source_attr)
@@ -923,8 +925,21 @@ class HeatRecoveryUnit(phi.MBDevice):
         group_id = self.groups[0]  # El recuperador sólo puede estar asociado a un grupo de habitaciones
         group = phi.all_room_groups.get(group_id)
         group_cooling_mode = group.iv  # Modo calefacción (False) o refrigeración (True) del grupo
-        group_rt = (float(room.rt()) for room in group.roomgroup)  # Generador con las temperaturas de las habitaciones
+        group_rt = (float(room.rt()) for room in group.roomgroup if room.rt() is not None)  # Generador con las
+        # temperaturas de las habitaciones
         group_sp = group.air_sp  # Consigna de ambiente calculada para el grupo
+        print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tConsignas:\t{group_sp} \n\t"
+              f"temperaturas:\t{group_rt}\t{[x for x in group_rt]}")
+        if not group_sp or not [x for x in group_rt]:  # Si no leo temperaturas o consignas,
+            # activo Modo Ventilación
+            print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tFaltan consignas ({group_sp} o "
+                  f"temperaturas{group_rt}")
+            return self.hru_mode
+        else:
+            print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tConsignas y temp válidas ({group_sp} "
+                  f"temperaturas{group_rt}")
+
+
         group_dp = group.air_dp  # Punto de rocío del grupo
         group_h = group.air_h  # Entalpía del grupo
         if group_cooling_mode:
@@ -1114,7 +1129,7 @@ class HeatRecoveryUnit(phi.MBDevice):
                  2: self.fancoil_mode,
                  4: self.freecooling_mode,
                  5: (self.dehumidification_mode, self.freecooling_mode),
-                 6: (self.fancoil_mode(), self.freecooling_mode),
+                 6: (self.fancoil_mode, self.freecooling_mode),
                  8: self.ventilation_mode}
 
         if all(not x for x in self.hru_modes.values()) or new_op_mode == phi.OFF:
@@ -1870,6 +1885,9 @@ class TempFluidController(phi.MBDevice):
             else:
                 # Se propaga el nuevo modo de funcionamiento
                 # Actualizo el valor del modo de funcionamiento (byte alto)
+                if None in (current_register_value, new_iv_mode):
+                    msg = f"DEBUGGING {__file__}: Error propagando el modo de I/V a {self.name}"
+                    return msg
                 new_val = set_hb(current_register_value, int(new_iv_mode))
                 res = await set_value(target, new_val)  # Escritura Modbus
                 self.__setattr__(modes[idx], new_iv_mode)
@@ -2075,9 +2093,10 @@ class TempFluidController(phi.MBDevice):
             roomgroup = roomgroups_values.get(roomgroup_id)  # Objeto del grupo RoomGroup
             if roomgroup is None:
                 continue
+            print(f"DEBUGGING {__file__}.\tCONTROL Tª IMPULSION.\n\tDatos del grupo de habitaciones\n{roomgroup}\n\n")
             if roomgroup.get("demanda") != 0:
                 # Hay demanda de refrigeración (demanda = 1) o de calefacción (demanda = 2). Se propaga el modo iv
-                iv = 1 if roomgroup.iv else 2  # roomgroup.iv es  1 en refrigeración
+                iv = 1 if roomgroup.get("iv") else 2  # roomgroup.iv es 1 en refrigeración
                 # Se arranca la bomba circuladora SI NO ESTÁ EN MODO MANUAL
                 if not modo_manual_activado:
                     update_st = await self.onoff(circuito, phi.ON)
@@ -2294,6 +2313,9 @@ class Fancoil(phi.MBDevice):
                   "adr": mode_adr}
         # Recojo el modo actual de funcionamiento del fancoil
         current_iv_value = get_value(target)
+        # print(f"DEBUGGING {__file__}: Valor iv fancoil: {current_iv_value}")
+        if current_iv_value is None:
+            return
         current_st_mode, current_demand = get_value(source)  # El registro 21 del SIG311 devuelve en el byte alto el
         # estado 0: off, el modo 1: on en calefacción o el modo 2: on en refrigeración. En el byte bajo devuelve
         # 0: si no hay demanda, 1: demanda de calor, 2: demanda de frío
@@ -2768,8 +2790,12 @@ class Fancoil(phi.MBDevice):
         roomgroup = roomgroups_values.get(self.groups[0])  # Datos del grupo de habitaciones asociado al fancoil
         if roomgroup is None:
             print(f"No se ha encontrado información del grupo de habitaciones {self.groups[0]}")
+            return
 
         self.iv = await self.iv_mode(roomgroup.get("iv"))  # 0:Calefaccion / 1:Refrigeracion
+        if None in [self.iv, roomgroup.get("air_sp"), roomgroup.get("air_rt")]:
+            print(f"DEBUGGING método update {__file__}  iv, sp o rt del fancoil {self.name} es None")
+            return
         fancoil_sp = roomgroup.get("air_sp") + phi.OFFSET_COOLING if self.iv \
             else roomgroup.get("air_sp") + phi.OFFSET_HEATING  # Offset heating tiene un valor negativo
         self.sp = await self.set_sp(new_sp_value=fancoil_sp)
@@ -2800,6 +2826,9 @@ class Fancoil(phi.MBDevice):
         modo = {0: "Calefacción", 1: "Refrigeración"}
         demanda = {0: "No hay demanda", 1: "Demanda de calor", 2: "Demanda de frío"}
         manual = {0: "Automático", 1: "Manual"}
+        if None in [self.manual_fan,]:
+            msg = f"DEBUGGING {__file__} __repr__: Error leyendo fancoil {self.name}"
+            return msg
         estado_manual_ventilador = self.manual_fan[0]
         dev_info = f"\nFancoil {self.name}\n"
         dev_info += f"\tEstado: {onoff.get(self.onoff_st)}\n"

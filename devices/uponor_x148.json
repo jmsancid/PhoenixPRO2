@@ -410,84 +410,96 @@
           "en": "Relative humidity Channel 1",
           "sp": "Humedad relativa Canal 1",
           "po": "Humedad relativa Canal 1"
-        }
+        },
+        "conv_f_read": [6]
       },
       "14": {
         "descr": {
           "en": "Relative humidity Channel 2",
           "sp": "Humedad relativa Canal 2",
           "po": "Humedad relativa Canal 2"
-        }
+        },
+        "conv_f_read": [6]
       },
       "15": {
         "descr": {
           "en": "Relative humidity Channel 3",
           "sp": "Humedad relativa Canal 3",
           "po": "Humedad relativa Canal 3"
-        }
+        },
+        "conv_f_read": [6]
       },
       "16": {
         "descr": {
           "en": "Relative humidity Channel 4",
           "sp": "Humedad relativa Canal 4",
           "po": "Humedad relativa Canal 4"
-        }
+        },
+        "conv_f_read": [6]
       },
       "17": {
         "descr": {
           "en": "Relative humidity Channel 5",
           "sp": "Humedad relativa Canal 5",
           "po": "Humedad relativa Canal 5"
-        }
+        },
+        "conv_f_read": [6]
       },
       "18": {
         "descr": {
           "en": "Relative humidity Channel 6",
           "sp": "Humedad relativa Canal 6",
           "po": "Humedad relativa Canal 6"
-        }
+        },
+        "conv_f_read": [6]
       },
       "19": {
         "descr": {
           "en": "Relative humidity Channel 7",
           "sp": "Humedad relativa Canal 7",
           "po": "Humedad relativa Canal 7"
-        }
+        },
+        "conv_f_read": [6]
       },
       "20": {
         "descr": {
           "en": "Relative humidity Channel 8",
           "sp": "Humedad relativa Canal 8",
           "po": "Humedad relativa Canal 8"
-        }
+        },
+        "conv_f_read": [6]
       },
       "21": {
         "descr": {
           "en": "Relative humidity Channel 9",
           "sp": "Humedad relativa Canal 9",
           "po": "Humedad relativa Canal 9"
-        }
+        },
+        "conv_f_read": [6]
       },
       "22": {
         "descr": {
           "en": "Relative humidity Channel 10",
           "sp": "Humedad relativa Canal 10",
           "po": "Humedad relativa Canal 10"
-        }
+        },
+        "conv_f_read": [6]
       },
       "23": {
         "descr": {
           "en": "Relative humidity Channel 11",
           "sp": "Humedad relativa Canal 11",
           "po": "Humedad relativa Canal 11"
-        }
+        },
+        "conv_f_read": [6]
       },
       "24": {
         "descr": {
           "en": "Relative humidity Channel 12",
           "sp": "Humedad relativa Canal 12",
           "po": "Humedad relativa Canal 12"
-        }
+        },
+        "conv_f_read": [6]
       },
       "25": {
         "descr": {

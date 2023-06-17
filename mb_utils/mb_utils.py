@@ -102,7 +102,7 @@ async def set_value(value_source: [dict, None], new_value: [int, float]) -> [int
     return res
 
 
-def get_h(temp:[int, float], rel_hum:[int, float], altitud=phi.ALTITUD) -> [float, None]:
+async def get_h(temp:[int, float], rel_hum:[int, float], altitud=phi.ALTITUD) -> [float, None]:
     """
     Calcula la entalpia a partir de un valor de temp en celsius y hr en %. Por defecto se toma la altitud de Madrid
     Si no se lee la humedad relativa, se devuelve 0
@@ -126,7 +126,7 @@ def get_h(temp:[int, float], rel_hum:[int, float], altitud=phi.ALTITUD) -> [floa
     return round(entalpia, 1)
 
 
-def get_dp(temp:[int, float], rel_hum:[int, float]) -> [float, None]:
+async def get_dp(temp:[int, float], rel_hum:[int, float]) -> [float, None]:
         """
         Calcula el punto de rocío a partir de una temp en celsius y hr en %.
         Si la temperatura o la humedad no tienen valores válidos, se devuelve None
@@ -439,7 +439,8 @@ async def update_all_buses():
         for iddevice, device in bus.items():
             print(f"\nActualizando valores del dispositivo {device.name}")
             update = await device.update()
-            print(repr(device))
+            if repr(device) is not None:
+                print(repr(device))
     return 1
 
 

@@ -167,7 +167,7 @@
       }
     },
     "ir": {
-      "22": {
+      "21": {
         "descr": {
           "en": "Current operation status (HB:operation mode / LB:demand",
           "sp": "Estado actual de funcionamiento (B alto: 0, 1-Cal, 2-Ref / B bajo: 0-No dem, 1-Dem cal, 2-Dem ref)",
@@ -175,7 +175,7 @@
         },
         "conv_f_read": [6]
       },
-      "23": {
+      "22": {
         "descr": {
           "en": "Current fan status (HB-AC fan / LB-EC fan)",
           "sp": "Estado actual del ventilador (HB-vent. AC (1-3) / LB-vent EC (0-100))",
@@ -183,14 +183,14 @@
         },
         "conv_f_read": [6]
       },
-      "24": {
+      "23": {
         "descr": {
           "en": "Current valve estatus",
           "sp": "Estado actual de la válvula",
           "po": "Estado actual de la válvula"
         }
       },
-      "25": {
+      "24": {
         "descr": {
           "en": "Floor temperature",
           "sp": "Temperatura del pavimento",
@@ -198,7 +198,7 @@
         },
         "conv_f_read": [1]
       },
-      "26": {
+      "25": {
         "descr": {
           "en": "On/Off digital input",
           "sp": "Entrada digital para Marcha/Paro remoto",
