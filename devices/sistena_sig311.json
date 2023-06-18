@@ -164,10 +164,17 @@
           "sp": "Salida digital auxiliar",
           "po": "Salida digital auxiliar"
         }
+      },
+      "21": {
+        "descr": {
+          "en": "CO2 sensor range (0 - 10.000 ppm)",
+          "sp": "Rango medida CO2 (0 - 10.000ppm)",
+          "po": "Rango medida CO2 (0 - 10.000ppm)"
+        }
       }
     },
     "ir": {
-      "21": {
+      "22": {
         "descr": {
           "en": "Current operation status (HB:operation mode / LB:demand",
           "sp": "Estado actual de funcionamiento (B alto: 0, 1-Cal, 2-Ref / B bajo: 0-No dem, 1-Dem cal, 2-Dem ref)",
@@ -175,30 +182,29 @@
         },
         "conv_f_read": [6]
       },
-      "22": {
+      "23": {
         "descr": {
           "en": "Current fan status (HB-AC fan / LB-EC fan)",
           "sp": "Estado actual del ventilador (HB-vent. AC (1-3) / LB-vent EC (0-100))",
-          "po": ""
+          "po": "Estado actual del ventilador (HB-vent. AC (1-3) / LB-vent EC (0-100))"
         },
         "conv_f_read": [6]
       },
-      "23": {
+      "24": {
         "descr": {
           "en": "Current valve estatus",
           "sp": "Estado actual de la válvula",
           "po": "Estado actual de la válvula"
         }
       },
-      "24": {
-        "descr": {
-          "en": "Floor temperature",
-          "sp": "Temperatura del pavimento",
-          "po": "Temperatura del pavimento"
-        },
-        "conv_f_read": [1]
-      },
       "25": {
+        "descr": {
+          "en": "CO2 measured value",
+          "sp": "Nivel de CO2",
+          "po": "Nivel de CO2"
+        }
+      },
+      "26": {
         "descr": {
           "en": "On/Off digital input",
           "sp": "Entrada digital para Marcha/Paro remoto",

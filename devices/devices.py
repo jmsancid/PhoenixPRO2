@@ -489,7 +489,7 @@ class UFHCController(phi.MBDevice):
         self.__setattr__(channel_attr, channel_info)
         # Si los valores de rt y rh son válidos, se calcula el punto de rocío y la entalpía del canal
         rt = self.__getattribute__(channel_val_attrs.get("rt"))
-        rh = self.__getattribute__(channel_val_attrs.get("rt"))  # Se toma solo el byte bajo
+        rh = self.__getattribute__(channel_val_attrs.get("rh"))[1]  # Se toma solo el byte bajo
         channel_h_attr = f"h{channel}"
         channel_dp_attr = f"dp{channel}"
         channel_h = 0
@@ -696,6 +696,7 @@ class HeatRecoveryUnit(phi.MBDevice):
 
         Returns: Velocidad actual del recuperador
         """
+        print(f"DEBUGGING {__file__}: Fijando velocidad recuperador")
         sources = {1: self.speed1_source, 2: self.speed2_source, 3: self.speed3_source}
         if all([x is None for x in sources.values()]):
             return  # El recuperador no trabaja con velocidades, sino con caudales
@@ -712,23 +713,28 @@ class HeatRecoveryUnit(phi.MBDevice):
                       "adr": speed_adr}
             spd_value = get_value(target)
             if new_speed == 0:
+                print(f"DEBUGGING {__file__}: Poniendo recuperador a velocidad 0")
                 self.speed = 0
                 if spd_value == phi.ON:
                     res = await set_value(target, phi.OFF)
             elif new_speed is None:
                 if spd_value:
+                    print(f"DEBUGGING {__file__}: Velocidad actual recuperador {spd_value}")
                     current_speed = spd
                     self.speed = spd
             elif new_speed == spd:
+                print(f"DEBUGGING {__file__}: Poniendo recuperador a velocidad {new_speed}")
                 res = await set_value(target, phi.ON)
                 current_speed = spd
                 self.speed = spd
             else:
                 res = await set_value(target, phi.OFF)
+                self.speed = 0
 
         if current_speed == 0:  # No se ha seleccionado ninguna velocidad y el recuperador estaba apagado
             self.speed = 0
 
+        print(f"DEBUGGING {__file__}: (antes de return) Poniendo recuperador a velocidad {self.speed}")
         return self.speed
 
     async def set_manual_speed(self):
@@ -805,12 +811,14 @@ class HeatRecoveryUnit(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
         current_pos = get_value(value_source=source)
+        print(f"DEBUGGING {__file__}: Posición actual compuertas {current_pos}\n(0=sin recirculación)")
         if current_pos == new_pos or new_pos is None:
             self.dampers_st = current_pos
         else:
             res = await set_value(source, new_pos)
             self.dampers_st = new_pos
 
+        print(f"DEBUGGING {__file__}: Posición calculada compuertas {self.dampers_st}\n(0=sin recirculación)")
         return self.dampers_st
 
     async def set_valv_pos(self, new_pos: [int, None] = None):
@@ -832,12 +840,18 @@ class HeatRecoveryUnit(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
         current_pos = get_value(value_source=source)
+        # print(f"DEBUGGING {__file__}: Estado actual válvula {current_pos}\t(0 = Cerrada)\n"
+        #       f"La funcion get_value devuelve un valor de tipo {type(current_pos)}  ")
         if current_pos == new_pos or new_pos is None:
             self.valv_st = current_pos
         else:
+            states = ["Cerrando", "Abriendo"]
+            valv_operation = "No se puede actuar sobre " if self.valv_st is None else f"{states[new_pos]}"
+            print(f"DEBUGGING {__file__}: {valv_operation} válvula")
             res = await set_value(source, new_pos)
             self.valv_st = new_pos
 
+        # print(f"DEBUGGING {__file__}: Estado válvula {self.valv_st}\t(0 = Cerrada)")
         return self.valv_st
 
     async def set_bypass_pos(self, new_pos: [int, None] = None):
@@ -917,8 +931,10 @@ class HeatRecoveryUnit(phi.MBDevice):
         group_cooling_mode = group.iv  # Modo calefacción (False) o refrigeración (True) del grupo
         group_rt = [float(room.rt()) for room in group.roomgroup if room.rt() is not None]  # Tª de las habitaciones
         group_sp = group.air_sp  # Consigna de ambiente calculada para el grupo
+        group_wsp = group.water_sp  # Consigna de impulsión de agua para el grupo
+        group_demand = group.demand  # 0-No demanda / 1-Demanda Refrig / 2-Demanda Calef.
         print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tConsignas:\t{group_sp} \n\t"
-              f"temperaturas:\t{group_rt}")
+              f"temperaturas:\t{group_rt}\n\tImpulsion agua:\t{group_wsp}\n\tDemanda:\t{group_demand}  ")
         if not group_sp or not group_rt:  # Si no leo temperaturas o consignas,
             # activo Modo Ventilación
             print(f"DEBUGGING {__file__}: Grupo {self.groups[0]}\n\tFaltan consignas ({group_sp} o "
@@ -932,7 +948,8 @@ class HeatRecoveryUnit(phi.MBDevice):
         group_h = group.air_h  # Entalpía del grupo
         if group_cooling_mode:
             for rt in group_rt:
-                if rt < group_dp + phi.OFFSET_ACTIVACION_DESHUMIDIFICACION:
+                if rt < group_dp + phi.OFFSET_ACTIVACION_DESHUMIDIFICACION or \
+                        (group_demand == 1 and group_wsp > phi.TEMP_ACTIVACION_DESHUMIDIFICACION):
                     dehumid_mode = True
                     self.hru_mode = phi.DESHUMIDIFICACION
             building = group.roomgroup[0].building_id  # Edificio al que pertenece el grupo de habitaciones
@@ -1012,14 +1029,17 @@ class HeatRecoveryUnit(phi.MBDevice):
         Activa el freecooling con el recuperador:
             Ventilador a velocidad máxima
             Compuerta de recirculación cerrada / compuerta aire exterior abierta
-            Válvula de 3 vías cerrada
+            Válvula de 3 vías cerrada si no están activados los modos Fancoil o Deshumidificación
             Bypass recuperador abierto
         :return:
         """
         print(f"Activando freecooling en el recuperador {self.name}")
         await self.set_speed(phi.MAX_HRU_SPEED)
         await self.set_airflow(self.max_airflow)
-        await self.set_valv_pos(phi.CLOSED)
+        if self.hru_mode in (5, 6):
+            await self.set_valv_pos(phi.OPEN)  # En modo fancoil y deshumidificación con FreeC la válvula está abierta
+        else:
+            await self.set_valv_pos(phi.CLOSED)
         await self.set_dampers_pos(phi.CLOSED)
         await self.set_bypass_pos(phi.OPEN)
 
@@ -1192,13 +1212,14 @@ class HeatRecoveryUnit(phi.MBDevice):
                            8: "Modo Ventilación"}
         dev_info = f"\nRecuperador {self.name}\n"
         dev_info += f"\tEstado: {onoff.get(self.onoff)}\n"
-        dev_info += f"\t:Modo de funcionamiento: {hru_modes_descr.get(self.hru_mode)}\n"
-        dev_info += f"\t:Modo manual ventilador {manual.get(self.manual)}\n"
+        dev_info += f"\tModo de funcionamiento: {hru_modes_descr.get(self.hru_mode)}\n"
+        dev_info += f"\tModo manual ventilador {manual.get(self.manual)}\n"
         if por_caudal:
-            dev_info += f"\t:Caudal del recuperador {self.supply_flow}\n"
+            dev_info += f"\tCaudal del recuperador: {self.supply_flow}\n"
         else:
-            dev_info += f"\t:Velocidad ventilador {self.speed}\n"
-        dev_info += f"\t:Estado válvula {self.valv_st}\n"
+            dev_info += f"\tVelocidad ventilador: {self.speed}\n"
+        dev_info += f"\tEstado compuertas: {self.dampers_st}\n"
+        dev_info += f"\tEstado válvula: {self.valv_st}\n"
         return dev_info
 
 
@@ -2375,9 +2396,10 @@ class Fancoil(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
         current_rt = get_value(value_source=source)
-        if new_rt_value is None or current_rt > 50 or current_rt < 0:
-            print(f"ERROR {self.name} - No se puede leer la temperatura ambiente.\nSe para el fancoil por seguridad")
-            await self.manual_fan_speed(manual_mode=phi.ON, man_speed=phi.OFF)  # Parada manual
+        # if new_rt_value is None or current_rt > 50 or current_rt < 0:
+        if new_rt_value is None:
+            # print(f"ERROR {self.name} - No se puede leer la temperatura ambiente.\nSe para el fancoil por seguridad")
+            # await self.manual_fan_speed(manual_mode=phi.ON, man_speed=phi.OFF)  # Parada manual
             self.rt = current_rt
         elif new_rt_value > 50 or new_rt_value < 0:
             await self.manual_fan_speed(manual_mode=phi.OFF)  # Se activa la selección automática de velocidad
@@ -2385,7 +2407,7 @@ class Fancoil(phi.MBDevice):
                   f"fancoil {self.name} (rango 0-50)")
             self.rt = current_rt
         else:
-            await self.manual_fan_speed(manual_mode=phi.OFF)  # Se activa la selección automática de velocidad
+            # await self.manual_fan_speed(manual_mode=phi.OFF)  # Se activa la selección automática de velocidad
             print(f"fancoil.set_sp: Actualizando temperatura ambiente con valor {new_rt_value} en fancoil {self.name}")
             res = await set_value(source, new_rt_value)
             self.rt = new_rt_value
@@ -2819,13 +2841,13 @@ class Fancoil(phi.MBDevice):
         estado_manual_ventilador = self.manual_fan[0]
         dev_info = f"\nFancoil {self.name}\n"
         dev_info += f"\tEstado: {onoff.get(self.onoff_st)}\n"
-        dev_info += f"\t:Modo de funcionamiento: {modo.get(self.iv)}\n"
-        dev_info += f"\t:Consigna {self.sp}\n"
-        dev_info += f"\t:Temperatura ambiente {self.rt}\n"
-        dev_info += f"\t:Demanda {demanda.get(self.demand)}\n"
-        dev_info += f"\t:Velocidad {self.fan_speed}\n"
-        dev_info += f"\t:Modo ventilador {manual.get(estado_manual_ventilador)}\n"
-        dev_info += f"\t:Estado válvula {self.valv_st}\n"
+        dev_info += f"\tModo de funcionamiento: {modo.get(self.iv)}\n"
+        dev_info += f"\tConsigna: {self.sp}\n"
+        dev_info += f"\tTemperatura ambiente: {self.rt}\n"
+        dev_info += f"\tDemanda: {demanda.get(self.demand)}\n"
+        dev_info += f"\tVelocidad: {self.fan_speed}\n"
+        dev_info += f"\tModo ventilador: {manual.get(estado_manual_ventilador)}\n"
+        dev_info += f"\tEstado válvula: {self.valv_st}\n"
         return dev_info
 
 

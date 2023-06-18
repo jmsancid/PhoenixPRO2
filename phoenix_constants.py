@@ -104,6 +104,7 @@ OFFSET_HEATING = -1.5
 # DIFERENCIA MÍNIMA ENTRE EL VALOR DE TEMPERATURA DEL GRUPO DE HABITACIONES Y PUNTO DE ROCÍO DEL GRUPO
 # SI TEMP_GRUPO + OFFSET_ACTIVACION_DESHUMIDIFICACON < TEMP_ROCIO_GRUPO ==> SE ACTIVA DESHUMIDIFICACION
 OFFSET_ACTIVACION_DESHUMIDIFICACION = 1
+TEMP_ACTIVACION_DESHUMIDIFICACION = 14.5
 MAX_HRU_SPEED = 3
 HRU_VENTILATION_SPEED = 2  # Velocidad por defecto en modo ventilación
 HRU_VENTILATION_AFLOWPCT = 50  # Porcentaje del caudal máximo del recuperador a aplicar por defecto en ventilación
@@ -145,16 +146,15 @@ GENERATOR_RW_FILES = ("manual_onoff_mode", "manual_onoff", "manual_sp_mode", "ma
 
 FANCOIL_R_FILES = ('onoff_st', 'demand', 'iv', 'sp', 'rt',
                    'fan_auto_cont', 'fan_speed', 'actmanual_fan', 'manual_speed', 'speed_limit',
-                   'valv_st', 'manual_valv_st', 'man_pos_valv', 'remote_onoff', 'sd_aux', 'floor_temp')
-FANCOIL_RW_FILES = ('fan_auto_cont', 'actmanual_fan', 'manual_speed', 'speed_limit', 'manual_valv_st', 'man_pos_valv',
-                    'remote_onoff', 'sd_aux')
+                   'valv_st', 'manual_valv_st', 'manual_valv_pos', 'remote_onoff', 'sd_aux', 'floor_temp')
+FANCOIL_RW_FILES = ('fan_auto_cont', 'actmanual_fan', 'manual_speed', 'speed_limit', 'manual_valv_st',
+                    'manual_valv_pos', 'remote_onoff', 'sd_aux')
 SPLIT_R_FILES = ()
 SPLIT_RW_FILES = ()
 HEATRECOVERYUNIT_R_FILES = ("onoff", "manual", "manual_speed", "hru_mode", "man_hru_mode_st", "man_hru_mode", "speed",
                             "manual_airflow", "supply_flow", "exhaust_flow", "valv_st", "bypass_st", "dampers_st",
                             "remote_onoff", "aux_ed2_st", "aux_ed3_st")
-HEATRECOVERYUNIT_RW_FILES = ("onoff", "manual", "manual_speed", "manual_airflow", "man_hru_mode_st", "hru_mode",
-                             "man_hru_mode_st", "man_hru_mode")
+HEATRECOVERYUNIT_RW_FILES = ("onoff", "manual", "manual_speed", "manual_airflow", "man_hru_mode_st", "man_hru_mode")
 
 AIRZONEMANAGER_R_FILES = ("iv", "sp", "rt", "sp1", "rt1", "sp2", "rt2",
                           "fan_auto_cont", "fan_speed", "damper1_st", "damper2_st",
