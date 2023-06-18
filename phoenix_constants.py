@@ -122,6 +122,7 @@ VENTILACION = 8
 EXCHANGE_FOLDER = r"/home/pi/var/tmp/reg"
 TEMP_EXT_FILE = EXCHANGE_FOLDER + "/1/1000/temp"
 HR_EXT_FILE = EXCHANGE_FOLDER + "/1/2000/humd"
+MODO_IV_FILE = EXCHANGE_FOLDER + "/1/5000/modo_iv"
 
 UFHCCONTROLLER_R_FILES = ('iv', 'pump',
                           'sp1', 'sp2', 'sp3', 'sp4', 'sp5', 'sp6', 'sp7', 'sp8', 'sp9', 'sp10', 'sp11', 'sp12',

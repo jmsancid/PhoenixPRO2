@@ -32,6 +32,37 @@ def get_default_t_exterior() -> float:
     return t_ext
 
 
+def get_modo_iv(bld: str = "1") -> [int, None]:
+    """
+        Obtiene el modo actual de funcionamiento del sistema: Calefacción = 0, Refrigeración = 1
+        """
+    bld_data = phi.prj.get("buildings")[bld]
+    if bld_data is None:
+        print(f"ERROR (get_modo_iv) - No se ha definido edificio {bld}")
+        sys.exit()
+    iv_source = bld_data.get("iv_source")
+    if iv_source is None:
+        msg = f"WARNING (get_modo_iv) - No se indicado origen de lectura del modo Frío/Calor en el " \
+              f"edificio {bld}. Se toman valores por defecto"
+        print(msg)
+        return get_default_t_exterior()
+    modo_iv_from_mbdev_source = iv_source.get("mbdev")
+    modo_iv_from_file_source = iv_source.get("file")
+    if modo_iv_from_mbdev_source not in [None, {}]:
+        print("El modo Frío/Calor se lee de un dispositivo ModBus")
+        modo_iv = get_value(modo_iv_from_mbdev_source)
+        return modo_iv
+    elif modo_iv_from_file_source:
+        print("El modo Frío/Calor se lee de un archivo")
+        modo_iv_file = phi.EXCHANGE_FOLDER + modo_iv_from_file_source
+        if path.isfile(modo_iv_file):
+            with open(modo_iv_file, "r") as ivf:
+                modo_iv = int(ivf.read())
+                return modo_iv
+    else:
+        return init_modo_iv()
+
+
 def get_temp_exterior(bld: str = "1") -> [float, None]:
     """
         Obtiene el valor actual de la temperatura exterior del edificio según el origen definido en la

@@ -12,7 +12,10 @@
         "id": 1,
         "name": "Nave 1",
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 1},
+        "iv_source": {
+            "mbdev": {},
+            "file": "/1/5000/modo_iv"
+          },
         "o_data": {
           "te_source": {
             "mbdev": {},
@@ -247,7 +250,10 @@
         "id": 2,
         "name": "Nave 2",
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 1},
+        "iv_source": {
+            "mbdev": {},
+            "file": "/1/5000/modo_iv"
+          },
         "o_data": {
           "te_source": {
             "mbdev": {},
@@ -482,7 +488,10 @@
         "id": 3,
         "name": "Nave 3",
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 1},
+        "iv_source": {
+            "mbdev": {},
+            "file": "/1/5000/modo_iv"
+          },
         "o_data": {
           "te_source": {
             "mbdev": {},
@@ -717,7 +726,10 @@
         "id": 4,
         "name": "Nave 4",
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 1},
+        "iv_source": {
+            "mbdev": {},
+            "file": "/1/5000/modo_iv"
+          },
         "o_data": {
           "te_source": {
             "mbdev": {},
@@ -952,7 +964,10 @@
         "id": 5,
         "name": "Boyera 1",
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 1},
+        "iv_source": {
+            "mbdev": {},
+            "file": "/1/5000/modo_iv"
+          },
         "o_data": {
           "te_source": {
             "mbdev": {},
@@ -1115,7 +1130,10 @@
         "id": 6,
         "name": "Boyera 2",
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 1},
+        "iv_source": {
+            "mbdev": {},
+            "file": "/1/5000/modo_iv"
+          },
         "o_data": {
           "te_source": {
             "mbdev": {},
@@ -1170,7 +1188,10 @@
         "id": 7,
         "name": "Casa Principal",
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 1},
+        "iv_source": {
+            "mbdev": {},
+            "file": "/1/5000/modo_iv"
+          },
         "o_data": {
           "te_source": {
             "mbdev": {},
