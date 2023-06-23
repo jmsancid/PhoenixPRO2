@@ -67,6 +67,7 @@ SPLITDB = MODULE_PATH + r"/project_elements/splits.json"
 HEATRECOVERYUNITDB = MODULE_PATH + r"/project_elements/heatrecoveryunits.json"
 AIRZONEMANAGERDB = MODULE_PATH + r"/project_elements/airzonemanagers.json"
 TEMPFLUIDCONTROLLERDB = MODULE_PATH + r"/project_elements/tempfluidcontrollers.json"
+DATASOURCEDB = MODULE_PATH + r"/project_elements/datasources.json"
 
 # DICCIONARIO PARA ACCEDER A LOS JSON CON LOS OBJETOS DEL PROYECTO
 PRJ_DEVICES_DB = {
@@ -76,7 +77,8 @@ PRJ_DEVICES_DB = {
     "Split": SPLITDB,
     "HeatRecoveryUnit": HEATRECOVERYUNITDB,
     "AirZoneManager": AIRZONEMANAGERDB,
-    "TempFluidController": TEMPFLUIDCONTROLLERDB
+    "TempFluidController": TEMPFLUIDCONTROLLERDB,
+    "DataSource": DATASOURCEDB
 }
 
 # VARIABLES PARA CÁLCULO DE TEMPERATURA DE IMPULSIÓN DE AGUA

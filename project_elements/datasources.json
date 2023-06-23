@@ -2,24 +2,7 @@
   "datasources": {
     "sistena_sig426": {
       "name": "Sensor de calidad de aire",
-      "onoff_target": ["hr", 2],
-      "st_modo_demanda_source": ["ir", 22],
-      "iv_source": ["hr", 3],
-      "sp_source": ["hr", 4],
-      "rt_source": ["hr", 5],
-      "fan_type_source": ["hr", 6],
-      "fan_auto_cont_source": ["hr", 7],
-      "fan_st_source": ["ir", 23],
-      "manual_fan_target": ["hr", 8],
-      "manual_speed_target": ["hr", 9],
-      "ac_speed_limit_source": ["hr", 12],
-      "ec_speed_limit_source": ["hr", 14],
-      "manual_valv_source": ["hr", 15],
-      "manual_valv_position_source": ["hr", 16],
-      "valv_st_source": ["ir", 24],
-      "remote_onoff_source": ["hr", 18],
-      "sd_aux_source": ["hr", 20],
-      "floor_temp_source": ["ir", 25]
+      "aq_source": ["ir", 10]
     }
   }
 }
