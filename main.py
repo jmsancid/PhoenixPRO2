@@ -9,8 +9,6 @@ from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_a
 # from publish.publish_results import publish_results
 
 async def main():
-    init_time = phi.datetime.now()
-    print(f"Hora inicio: {str(init_time)}")
     print(f"\n\t\tAccediendo al controlador {phi.boardsn}\n")
 
     changes = await check_changes_from_web()
@@ -39,3 +37,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+    end_time = phi.datetime.now()
+    print(f"Hora finalización: {str(end_time)}")

@@ -10,7 +10,7 @@
     "buildings": {
       "1": {
         "id": 1,
-        "name": "Nave 1",
+        "name": "COVA MURADA",
         "onoff_source": {"bus": 1, "device": 1},
         "iv_source": {
             "mbdev": {},
@@ -30,12 +30,12 @@
         "dwellings": {
           "1": {
             "id": 1,
-            "name": "Habitación 1.1",
+            "name": "Habitación 35",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-1.1",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.1", "Dorm1.1"],
+                "name": "Dormitorio 1 H-35",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_35", "Dorm35"],
                 "iv_source": {"bus": 1, "device": 1, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 1, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 2},
@@ -49,8 +49,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-1.1",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.1", "B1.1"],
+                "name": "Baño 1 H-35",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_35", "B35"],
                 "iv_source": {"bus": 1, "device": 1, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 1, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 1, "datatype": "ir", "adr": 1},
@@ -66,12 +66,12 @@
           },
           "2": {
             "id": 2,
-            "name": "Habitación 1.2",
+            "name": "Habitación 34",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-1.2",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.2", "Dorm1.2"],
+                "name": "Dormitorio 1 H-34",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_34", "Dorm34"],
                 "iv_source": {"bus": 1, "device": 2, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 2, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 1},
@@ -85,8 +85,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-1.2",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.2", "B1.2"],
+                "name": "Baño 1 H-34",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_34", "B34"],
                 "iv_source": {"bus": 1, "device": 2, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 2, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 2, "datatype": "ir", "adr": 4},
@@ -102,12 +102,12 @@
           },
           "3": {
             "id": 1,
-            "name": "Habitación 1.3",
+            "name": "Habitación 29",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-1.3",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.3", "Dorm1.3"],
+                "name": "Dormitorio 1 H-29",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_29", "Dorm29"],
                 "iv_source": {"bus": 1, "device": 3, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 3, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 1},
@@ -121,8 +121,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-1.3",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.3", "B1.3"],
+                "name": "Baño 1 H-29",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_29", "B29"],
                 "iv_source": {"bus": 1, "device": 3, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 3, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 3, "datatype": "ir", "adr": 4},
@@ -138,12 +138,12 @@
           },
           "4": {
             "id": 1,
-            "name": "Habitación 1.4",
+            "name": "Habitación 33",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-1.4",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.4", "Dorm1.4"],
+                "name": "Dormitorio 1 H-33",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_33", "Dorm33"],
                 "iv_source": {"bus": 1, "device": 4, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 4, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 4, "datatype": "ir", "adr": 1},
@@ -157,8 +157,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-1.4",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.4", "B1.4"],
+                "name": "Baño 1 H-33",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_33", "B33"],
                 "iv_source": {"bus": 1, "device": 4, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 4, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 4, "datatype": "ir", "adr": 4},
@@ -174,12 +174,12 @@
           },
           "5": {
             "id": 1,
-            "name": "Habitación 1.5",
+            "name": "Habitación 28",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-1.5",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.5", "Dorm1.5"],
+                "name": "Dormitorio 1 H-28",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_28", "Dorm28"],
                 "iv_source": {"bus": 1, "device": 5, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 5, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 5, "datatype": "ir", "adr": 1},
@@ -193,8 +193,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-1.5",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.5", "B1.5"],
+                "name": "Baño 1 H-28",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_28", "B28"],
                 "iv_source": {"bus": 1, "device": 5, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 5, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 5, "datatype": "ir", "adr": 4},
@@ -210,12 +210,12 @@
           },
           "6": {
             "id": 1,
-            "name": "Habitación 1.6",
+            "name": "Habitación 27",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-1.6",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.6", "Dorm1.6"],
+                "name": "Dormitorio 1 H-27",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_27", "Dorm27"],
                 "iv_source": {"bus": 1, "device": 6, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 6, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 6, "datatype": "ir", "adr": 2},
@@ -229,8 +229,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-1.6",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_1", "Hab_1.6", "B1.6"],
+                "name": "Baño 1 H-27",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Cova_Murada", "Hab_27", "B27"],
                 "iv_source": {"bus": 1, "device": 6, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 6, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 6, "datatype": "ir", "adr": 1},
@@ -248,7 +248,7 @@
       },
       "2": {
         "id": 2,
-        "name": "Nave 2",
+        "name": "XOROI",
         "onoff_source": {"bus": 1, "device": 1},
         "iv_source": {
             "mbdev": {},
@@ -268,12 +268,12 @@
         "dwellings": {
           "1": {
             "id": 1,
-            "name": "Habitación 2.1",
+            "name": "Habitación 32",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-2.1",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.1", "Dorm2.1"],
+                "name": "Dormitorio 1 H-32",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_32", "Dorm32"],
                 "iv_source": {"bus": 1, "device": 7, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 7, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 7, "datatype": "ir", "adr": 2},
@@ -287,8 +287,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-2.1",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.1", "B2.1"],
+                "name": "Baño 1 H-32",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_32", "B32"],
                 "iv_source": {"bus": 1, "device": 7, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 7, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 7, "datatype": "ir", "adr": 1},
@@ -304,12 +304,12 @@
           },
           "2": {
             "id": 2,
-            "name": "Habitación 2.2",
+            "name": "Habitación 31",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-2.2",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.2", "Dorm2.2"],
+                "name": "Dormitorio 1 H-31",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_31", "Dorm31"],
                 "iv_source": {"bus": 1, "device": 8, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 8, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 8, "datatype": "ir", "adr": 1},
@@ -323,8 +323,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-2.2",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.2", "B2.2"],
+                "name": "Baño 1 H-31",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_31", "B31"],
                 "iv_source": {"bus": 1, "device": 8, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 8, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 8, "datatype": "ir", "adr": 4},
@@ -340,12 +340,12 @@
           },
           "3": {
             "id": 3,
-            "name": "Habitación 2.3",
+            "name": "Habitación 26",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-2.3",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.3", "Dorm2.3"],
+                "name": "Dormitorio 1 H-26",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_26", "Dorm26"],
                 "iv_source": {"bus": 1, "device": 9, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 9, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 9, "datatype": "ir", "adr": 1},
@@ -359,8 +359,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-2.3",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.3", "B2.3"],
+                "name": "Baño 1 H-26",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_26", "B26"],
                 "iv_source": {"bus": 1, "device": 9, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 9, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 9, "datatype": "ir", "adr": 4},
@@ -376,12 +376,12 @@
           },
           "4": {
             "id": 4,
-            "name": "Habitación 2.4",
+            "name": "Habitación 30",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-2.4",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.4", "Dorm2.4"],
+                "name": "Dormitorio 1 H-30",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_30", "Dorm30"],
                 "iv_source": {"bus": 1, "device": 10, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 10, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 10, "datatype": "ir", "adr": 1},
@@ -395,8 +395,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-2.4",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.4", "B2.4"],
+                "name": "Baño 1 H-30",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_30", "B30"],
                 "iv_source": {"bus": 1, "device": 10, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 10, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 10, "datatype": "ir", "adr": 4},
@@ -412,12 +412,12 @@
           },
           "5": {
             "id": 5,
-            "name": "Habitación 2.5",
+            "name": "Habitación 25",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-2.5",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.5", "Dorm2.5"],
+                "name": "Dormitorio 1 H-25",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_25", "Dorm25"],
                 "iv_source": {"bus": 1, "device": 11, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 11, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 11, "datatype": "ir", "adr": 1},
@@ -431,8 +431,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-2.5",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.5", "B2.5"],
+                "name": "Baño 1 H-25",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_25", "B25"],
                 "iv_source": {"bus": 1, "device": 11, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 11, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 11, "datatype": "ir", "adr": 4},
@@ -448,12 +448,12 @@
           },
           "6": {
             "id": 6,
-            "name": "Habitación 2.6",
+            "name": "Habitación 24",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-2.6",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.6", "Dorm2.6"],
+                "name": "Dormitorio 1 H-24",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_24", "Dorm24"],
                 "iv_source": {"bus": 1, "device": 12, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 12, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 12, "datatype": "ir", "adr": 2},
@@ -467,8 +467,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-2.6",
-                "groups": ["Son_Vell", "Naves_1-2", "Nave_2", "Hab_2.6", "B2.6"],
+                "name": "Baño 1 H-24",
+                "groups": ["Son_Vell", "Naves_N3-N4", "Xoroi", "Hab_24", "B24"],
                 "iv_source": {"bus": 1, "device": 12, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 12, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 12, "datatype": "ir", "adr": 1},
@@ -486,7 +486,7 @@
       },
       "3": {
         "id": 3,
-        "name": "Nave 3",
+        "name": "SAIGO",
         "onoff_source": {"bus": 1, "device": 1},
         "iv_source": {
             "mbdev": {},
@@ -506,12 +506,12 @@
         "dwellings": {
           "1": {
             "id": 1,
-            "name": "Habitación 3.1",
+            "name": "Habitación 23",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-3.1",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.1", "Dorm3.1"],
+                "name": "Dormitorio 1 H-23",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_23", "Dorm23"],
                 "iv_source": {"bus": 1, "device": 13, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 13, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 13, "datatype": "ir", "adr": 2},
@@ -525,8 +525,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-3.1",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.1", "B3.1"],
+                "name": "Baño 1 H-23",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_23", "B23"],
                 "iv_source": {"bus": 1, "device": 13, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 13, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 13, "datatype": "ir", "adr": 1},
@@ -542,12 +542,12 @@
           },
           "2": {
             "id": 2,
-            "name": "Habitación 3.2",
+            "name": "Habitación 22",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-3.2",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.2", "Dorm3.2"],
+                "name": "Dormitorio 1 H-22",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_22", "Dorm22"],
                 "iv_source": {"bus": 1, "device": 14, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 14, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 14, "datatype": "ir", "adr": 1},
@@ -561,8 +561,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-3.2",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.2", "B3.2"],
+                "name": "Baño 1 H-22",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_22", "B22"],
                 "iv_source": {"bus": 1, "device": 14, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 14, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 14, "datatype": "ir", "adr": 4},
@@ -578,12 +578,12 @@
           },
           "3": {
             "id": 3,
-            "name": "Habitación 3.3",
+            "name": "Habitación 15",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-3.3",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.3", "Dorm3.3"],
+                "name": "Dormitorio 1 H-15",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_15", "Dorm15"],
                 "iv_source": {"bus": 1, "device": 15, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 15, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 15, "datatype": "ir", "adr": 1},
@@ -597,8 +597,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-3.3",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.3", "B3.3"],
+                "name": "Baño 1 H-15",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_15", "B15"],
                 "iv_source": {"bus": 1, "device": 15, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 15, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 15, "datatype": "ir", "adr": 4},
@@ -614,12 +614,12 @@
           },
           "4": {
             "id": 4,
-            "name": "Habitación 3.4",
+            "name": "Habitación 21",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-3.4",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.4", "Dorm3.4"],
+                "name": "Dormitorio 1 H-21",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_21", "Dorm21"],
                 "iv_source": {"bus": 1, "device": 16, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 16, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 16, "datatype": "ir", "adr": 1},
@@ -633,8 +633,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-3.4",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.4", "B3.4"],
+                "name": "Baño 1 H-21",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_21", "B21"],
                 "iv_source": {"bus": 1, "device": 16, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 16, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 16, "datatype": "ir", "adr": 4},
@@ -650,12 +650,12 @@
           },
           "5": {
             "id": 5,
-            "name": "Habitación 3.5",
+            "name": "Habitación 14",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-3.5",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.5", "Dorm3.5"],
+                "name": "Dormitorio 1 H-14",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_14", "Dorm14"],
                 "iv_source": {"bus": 1, "device": 17, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 17, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 17, "datatype": "ir", "adr": 1},
@@ -669,8 +669,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-3.5",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.5", "B3.5"],
+                "name": "Baño 1 H-14",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_14", "B14"],
                 "iv_source": {"bus": 1, "device": 17, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 17, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 17, "datatype": "ir", "adr": 4},
@@ -686,12 +686,12 @@
           },
           "6": {
             "id": 6,
-            "name": "Habitación 3.6",
+            "name": "Habitación 12",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-3.6",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.6", "Dorm3.6"],
+                "name": "Dormitorio 1 H-12",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_12", "Dorm12"],
                 "iv_source": {"bus": 1, "device": 18, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 18, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 18, "datatype": "ir", "adr": 2},
@@ -705,8 +705,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-3.6",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_3", "Hab_3.6", "B3.6"],
+                "name": "Baño 1 H-12",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Saigo", "Hab_12", "B12"],
                 "iv_source": {"bus": 1, "device": 18, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 18, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 18, "datatype": "ir", "adr": 1},
@@ -724,7 +724,7 @@
       },
       "4": {
         "id": 4,
-        "name": "Nave 4",
+        "name": "PARELLA",
         "onoff_source": {"bus": 1, "device": 1},
         "iv_source": {
             "mbdev": {},
@@ -744,12 +744,12 @@
         "dwellings": {
           "1": {
             "id": 1,
-            "name": "Habitación 4.1",
+            "name": "Habitación 20",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-4.1",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.1", "Dorm4.1"],
+                "name": "Dormitorio 1 H-20",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_20", "Dorm20"],
                 "iv_source": {"bus": 1, "device": 19, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 19, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 19, "datatype": "ir", "adr": 2},
@@ -763,8 +763,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-4.1",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.1", "B4.1"],
+                "name": "Baño 1 H-20",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_20", "B20"],
                 "iv_source": {"bus": 1, "device": 19, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 19, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 19, "datatype": "ir", "adr": 1},
@@ -780,12 +780,12 @@
           },
           "2": {
             "id": 2,
-            "name": "Habitación 4.2",
+            "name": "Habitación 19",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-4.2",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.2", "Dorm4.2"],
+                "name": "Dormitorio 1 H-19",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_19", "Dorm19"],
                 "iv_source": {"bus": 1, "device": 20, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 20, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 20, "datatype": "ir", "adr": 2},
@@ -799,8 +799,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-4.2",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.2", "B4.2"],
+                "name": "Baño 1 H-19",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_19", "B19"],
                 "iv_source": {"bus": 1, "device": 20, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 20, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 20, "datatype": "ir", "adr": 1},
@@ -816,12 +816,12 @@
           },
           "3": {
             "id": 3,
-            "name": "Habitación 4.3",
+            "name": "Habitación 11",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-4.3",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.3", "Dorm4.3"],
+                "name": "Dormitorio 1 H-11",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_11", "Dorm11"],
                 "iv_source": {"bus": 1, "device": 21, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 21, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 21, "datatype": "ir", "adr": 1},
@@ -835,8 +835,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-4.3",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.3", "B4.3"],
+                "name": "Baño 1 H-11",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_11", "B11"],
                 "iv_source": {"bus": 1, "device": 21, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 21, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 21, "datatype": "ir", "adr": 4},
@@ -852,12 +852,12 @@
           },
           "4": {
             "id": 4,
-            "name": "Habitación 4.4",
+            "name": "Habitación 18",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-4.4",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.4", "Dorm4.4"],
+                "name": "Dormitorio 1 H-18",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_18", "Dorm18"],
                 "iv_source": {"bus": 1, "device": 22, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 22, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 22, "datatype": "ir", "adr": 1},
@@ -871,8 +871,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-4.4",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.4", "B4.4"],
+                "name": "Baño 1 H-18",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_18", "B18"],
                 "iv_source": {"bus": 1, "device": 22, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 22, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 22, "datatype": "ir", "adr": 4},
@@ -888,12 +888,12 @@
           },
           "5": {
             "id": 5,
-            "name": "Habitación 4.5",
+            "name": "Habitación 10",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-4.5",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.5", "Dorm4.5"],
+                "name": "Dormitorio 1 H-10",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_10", "Dorm10"],
                 "iv_source": {"bus": 1, "device": 23, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 23, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 23, "datatype": "ir", "adr": 1},
@@ -907,8 +907,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-4.5",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.5", "B4.5"],
+                "name": "Baño 1 H-10",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_10", "B10"],
                 "iv_source": {"bus": 1, "device": 23, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 23, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 23, "datatype": "ir", "adr": 4},
@@ -924,12 +924,12 @@
           },
           "6": {
             "id": 6,
-            "name": "Habitación 4.6",
+            "name": "Habitación 9",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-4.6",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.6", "Dorm4.6"],
+                "name": "Dormitorio 1 H-9",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_9", "Dorm9"],
                 "iv_source": {"bus": 1, "device": 24, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 24, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 1, "device": 24, "datatype": "ir", "adr": 1},
@@ -943,8 +943,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-4.6",
-                "groups": ["Son_Vell", "Naves_3-4", "Nave_4", "Hab_4.6", "B4.6"],
+                "name": "Baño 1 H-9",
+                "groups": ["Son_Vell", "Naves_N1-N2", "Parella", "Hab_9", "B9"],
                 "iv_source": {"bus": 1, "device": 24, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 24, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 1, "device": 24, "datatype": "ir", "adr": 4},
@@ -962,7 +962,7 @@
       },
       "5": {
         "id": 5,
-        "name": "Boyera 1",
+        "name": "Nura",
         "onoff_source": {"bus": 1, "device": 1},
         "iv_source": {
             "mbdev": {},
@@ -982,12 +982,12 @@
         "dwellings": {
           "1": {
             "id": 1,
-            "name": "Habitación BY1.1",
+            "name": "Habitación 17",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-BY1.1",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.1", "Dorm_BY1.1"],
+                "name": "Dormitorio 1 H-17",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_17", "Dorm_17"],
                 "iv_source": {"bus": 2, "device": 25, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 25, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 25, "datatype": "ir", "adr": 1},
@@ -1001,8 +1001,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-BY1.1",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.1", "B_BY1.1"],
+                "name": "Baño 1 H-17",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_17", "B_17"],
                 "iv_source": {"bus": 2, "device": 25, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 25, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 2, "device": 25, "datatype": "ir", "adr": 4},
@@ -1018,12 +1018,12 @@
           },
           "2": {
             "id": 2,
-            "name": "Habitación BY1.2",
+            "name": "Habitación 16",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-BY1.2",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.2", "Dorm_BY1.2"],
+                "name": "Dormitorio 1 H-16",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_16", "Dorm_16"],
                 "iv_source": {"bus": 2, "device": 26, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 26, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 26, "datatype": "ir", "adr": 1},
@@ -1037,8 +1037,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-BY1.2",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.2", "B_BY1.2"],
+                "name": "Baño 1 H-16",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_16", "B_16"],
                 "iv_source": {"bus": 2, "device": 26, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 26, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 2, "device": 26, "datatype": "ir", "adr": 4},
@@ -1054,12 +1054,12 @@
           },
           "3": {
             "id": 3,
-            "name": "Habitación BY1.3",
+            "name": "Habitación 8",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-BY1.3",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.3", "Dorm_BY1.3"],
+                "name": "Dormitorio 1 H-8",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_8", "Dorm_8"],
                 "iv_source": {"bus": 2, "device": 27, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 27, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 2, "device": 27, "datatype": "ir", "adr": 2},
@@ -1073,8 +1073,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-BY1.3",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.3", "B_BY1.3"],
+                "name": "Baño 1 H-8",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_8", "B_8"],
                 "iv_source": {"bus": 2, "device": 27, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 27, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 27, "datatype": "ir", "adr": 1},
@@ -1090,12 +1090,12 @@
           },
           "4": {
             "id": 4,
-            "name": "Habitación BY1.4",
+            "name": "Habitación 7",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-BY1.4",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.4", "Dorm_BY1.4"],
+                "name": "Dormitorio 1 H-7",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_7", "Dorm_7"],
                 "iv_source": {"bus": 2, "device": 28, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 28, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 28, "datatype": "ir", "adr": 1},
@@ -1109,8 +1109,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño 1 H-BY1.4",
-                "groups": ["Son_Vell", "Boyeras", "Boyera_1", "Hab_BY1.4", "B_BY1.4"],
+                "name": "Baño 1 H-7",
+                "groups": ["Son_Vell", "Boyeras", "Nura", "Hab_7", "B_7"],
                 "iv_source": {"bus": 2, "device": 28, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 28, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 2, "device": 28, "datatype": "ir", "adr": 4},
@@ -1128,7 +1128,7 @@
       },
       "6": {
         "id": 6,
-        "name": "Boyera 2",
+        "name": "Restaurante",
         "onoff_source": {"bus": 1, "device": 1},
         "iv_source": {
             "mbdev": {},
@@ -1422,12 +1422,12 @@
           },
           "2": {
             "id": 2,
-            "name": "Habitación 1 Planta Primera Casa Principal",
+            "name": "Habitación Pregonda Planta Primera Casa Principal",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-CPP1.1",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.1", "Dorm_CPP1.1"],
+                "name": "Dormitorio 1 H-Pregonda",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Pregonda", "Dorm_Pregonda"],
                 "iv_source": {"bus": 2, "device": 36, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 36, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 2, "device": 36, "datatype": "ir", "adr": 2},
@@ -1441,8 +1441,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño H-CPP1.1",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.1", "B_CPP1.1"],
+                "name": "Baño H-Pregonda",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Pregonda", "B_Pregonda"],
                 "iv_source": {"bus": 2, "device": 36, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 36, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 36, "datatype": "ir", "adr": 1},
@@ -1458,12 +1458,12 @@
           },
           "3": {
             "id": 3,
-            "name": "Habitación 2 Planta Primera Casa Principal",
+            "name": "Habitación Cavalleria Planta Primera Casa Principal",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-CPP1.2",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.2", "Dorm_CPP1.2"],
+                "name": "Dormitorio 1 H-Cavalleria",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Cavalleria", "Dorm_Cavalleria"],
                 "iv_source": {"bus": 2, "device": 38, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 38, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 2},
@@ -1477,8 +1477,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño H-CPP1.2",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.2", "B_CPP1.2"],
+                "name": "Baño H-Cavalleria",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Cavalleria", "B_Cavalleria"],
                 "iv_source": {"bus": 2, "device": 38, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 38, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 38, "datatype": "ir", "adr": 1},
@@ -1509,12 +1509,12 @@
           },
           "4": {
             "id": 4,
-            "name": "Habitación 3 Planta Primera Casa Principal",
+            "name": "Habitación Macarella Planta Primera Casa Principal",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-CPP1.3",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.3", "Dorm_CPP1.3"],
+                "name": "Dormitorio 1 H-Macarella",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Macarella", "Dorm_Macarella"],
                 "iv_source": {"bus": 2, "device": 35, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 35, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 4},
@@ -1528,8 +1528,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Sala H-CPP1.3",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.3", "Sala_CPP1.3"],
+                "name": "Sala H-Macarella",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Macarella", "Sala_Macarella"],
                 "iv_source": {"bus": 2, "device": 35, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 35, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 1},
@@ -1543,8 +1543,8 @@
               },
               "3": {
                 "id": 3,
-                "name": "Baño H-CPP1.3",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.3", "B_CPP1.3"],
+                "name": "Baño H-Macarella",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Macarella", "B_Macarella"],
                 "iv_source": {"bus": 2, "device": 35, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 35, "datatype": "hr", "adr": 2},
                 "rt_source": {"bus": 2, "device": 35, "datatype": "ir", "adr": 3},
@@ -1560,12 +1560,12 @@
           },
           "5": {
             "id": 5,
-            "name": "Habitación 4 Planta Primera Casa Principal",
+            "name": "Habitación Son Saura Planta Primera Casa Principal",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 H-CPP1.4",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.4", "Dorm_CPP1.4"],
+                "name": "Dormitorio 1 H-Son_Saura",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Son_Saura", "Dorm_Son_Saura"],
                 "iv_source": {"bus": 2, "device": 37, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 37, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 1},
@@ -1579,8 +1579,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Sala H-CPP1.3",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.4", "Sala_CPP1.4"],
+                "name": "Sala H-Son_Saura",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Son_Saura", "Sala_Son_Saura"],
                 "iv_source": {"bus": 2, "device": 37, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 37, "datatype": "hr", "adr": 3},
                 "rt_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 4},
@@ -1594,8 +1594,8 @@
               },
               "3": {
                 "id": 3,
-                "name": "Baño H-CPP1.3",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_CPP1.4", "B_CPP1.4"],
+                "name": "Baño H-Son_Saura",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_1", "Hab_Son_Saura", "B_Son_Saura"],
                 "iv_source": {"bus": 2, "device": 37, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 37, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 2, "device": 37, "datatype": "ir", "adr": 2},
@@ -1626,12 +1626,12 @@
           },
           "6": {
             "id": 6,
-            "name": "Habitación 5 Suite Planta Segunda Casa Principal",
+            "name": "Suite Turqueta Planta Segunda Casa Principal",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Vestidor - HS5-CPP2.1",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "Vest_CPP2.1"],
+                "name": "Vestidor - HS-Turqueta",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_Turqueta", "Vest_S_Turqueta"],
                 "iv_source": {"bus": 2, "device": 39, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 39, "datatype": "hr", "adr": 2},
                 "rt_source": {"bus": 2, "device": 39, "datatype": "ir", "adr": 3},
@@ -1645,8 +1645,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Baño Principal HS5-CPP2.1",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "BPpal_CPP2.1"],
+                "name": "Baño Principal HS-Turqueta",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_Turqueta", "BPpal_S_Turqueta"],
                 "iv_source": {"bus": 2, "device": 39, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 39, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 39, "datatype": "ir", "adr": 1},
@@ -1660,8 +1660,8 @@
               },
               "3": {
                 "id": 3,
-                "name": "Estudio HS5-CPP2.1",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "Estudio_CPP2.1"],
+                "name": "Estudio HS-Turqueta",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_Turqueta", "Estudio_S_Turqueta"],
                 "iv_source": {"bus": 2, "device": 42, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 42, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 2},
@@ -1675,8 +1675,8 @@
               },
               "4": {
                 "id": 4,
-                "name": "Baño B HS5-CPP2.1",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "B2_CPP2.1"],
+                "name": "Baño B HS-Turqueta",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_Turqueta", "B2_S_Turqueta"],
                 "iv_source": {"bus": 2, "device": 42, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 42, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 1},
@@ -1690,8 +1690,8 @@
               },
               "5": {
                 "id": 5,
-                "name": "Salón HS5-CPP2.1",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.1", "Salon_CPP2.1"],
+                "name": "Salón HS-Turqueta",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_Turqueta", "Salon_S_Turqueta"],
                 "iv_source": {"bus": 2, "device": 42, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 42, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 42, "datatype": "ir", "adr": 1},
@@ -1707,12 +1707,12 @@
           },
           "7": {
             "id": 7,
-            "name": "Habitación 6 Suite Planta Segunda Casa Principal",
+            "name": "Suite Son Vell Planta Segunda Casa Principal",
             "rooms": {
               "1": {
                 "id": 1,
-                "name": "Dormitorio 1 - HS6-CPP2.2",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Dorm_CPP2.2"],
+                "name": "Dormitorio 1 - HS-Son_Vell",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_SonVell", "Dorm_S_SonVell"],
                 "iv_source": {"bus": 2, "device": 41, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 41, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 41, "datatype": "ir", "adr": 1},
@@ -1726,8 +1726,8 @@
               },
               "2": {
                 "id": 2,
-                "name": "Jacuzzi HS6-CPP2.2",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Jacuzzi_CPP2.2"],
+                "name": "Jacuzzi HS-Son_Vell",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_SonVell", "Jacuzzi_S_SonVell"],
                 "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 0},
                 "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 1},
@@ -1741,8 +1741,8 @@
               },
               "3": {
                 "id": 3,
-                "name": "Salón HS6-CPP2.2",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Salon_CPP2.2"],
+                "name": "Salón HS-Son_Vell",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_SonVell", "Salon_S_SonVell"],
                 "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 2},
                 "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 3},
@@ -1756,8 +1756,8 @@
               },
               "4": {
                 "id": 4,
-                "name": "Estudio HS6-CPP2.2",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "Estudio_CPP2.2"],
+                "name": "Estudio HS-Son_Vell",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_SonVell", "Estudio_S_SonVell"],
                 "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 5},
                 "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 6},
@@ -1771,8 +1771,8 @@
               },
               "5": {
                 "id": 5,
-                "name": "Baño Estudio HS6-CPP2.2",
-                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "Hab_CPP2.2", "B2_CPP2.2"],
+                "name": "Baño Estudio HS-Son_Vell",
+                "groups": ["Son_Vell", "Casa_Principal", "Planta_2", "S_SonVell", "B2_S_SonVell"],
                 "iv_source": {"bus": 2, "device": 40, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 2, "device": 40, "datatype": "hr", "adr": 7},
                 "rt_source": {"bus": 2, "device": 40, "datatype": "ir", "adr": 8},
@@ -1813,8 +1813,8 @@
         "devices": {
           "1": {
             "id": 1,
-            "name": "Centralita UFHC Hab 1.1",
-            "groups": ["Hab_1.1"],
+            "name": "Centralita UFHC Hab 35",
+            "groups": ["Hab_35"],
             "slave": 11,
             "baudrate": 9600,
             "databits": 8,
@@ -1826,8 +1826,8 @@
           },
           "2": {
             "id": 2,
-            "name": "Centralita UFHC Hab 1.2",
-            "groups": ["Hab_1.2"],
+            "name": "Centralita UFHC Hab 34",
+            "groups": ["Hab_34"],
             "slave": 12,
             "baudrate": 9600,
             "databits": 8,
@@ -1839,8 +1839,8 @@
           },
           "3": {
             "id": 3,
-            "name": "Centralita UFHC Hab 1.3",
-            "groups": ["Hab_1.3"],
+            "name": "Centralita UFHC Hab 29",
+            "groups": ["Hab_29"],
             "slave": 13,
             "baudrate": 9600,
             "databits": 8,
@@ -1852,8 +1852,8 @@
           },
           "4": {
             "id": 4,
-            "name": "Centralita UFHC Hab 1.4",
-            "groups": ["Hab_1.4"],
+            "name": "Centralita UFHC Hab 33",
+            "groups": ["Hab_33"],
             "slave": 14,
             "baudrate": 9600,
             "databits": 8,
@@ -1865,8 +1865,8 @@
           },
           "5": {
             "id": 5,
-            "name": "Centralita UFHC Hab 1.5",
-            "groups": ["Hab_1.5"],
+            "name": "Centralita UFHC Hab 28",
+            "groups": ["Hab_28"],
             "slave": 15,
             "baudrate": 9600,
             "databits": 8,
@@ -1878,8 +1878,8 @@
           },
           "6": {
             "id": 6,
-            "name": "Centralita UFHC Hab 1.6",
-            "groups": ["Hab_1.6"],
+            "name": "Centralita UFHC Hab 27",
+            "groups": ["Hab_27"],
             "slave": 16,
             "baudrate": 9600,
             "databits": 8,
@@ -1891,8 +1891,8 @@
           },
           "7": {
             "id": 7,
-            "name": "Centralita UFHC Hab 2.1",
-            "groups": ["Hab_2.1"],
+            "name": "Centralita UFHC Hab 32",
+            "groups": ["Hab_32"],
             "slave": 21,
             "baudrate": 9600,
             "databits": 8,
@@ -1904,8 +1904,8 @@
           },
           "8": {
             "id": 8,
-            "name": "Centralita UFHC Hab 2.2",
-            "groups": ["Hab_2.2"],
+            "name": "Centralita UFHC Hab 31",
+            "groups": ["Hab_31"],
             "slave": 22,
             "baudrate": 9600,
             "databits": 8,
@@ -1917,8 +1917,8 @@
           },
           "9": {
             "id": 9,
-            "name": "Centralita UFHC Hab 2.3",
-            "groups": ["Hab_2.3"],
+            "name": "Centralita UFHC Hab 26",
+            "groups": ["Hab_26"],
             "slave": 23,
             "baudrate": 9600,
             "databits": 8,
@@ -1930,8 +1930,8 @@
           },
           "10": {
             "id": 10,
-            "name": "Centralita UFHC Hab 2.4",
-            "groups": ["Hab_2.4"],
+            "name": "Centralita UFHC Hab 30",
+            "groups": ["Hab_30"],
             "slave": 24,
             "baudrate": 9600,
             "databits": 8,
@@ -1943,8 +1943,8 @@
           },
           "11": {
             "id": 11,
-            "name": "Centralita UFHC Hab 2.5",
-            "groups": ["Hab_2.5"],
+            "name": "Centralita UFHC Hab 25",
+            "groups": ["Hab_25"],
             "slave": 25,
             "baudrate": 9600,
             "databits": 8,
@@ -1956,8 +1956,8 @@
           },
           "12": {
             "id": 12,
-            "name": "Centralita UFHC Hab 2.6",
-            "groups": ["Hab_2.6"],
+            "name": "Centralita UFHC Hab 24",
+            "groups": ["Hab_24"],
             "slave": 26,
             "baudrate": 9600,
             "databits": 8,
@@ -1969,8 +1969,8 @@
           },
           "13": {
             "id": 13,
-            "name": "Centralita UFHC Hab 3.1",
-            "groups": ["Hab_3.1"],
+            "name": "Centralita UFHC Hab 23",
+            "groups": ["Hab_23"],
             "slave": 31,
             "baudrate": 9600,
             "databits": 8,
@@ -1982,8 +1982,8 @@
           },
           "14": {
             "id": 14,
-            "name": "Centralita UFHC Hab 3.2",
-            "groups": ["Hab_3.2"],
+            "name": "Centralita UFHC Hab 22",
+            "groups": ["Hab_22"],
             "slave": 32,
             "baudrate": 9600,
             "databits": 8,
@@ -1995,8 +1995,8 @@
           },
           "15": {
             "id": 15,
-            "name": "Centralita UFHC Hab 3.3",
-            "groups": ["Hab_3.3"],
+            "name": "Centralita UFHC Hab 15",
+            "groups": ["Hab_15"],
             "slave": 33,
             "baudrate": 9600,
             "databits": 8,
@@ -2008,8 +2008,8 @@
           },
           "16": {
             "id": 16,
-            "name": "Centralita UFHC Hab 3.4",
-            "groups": ["Hab_3.4"],
+            "name": "Centralita UFHC Hab 21",
+            "groups": ["Hab_21"],
             "slave": 34,
             "baudrate": 9600,
             "databits": 8,
@@ -2021,8 +2021,8 @@
           },
           "17": {
             "id": 17,
-            "name": "Centralita UFHC Hab 3.5",
-            "groups": ["Hab_3.5"],
+            "name": "Centralita UFHC Hab 14",
+            "groups": ["Hab_14"],
             "slave": 35,
             "baudrate": 9600,
             "databits": 8,
@@ -2034,8 +2034,8 @@
           },
           "18": {
             "id": 18,
-            "name": "Centralita UFHC Hab 3.6",
-            "groups": ["Hab_3.6"],
+            "name": "Centralita UFHC Hab 12",
+            "groups": ["Hab_12"],
             "slave": 36,
             "baudrate": 9600,
             "databits": 8,
@@ -2047,8 +2047,8 @@
           },
           "19": {
             "id": 19,
-            "name": "Centralita UFHC Hab 4.1",
-            "groups": ["Hab_4.1"],
+            "name": "Centralita UFHC Hab 20",
+            "groups": ["Hab_20"],
             "slave": 41,
             "baudrate": 9600,
             "databits": 8,
@@ -2060,8 +2060,8 @@
           },
           "20": {
             "id": 20,
-            "name": "Centralita UFHC Hab 4.2",
-            "groups": ["Hab_4.2"],
+            "name": "Centralita UFHC Hab 19",
+            "groups": ["Hab_19"],
             "slave": 42,
             "baudrate": 9600,
             "databits": 8,
@@ -2073,8 +2073,8 @@
           },
           "21": {
             "id": 21,
-            "name": "Centralita UFHC Hab 4.3",
-            "groups": ["Hab_4.3"],
+            "name": "Centralita UFHC Hab 11",
+            "groups": ["Hab_11"],
             "slave": 43,
             "baudrate": 9600,
             "databits": 8,
@@ -2086,8 +2086,8 @@
           },
           "22": {
             "id": 22,
-            "name": "Centralita UFHC Hab 4.4",
-            "groups": ["Hab_4.4"],
+            "name": "Centralita UFHC Hab 18",
+            "groups": ["Hab_18"],
             "slave": 44,
             "baudrate": 9600,
             "databits": 8,
@@ -2099,8 +2099,8 @@
           },
           "23": {
             "id": 23,
-            "name": "Centralita UFHC Hab 4.5",
-            "groups": ["Hab_4.5"],
+            "name": "Centralita UFHC Hab 10",
+            "groups": ["Hab_10"],
             "slave": 45,
             "baudrate": 9600,
             "databits": 8,
@@ -2112,8 +2112,8 @@
           },
           "24": {
             "id": 24,
-            "name": "Centralita UFHC Hab 4.6",
-            "groups": ["Hab_4.6"],
+            "name": "Centralita UFHC Hab 9",
+            "groups": ["Hab_9"],
             "slave": 46,
             "baudrate": 9600,
             "databits": 8,
@@ -2125,8 +2125,8 @@
           },
           "43": {
             "id": 43,
-            "name": "Recuperador Hab 1.1",
-            "groups": ["Hab_1.1"],
+            "name": "Recuperador Hab 35",
+            "groups": ["Hab_35"],
             "slave": 111,
             "baudrate": 9600,
             "databits": 8,
@@ -2138,8 +2138,8 @@
           },
           "44": {
             "id": 44,
-            "name": "Recuperador Hab 1.2",
-            "groups": ["Hab_1.2"],
+            "name": "Recuperador Hab 34",
+            "groups": ["Hab_34"],
             "slave": 112,
             "baudrate": 9600,
             "databits": 8,
@@ -2151,8 +2151,8 @@
           },
           "45": {
             "id": 45,
-            "name": "Recuperador Hab 1.3",
-            "groups": ["Hab_1.3"],
+            "name": "Recuperador Hab 29",
+            "groups": ["Hab_29"],
             "slave": 113,
             "baudrate": 9600,
             "databits": 8,
@@ -2164,8 +2164,8 @@
           },
           "46": {
             "id": 46,
-            "name": "Recuperador Hab 1.4",
-            "groups": ["Hab_1.4"],
+            "name": "Recuperador Hab 33",
+            "groups": ["Hab_33"],
             "slave": 114,
             "baudrate": 9600,
             "databits": 8,
@@ -2177,8 +2177,8 @@
           },
           "47": {
             "id": 47,
-            "name": "Recuperador Hab 1.5",
-            "groups": ["Hab_1.5"],
+            "name": "Recuperador Hab 28",
+            "groups": ["Hab_28"],
             "slave": 115,
             "baudrate": 9600,
             "databits": 8,
@@ -2190,8 +2190,8 @@
           },
           "48": {
             "id": 48,
-            "name": "Recuperador Hab 1.6",
-            "groups": ["Hab_1.6"],
+            "name": "Recuperador Hab 27",
+            "groups": ["Hab_27"],
             "slave": 116,
             "baudrate": 9600,
             "databits": 8,
@@ -2203,8 +2203,8 @@
           },
           "49": {
             "id": 49,
-            "name": "Recuperador Hab 2.1",
-            "groups": ["Hab_2.1"],
+            "name": "Recuperador Hab 32",
+            "groups": ["Hab_32"],
             "slave": 121,
             "baudrate": 9600,
             "databits": 8,
@@ -2216,8 +2216,8 @@
           },
           "50": {
             "id": 50,
-            "name": "Recuperador Hab 2.2",
-            "groups": ["Hab_2.2"],
+            "name": "Recuperador Hab 31",
+            "groups": ["Hab_31"],
             "slave": 122,
             "baudrate": 9600,
             "databits": 8,
@@ -2229,8 +2229,8 @@
           },
           "51": {
             "id": 51,
-            "name": "Recuperador Hab 2.3",
-            "groups": ["Hab_2.3"],
+            "name": "Recuperador Hab 26",
+            "groups": ["Hab_26"],
             "slave": 123,
             "baudrate": 9600,
             "databits": 8,
@@ -2242,8 +2242,8 @@
           },
           "52": {
             "id": 52,
-            "name": "Recuperador Hab 2.4",
-            "groups": ["Hab_2.4"],
+            "name": "Recuperador Hab 30",
+            "groups": ["Hab_30"],
             "slave": 124,
             "baudrate": 9600,
             "databits": 8,
@@ -2255,8 +2255,8 @@
           },
           "53": {
             "id": 53,
-            "name": "Recuperador Hab 2.5",
-            "groups": ["Hab_2.5"],
+            "name": "Recuperador Hab 25",
+            "groups": ["Hab_25"],
             "slave": 125,
             "baudrate": 9600,
             "databits": 8,
@@ -2268,8 +2268,8 @@
           },
           "54": {
             "id": 54,
-            "name": "Recuperador Hab 2.6",
-            "groups": ["Hab_2.6"],
+            "name": "Recuperador Hab 24",
+            "groups": ["Hab_24"],
             "slave": 126,
             "baudrate": 9600,
             "databits": 8,
@@ -2281,8 +2281,8 @@
           },
           "55": {
             "id": 55,
-            "name": "Recuperador Hab 3.1",
-            "groups": ["Hab_3.1"],
+            "name": "Recuperador Hab 23",
+            "groups": ["Hab_23"],
             "slave": 131,
             "baudrate": 9600,
             "databits": 8,
@@ -2294,8 +2294,8 @@
           },
           "56": {
             "id": 56,
-            "name": "Recuperador Hab 3.2",
-            "groups": ["Hab_3.2"],
+            "name": "Recuperador Hab 22",
+            "groups": ["Hab_22"],
             "slave": 132,
             "baudrate": 9600,
             "databits": 8,
@@ -2307,8 +2307,8 @@
           },
           "57": {
             "id": 57,
-            "name": "Recuperador Hab 3.3",
-            "groups": ["Hab_3.3"],
+            "name": "Recuperador Hab 15",
+            "groups": ["Hab_15"],
             "slave": 133,
             "baudrate": 9600,
             "databits": 8,
@@ -2320,8 +2320,8 @@
           },
           "58": {
             "id": 58,
-            "name": "Recuperador Hab 3.4",
-            "groups": ["Hab_3.4"],
+            "name": "Recuperador Hab 21",
+            "groups": ["Hab_21"],
             "slave": 134,
             "baudrate": 9600,
             "databits": 8,
@@ -2333,8 +2333,8 @@
           },
           "59": {
             "id": 59,
-            "name": "Recuperador Hab 3.5",
-            "groups": ["Hab_3.5"],
+            "name": "Recuperador Hab 14",
+            "groups": ["Hab_14"],
             "slave": 135,
             "baudrate": 9600,
             "databits": 8,
@@ -2346,8 +2346,8 @@
           },
           "60": {
             "id": 60,
-            "name": "Recuperador Hab 3.6",
-            "groups": ["Hab_3.6"],
+            "name": "Recuperador Hab 12",
+            "groups": ["Hab_12"],
             "slave": 136,
             "baudrate": 9600,
             "databits": 8,
@@ -2359,8 +2359,8 @@
           },
           "61": {
             "id": 61,
-            "name": "Recuperador Hab 4.1",
-            "groups": ["Hab_4.1"],
+            "name": "Recuperador Hab 20",
+            "groups": ["Hab_20"],
             "slave": 141,
             "baudrate": 9600,
             "databits": 8,
@@ -2372,8 +2372,8 @@
           },
           "62": {
             "id": 62,
-            "name": "Recuperador Hab 4.2",
-            "groups": ["Hab_4.2"],
+            "name": "Recuperador Hab 19",
+            "groups": ["Hab_19"],
             "slave": 142,
             "baudrate": 9600,
             "databits": 8,
@@ -2385,8 +2385,8 @@
           },
           "63": {
             "id": 63,
-            "name": "Recuperador Hab 4.3",
-            "groups": ["Hab_4.3"],
+            "name": "Recuperador Hab 11",
+            "groups": ["Hab_11"],
             "slave": 143,
             "baudrate": 9600,
             "databits": 8,
@@ -2398,8 +2398,8 @@
           },
           "64": {
             "id": 64,
-            "name": "Recuperador Hab 4.4",
-            "groups": ["Hab_4.4"],
+            "name": "Recuperador Hab 18",
+            "groups": ["Hab_18"],
             "slave": 144,
             "baudrate": 9600,
             "databits": 8,
@@ -2411,8 +2411,8 @@
           },
           "65": {
             "id": 65,
-            "name": "Recuperador Hab 4.5",
-            "groups": ["Hab_4.5"],
+            "name": "Recuperador Hab 10",
+            "groups": ["Hab_10"],
             "slave": 145,
             "baudrate": 9600,
             "databits": 8,
@@ -2424,8 +2424,8 @@
           },
           "66": {
             "id": 66,
-            "name": "Recuperador Hab 4.6",
-            "groups": ["Hab_4.6"],
+            "name": "Recuperador Hab 9",
+            "groups": ["Hab_9"],
             "slave": 146,
             "baudrate": 9600,
             "databits": 8,
@@ -2437,8 +2437,8 @@
           },
           "86": {
             "id": 86,
-            "name": "Controlador tª impulsion agua Nave 1",
-            "groups": ["Nave_1"],
+            "name": "Controlador tª impulsion agua Cova Murada",
+            "groups": ["Cova_Murada"],
             "slave": 201,
             "baudrate": 9600,
             "databits": 8,
@@ -2450,8 +2450,8 @@
           },
           "87": {
             "id": 87,
-            "name": "Controlador tª impulsion agua Nave 2",
-            "groups": ["Nave_2"],
+            "name": "Controlador tª impulsion agua XOROI",
+            "groups": ["Xoroi"],
             "slave": 202,
             "baudrate": 9600,
             "databits": 8,
@@ -2463,8 +2463,8 @@
           },
           "88": {
             "id": 88,
-            "name": "Controlador tª impulsion agua Nave 3",
-            "groups": ["Nave_3"],
+            "name": "Controlador tª impulsion agua SAIGO",
+            "groups": ["Saigo"],
             "slave": 203,
             "baudrate": 9600,
             "databits": 8,
@@ -2476,8 +2476,8 @@
           },
           "89": {
             "id": 89,
-            "name": "Controlador tª impulsion agua Nave 4",
-            "groups": ["Nave_4"],
+            "name": "Controlador tª impulsion agua PARELLA",
+            "groups": ["Parella"],
             "slave": 204,
             "baudrate": 9600,
             "databits": 8,
@@ -2497,8 +2497,8 @@
         "devices": {
           "25": {
             "id": 25,
-            "name": "Centralita UFHC Hab BY1.1",
-            "groups": ["Hab_BY1.1"],
+            "name": "Centralita UFHC Hab 17",
+            "groups": ["Hab_17"],
             "slave": 51,
             "baudrate": 9600,
             "databits": 8,
@@ -2510,8 +2510,8 @@
           },
           "26": {
             "id": 26,
-            "name": "Centralita UFHC Hab BY1.2",
-            "groups": ["Hab_BY1.2"],
+            "name": "Centralita UFHC Hab 16",
+            "groups": ["Hab_16"],
             "slave": 52,
             "baudrate": 9600,
             "databits": 8,
@@ -2523,8 +2523,8 @@
           },
           "27": {
             "id": 27,
-            "name": "Centralita UFHC Hab BY1.3",
-            "groups": ["Hab_BY1.3"],
+            "name": "Centralita UFHC Hab 8",
+            "groups": ["Hab_8"],
             "slave": 53,
             "baudrate": 9600,
             "databits": 8,
@@ -2536,8 +2536,8 @@
           },
           "28": {
             "id": 28,
-            "name": "Centralita UFHC Hab BY1.4",
-            "groups": ["Hab_BY1.4"],
+            "name": "Centralita UFHC Hab 7",
+            "groups": ["Hab_7"],
             "slave": 54,
             "baudrate": 9600,
             "databits": 8,
@@ -2627,8 +2627,8 @@
           },
           "35": {
             "id": 35,
-            "name": "Centralita UFHC Habitación 3 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.3"],
+            "name": "Centralita UFHC Habitación Macarella P1 - Casa Principal",
+            "groups": ["Hab_Macarella"],
             "slave": 75,
             "baudrate": 9600,
             "databits": 8,
@@ -2640,8 +2640,8 @@
           },
           "36": {
             "id": 36,
-            "name": "Centralita UFHC Habitación 1 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.1"],
+            "name": "Centralita UFHC Habitación Pregonda P1 - Casa Principal",
+            "groups": ["Hab_Pregonda"],
             "slave": 76,
             "baudrate": 9600,
             "databits": 8,
@@ -2653,8 +2653,8 @@
           },
           "37": {
             "id": 37,
-            "name": "Centralita UFHC Habitación 4 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.4"],
+            "name": "Centralita UFHC Habitación Son Saura P1 - Casa Principal",
+            "groups": ["Hab_Son_Saura"],
             "slave": 77,
             "baudrate": 9600,
             "databits": 8,
@@ -2666,8 +2666,8 @@
           },
           "38": {
             "id": 38,
-            "name": "Centralita UFHC Habitación 2 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.2"],
+            "name": "Centralita UFHC Habitación Cavalleria - Casa Principal",
+            "groups": ["Hab_Cavalleria"],
             "slave": 78,
             "baudrate": 9600,
             "databits": 8,
@@ -2679,8 +2679,8 @@
           },
           "39": {
             "id": 39,
-            "name": "Centralita 1 UFHC Suite 5 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.1"],
+            "name": "Centralita 1 UFHC Suite Turqueta P2 - Casa Principal",
+            "groups": ["S_Turqueta"],
             "slave": 79,
             "baudrate": 9600,
             "databits": 8,
@@ -2692,8 +2692,8 @@
           },
           "40": {
             "id": 40,
-            "name": "Centralita 2 UFHC Suite 6 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.2"],
+            "name": "Centralita 2 UFHC Suite Son Vell P2 - Casa Principal",
+            "groups": ["S_SonVell"],
             "slave": 80,
             "baudrate": 9600,
             "databits": 8,
@@ -2705,8 +2705,8 @@
           },
           "41": {
             "id": 41,
-            "name": "Centralita 1 UFHC Suite 6 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.2"],
+            "name": "Centralita 1 UFHC Suite Son Vell P2 - Casa Principal",
+            "groups": ["S_SonVell"],
             "slave": 81,
             "baudrate": 9600,
             "databits": 8,
@@ -2718,8 +2718,8 @@
           },
           "42": {
             "id": 42,
-            "name": "Centralita 2 UFHC Suite 5 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.1"],
+            "name": "Centralita 2 UFHC Suite Turqueta P2 - Casa Principal",
+            "groups": ["S_Turqueta"],
             "slave": 82,
             "baudrate": 9600,
             "databits": 8,
@@ -2731,8 +2731,8 @@
           },
           "67": {
             "id": 67,
-            "name": "Recuperador Hab BY1.1",
-            "groups": ["Hab_BY1.1"],
+            "name": "Recuperador Hab 17",
+            "groups": ["Hab_17"],
             "slave": 151,
             "baudrate": 9600,
             "databits": 8,
@@ -2744,8 +2744,8 @@
           },
           "68": {
             "id": 68,
-            "name": "Recuperador Hab BY1.2",
-            "groups": ["Hab_BY1.2"],
+            "name": "Recuperador Hab 16",
+            "groups": ["Hab_16"],
             "slave": 152,
             "baudrate": 9600,
             "databits": 8,
@@ -2757,8 +2757,8 @@
           },
           "69": {
             "id": 69,
-            "name": "Recuperador Hab BY1.3",
-            "groups": ["Hab_BY1.3"],
+            "name": "Recuperador Hab 8",
+            "groups": ["Hab_8"],
             "slave": 153,
             "baudrate": 9600,
             "databits": 8,
@@ -2770,8 +2770,8 @@
           },
           "70": {
             "id": 70,
-            "name": "Recuperador Hab BY1.4",
-            "groups": ["Hab_BY1.4"],
+            "name": "Recuperador Hab 7",
+            "groups": ["Hab_7"],
             "slave": 154,
             "baudrate": 9600,
             "databits": 8,
@@ -2861,8 +2861,8 @@
           },
           "77": {
             "id": 77,
-            "name": "Recuperador Habitación 1 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.1"],
+            "name": "Recuperador Habitación Macarella P1 - Casa Principal",
+            "groups": ["Hab_Macarella"],
             "slave": 175,
             "baudrate": 9600,
             "databits": 8,
@@ -2874,8 +2874,8 @@
           },
           "78": {
             "id": 78,
-            "name": "Recuperador Habitación 2 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.2"],
+            "name": "Recuperador Habitación Cavalleria P1 - Casa Principal",
+            "groups": ["Hab_Cavalleria"],
             "slave": 176,
             "baudrate": 9600,
             "databits": 8,
@@ -2887,8 +2887,8 @@
           },
           "79": {
             "id": 79,
-            "name": "Recuperador Habitación 3 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.3"],
+            "name": "Recuperador Habitación Pregonda P1 - Casa Principal",
+            "groups": ["Hab_Pregonda"],
             "slave": 177,
             "baudrate": 9600,
             "databits": 8,
@@ -2900,8 +2900,8 @@
           },
           "80": {
             "id": 80,
-            "name": "Recuperador Habitación 4 P1 - Casa Principal",
-            "groups": ["Hab_CPP1.4"],
+            "name": "Recuperador Habitación Son Saura P1 - Casa Principal",
+            "groups": ["Hab_Son_Saura"],
             "slave": 178,
             "baudrate": 9600,
             "databits": 8,
@@ -2913,8 +2913,8 @@
           },
           "81": {
             "id": 81,
-            "name": "Recuperador Suite 5 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.1"],
+            "name": "Recuperador Suite Turqueta P2 - Casa Principal",
+            "groups": ["S_Turqueta"],
             "slave": 179,
             "baudrate": 9600,
             "databits": 8,
@@ -2926,8 +2926,8 @@
           },
           "82": {
             "id": 82,
-            "name": "Recuperador Suite 6 P2 - Casa Principal",
-            "groups": ["Hab_CPP2.2"],
+            "name": "Recuperador Suite Son Vell P2 - Casa Principal",
+            "groups": ["S_SonVell"],
             "slave": 180,
             "baudrate": 9600,
             "databits": 8,
@@ -2978,8 +2978,8 @@
           },
           "90": {
             "id": 90,
-            "name": "Controlador tª impulsion agua Boyera 1",
-            "groups": ["Boyera_1"],
+            "name": "Controlador tª impulsion agua Nura",
+            "groups": ["Nura"],
             "slave": 205,
             "baudrate": 9600,
             "databits": 8,

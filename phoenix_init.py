@@ -2,12 +2,17 @@
 import json
 import sys
 import pickle
+from datetime import datetime
 from gc import \
     collect
 from phoenix_config import *
 from phoenix_constants import *
 from project_elements.building import Room, RoomGroup
 from devices.devices import SYSTEM_CLASSES
+
+
+init_time = datetime.now()
+print(f"Hora inicio: {str(init_time)}")
 
 
 # system_classes = list(SYSTEM_CLASSES.values())  # Clases de dispositivos del sistema

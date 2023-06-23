@@ -5,7 +5,7 @@ from bisect import bisect
 import phoenix_init as phi
 from mb_utils.mb_utils import get_value, set_value, get_h, get_dp, get_roomgroup_values, update_xch_files_from_devices
 from regops.regops import set_hb, set_lb
-from project_elements.building import get_temp_exterior, get_hrel_exterior, get_h_exterior
+from project_elements.building import get_temp_exterior, get_hrel_exterior, get_h_exterior, get_modo_iv
 
 
 class Generator(phi.MBDevice):
@@ -128,7 +128,7 @@ class Generator(phi.MBDevice):
         """
         Fija el modo iv del generador.
         EN PHOENIX MODO CALEFACCIÓN=0 Y MODO REFRIGERACIÓN=1.
-        EN ECODAN, POR EJEMPLO, CALEFACCIÓN=1 (self.heating_value) / REFRIGEREACIÓN = 3 (self.cooling_value)
+        EN ECODAN, POR EJEMPLO, CALEFACCIÓN=1 (self.heating_value) / REFRIGERACIÓN = 3 (self.cooling_value)
         Hay que mapear los valores de calefacción y refrigeración del generador con dichos valores y tenerlo
         en cuenta a la hora de escribirlos en el generador.
         Si new_iv_mode es None, devuelve el modo actual
@@ -138,7 +138,7 @@ class Generator(phi.MBDevice):
              Modo calefacción / refrigeración actual
         """
         if self.iv_source is None:
-            return
+               return
 
         datatype = self.iv_source[0]
         adr = self.iv_source[1]
@@ -288,6 +288,10 @@ class Generator(phi.MBDevice):
 
         Returns: resultado de la escritura modbus de los valores actualizados o los valores manuales.
         """
+        system_iv = get_modo_iv()  # Modo frío=1 / calor=0 del sistema
+        print(f"DEBUGGING {__file__} - Modo de funcionamiento del sistema asociado al "
+              f"generador {self.name} = {system_iv}")
+
         if not self.groups:
             print(f"ERROR {__file__} - No se ha definido grupo de habitaciones para {self.name}")
 
@@ -304,7 +308,7 @@ class Generator(phi.MBDevice):
         if self.manual_iv_mode:
             await self.iv_mode(self.manual_iv_mode)
         else:
-            await self.iv_mode()
+            await self.iv_mode(system_iv)  # Se propaga el modo Frío/Calor del sistema al generador
         if self.manual_sp_mode:
             await self.set_sp(self.manual_sp)
         else:
@@ -427,16 +431,27 @@ class UFHCController(phi.MBDevice):
         Returns:
              Modo calefacción / refrigeración actual
         """
-        if self.groups is None:
-            print(f"ERROR {__file__} - No se ha definido ningún grupo en el dispositivo {self.name}")
-            return
-        group_values = await get_roomgroup_values(self.groups[0])
-        group_iv = group_values.get("iv")
-        if group_iv is not None:
-            self.iv = group_iv
-
-        if new_iv_mode is not None and new_iv_mode in [phi.COOLING, phi.HEATING]:
+        # if self.groups is None:
+        #     print(f"ERROR {__file__} - No se ha definido ningún grupo en el dispositivo {self.name}")
+        #     return
+        # group_values = await get_roomgroup_values(self.groups[0])
+        # group_iv = group_values.get("iv")
+        # if group_iv is not None:
+        #     self.iv = group_iv
+        #
+        iv_datatype = self.iv_source[0]
+        iv_adr = self.iv_source[1]
+        target = {"bus": int(self.bus_id),
+                  "device": int(self.device_id),
+                  "datatype": iv_datatype,
+                  "adr": iv_adr}
+        current_iv_mode = get_value(target)
+        if new_iv_mode is None:
+            self.iv = current_iv_mode
+        elif new_iv_mode in [phi.COOLING, phi.HEATING]:
+            res = await set_value(target, new_iv_mode)
             self.iv = new_iv_mode
+
         return self.iv
 
     async def pump_st(self):
@@ -509,7 +524,10 @@ class UFHCController(phi.MBDevice):
         Actualiza todos los atributos del dispositivo ModBus según las últimas lecturas
         :return:
         """
-        await self.iv_mode()  # Actualizo el modo IV del grupo
+        system_iv = get_modo_iv()  # Modo frío=1 / calor=0 del sistema
+        print(f"DEBUGGING {__file__} - Modo de funcionamiento del sistema asociado al "
+              f"Controlador UFHC {self.name} = {system_iv}")
+        await self.iv_mode(system_iv)  # Actualizo el modo IV de la centralita
         await self.pump_st()  # Actualizo el estado de la bomba
         for ch in range(12):
             await self.set_channel_info(ch + 1)  # Los canales se identifican del 1 al 12, pero
@@ -1931,6 +1949,10 @@ class TempFluidController(phi.MBDevice):
             current_iv, current_sp = current_iv_sp
             self.__setattr__(setpoints[idx], current_sp)
             current_register_value = current_iv * 256 + current_sp
+        else:
+            print(f"DEBUGGING {__file__}. El valor actual del registro {adr} del dispositivo {self.name} "
+                  f"es {current_iv_sp}")
+            return
         if new_sp is not None:
             if new_sp > 55 or new_sp < 5:
                 print(f"{self.name}: Error escribiendo la consigna {new_sp} para el circuito {circuit}")
@@ -2151,8 +2173,8 @@ class TempFluidController(phi.MBDevice):
             dev_info += f"\n=========="
             dev_info += f"\n\tEstado bomba: {onoff_values.get(st)}"
             dev_info += f"\n\tEstado modo de funcionamiento: {mode_values.get(iv)}"
-            dev_info += f"\n\tConsigna de impulusión: {sp} ºC"
-            dev_info += f"\n\tTemperatura de impulusión: {ti} ºC"
+            dev_info += f"\n\tConsigna de impulsión: {sp} ºC"
+            dev_info += f"\n\tTemperatura de impulsión: {ti} ºC"
             dev_info += f"\n\tApertura válvula: {valv}%"
 
         dev_info += f"\n\nEstado salida digital 4 {active_values.get(self.get_st4())}"

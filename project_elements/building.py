@@ -229,7 +229,7 @@ class Room:
         st = self.st()
         dp = self.dp()
         h = self.h()
-        room_info = f"""Datos de la habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id}
+        room_info = f"""\nDatos de la habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id}
             Modo: {modo}
             Consigna: {sp}
             Humedad relativa: {rh}
@@ -241,7 +241,7 @@ class Room:
         if None not in (sp, rt) and sp < 50 and rt < 50:
             return room_info
         else:
-            msg = f"Habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id} " \
+            msg = f"\nHabitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id} " \
                   f"tiene una consigna o una temperatura no válidas"
             return msg
 

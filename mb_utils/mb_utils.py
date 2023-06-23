@@ -350,34 +350,37 @@ async def check_changes_from_web() -> int:
             ex_folder_name = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + dev_sl
             print(f"Comprobando esclavo {dev_sl} (clase {clase})) del bus {bus_id}")
             # print(f"\tArchivos\n{xch_rw_files}")
-            for f in xch_rw_files:
-                file_to_check = ex_folder_name + r"/" + f
-                last_mod_time = get_f_modif_timestamp(file_to_check)
-                current_value = getattr(dev, f)  # el nombre del fichero f coincide con el atributo a comprobar
-                if any([x is None for x in (last_mod_time, last_reading_time)]):
+            for xf in xch_rw_files:
+                file_from_web_to_check = ex_folder_name + r"/" + xf + r"RW"
+                file_from_dev_to_check = ex_folder_name + r"/" + xf
+                last_mod_time = get_f_modif_timestamp(file_from_web_to_check)
+                current_value = getattr(dev, xf)  # el nombre del fichero f coincide con el atributo a comprobar
+                if None in (last_mod_time, last_reading_time):
                     print(f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
-                          f"Última modificación: {last_mod_time}\n\t"
+                          f"Última modificación {file_from_web_to_check}: {last_mod_time}\n\t"
                           f"Última lectura: {last_reading_time}")
                     continue
                 if last_mod_time > last_reading_time:  # Ha habido modificaciones desde la Web
-                    with open(file_to_check, "r") as modf:
+                    with open(file_from_web_to_check, "r") as modf:
                         new_value = modf.read()
-                    print(f"Se ha modificado desde la Web el fichero:\n\t{file_to_check}\n"
-                          f"Valor anterior:\t{current_value} (tipo {type(getattr(dev, f))})\n"
+                    print(f"Se ha modificado desde la Web el fichero:\n\t{file_from_web_to_check}\n"
+                          f"Valor anterior:\t{current_value} (tipo {type(getattr(dev, xf))})\n"
                           f"Valor desde web:\t{new_value} (tipo {type(new_value)})")
-                    attr_mod[file_to_check] = new_value
+                    attr_mod[file_from_web_to_check] = new_value
                     if new_value is not None:
                         if '(' in new_value:  # Is Tuple
                             val_to_write = tuple(map(int, new_value.strip('()').split(', ')))
-                            setattr(dev, f, val_to_write)
+                            setattr(dev, xf, val_to_write)
                         elif '.' in new_value:  # Is float
-                            setattr(dev, f, float(new_value))
+                            setattr(dev, xf, float(new_value))
                         elif new_value.isdecimal():  # Is int
-                            setattr(dev, f, int(new_value))
+                            setattr(dev, xf, int(new_value))
                         else:
-                            setattr(dev, f, str(new_value))
+                            setattr(dev, xf, str(new_value))
+                        with open(file_from_dev_to_check, "w") as xf:
+                            xf.write(str(new_value))
                 else:
-                    attr_not_mod[file_to_check] = current_value
+                    attr_not_mod[file_from_web_to_check] = current_value
         print(f"Archivos modificados: {attr_mod}")
         print(f"Archivos NO modificados: {attr_not_mod}")
 
@@ -514,7 +517,7 @@ async def update_devices_from_xch_files(device):
     attrs_to_update = phi.EXCHANGE_R_FILES.get(cls)  # Tupla con los archivos a actualizar (son los nombres
     # de los atributos)
     for attr in attrs_to_update:
-        attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + r"/" + attr
+        attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + r"/RW/" + attr
         if not path.isfile(attr_file):
             print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_file}")
             continue
