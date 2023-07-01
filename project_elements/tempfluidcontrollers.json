@@ -18,6 +18,25 @@
       "ti3_source": ["ir", 14],
       "v3_source": ["ir", 18],
       "st4_source": ["hr", 5]
+    },
+    "sistena_sig610v2": {
+      "name": "Controlador para temperatura impulsión/retorno SIG610 CAMARINES",
+      "st1_target": ["hr", 4],
+      "iv1_source": ["hr", 10, "hb"],
+      "sp1_source": ["hr", 10, "lb"],
+      "ti1_source": ["ir", 14],
+      "v1_source": ["ir", 18],
+      "st2_target": ["hr", 3],
+      "iv2_source": ["hr", 8, "hb"],
+      "sp2_source": ["hr", 8, "lb"],
+      "ti2_source": ["ir", 13],
+      "v2_source": ["ir", 17],
+      "st3_target": ["hr", 2],
+      "iv3_source": ["hr", 6, "hb"],
+      "sp3_source": ["hr", 6, "lb"],
+      "ti3_source": ["ir", 12],
+      "v3_source": ["ir", 16],
+      "st4_source": ["hr", 5]
     }
   }
 }

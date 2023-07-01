@@ -124,6 +124,19 @@ class Generator(phi.MBDevice):
 
         return self.onoff_st
 
+    async def set_manual_onoff(self):
+        """
+        Aplica al generador el valor del atributo manual_onoff
+        Returns:
+
+        """
+        if self.manual_onoff_mode and self.manual_onoff is not None:
+            operations = ("Apagando", "Encendiendo")
+            print(f"{operations[self.manual_onoff]} MANUALMENTE el generador {self.name}")
+            await self.onoff(self.manual_onoff)
+            return 1
+        return 0
+
     async def iv_mode(self, new_iv_mode: [int, None] = None):
         """
         Fija el modo iv del generador.
@@ -178,6 +191,19 @@ class Generator(phi.MBDevice):
 
         return self.iv
 
+    async def set_manual_iv(self):
+        """
+        Aplica al generador el valor del atributo manual_iv
+        Returns:
+
+        """
+        if self.manual_iv_mode and self.manual_iv is not None:
+            operations = ("Calefaccion", "Refrigeracion")
+            print(f"Activando {operations[self.manual_iv]} MANUALMENTE en el generador {self.name}")
+            await self.iv_mode(self.manual_iv)
+            return 1
+        return 0
+
     async def set_sp(self, new_sp: [int, float, None] = None) -> [int, None]:
         """
         TODO Asociar consigna al grupo de habitaciones + definir consigna ACS + definir consign manual generador
@@ -208,6 +234,18 @@ class Generator(phi.MBDevice):
                 res = await set_value(source, new_sp)  # Escritura Modbus
                 self.sp = new_sp
         return self.sp
+
+    async def set_manual_sp(self):
+        """
+        Aplica al generador el valor del atributo manual_sp
+        Returns:
+
+        """
+        if self.manual_sp_mode and self.manual_sp is not None:
+            print(f"Aplicando la consigna {self.manual_sp} MANUALMENTE en el generador {self.name}")
+            await self.set_sp(self.manual_sp)
+            return 1
+        return 0
 
     async def set_dhwsp(self, new_dhwsp: [int, None] = None) -> [int, None]:
         """
@@ -267,7 +305,7 @@ class Generator(phi.MBDevice):
 
         for k, v in info_attributes.items():
             attr_source = self.__getattribute__(k)
-            if attr_source is None:
+            if attr_source is None or not attr_source:
                 continue
             datatype = attr_source[0]
             adr = attr_source[1]
@@ -279,6 +317,18 @@ class Generator(phi.MBDevice):
             if current_attr_val is not None:
                 self.__setattr__(v, current_attr_val)
                 print(f"{self.name}. Valor de {v}:\t{current_attr_val}")
+        return 1
+
+    async def upload(self):
+        """
+        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
+        "manual_onoff_mode", "manual_onoff", "manual_sp_mode", "manual_sp", "dhwsp", "manual_iv_mode", "manual_iv")
+        :return:
+        """
+        await self.set_manual_onoff()
+        await self.set_manual_iv()
+        await self.set_manual_sp()
+        await self.set_dhwsp(self.dhwsp)
         return 1
 
     async def update(self):
@@ -328,32 +378,24 @@ class Generator(phi.MBDevice):
         Para imprimir los valores de los 3 circuitos de impulsión
         :return:
         """
-        onoff_st = ("st1", "st2", "st3")
-        iv_modes = ("iv1", "iv2", "iv3")
-        setpoints = ("sp1", "sp2", "sp3")
-        t_imps = ("ti1", "ti2", "ti3")
-        valv_st = ("v1", "v2", "v3")
         onoff_values = {0: "Parada", 1: "En Marcha"}
-        active_values = {0: "Desactivada", 1: "Activada"}
-        mode_values = {0: "Circuito parado", 1: "Refrigeración", 2: "Calefacción"}
         dev_info = ""
 
-        for idx in range(3):
-            circuito = idx + 1
-            st = self.__getattribute__(onoff_st[idx])
-            iv = self.__getattribute__(iv_modes[idx])
-            sp = self.__getattribute__(setpoints[idx])
-            ti = self.__getattribute__(t_imps[idx])
-            valv = self.__getattribute__(valv_st[idx])
-            dev_info += f"\nCIRCUITO {circuito}"
-            dev_info += f"\n=========="
-            dev_info += f"\n\tEstado bomba: {onoff_values.get(st)}"
-            dev_info += f"\n\tEstado modo de funcionamiento: {mode_values.get(iv)}"
-            dev_info += f"\n\tConsigna de impulusión: {sp} ºC"
-            dev_info += f"\n\tTemperatura de impulusión: {ti} ºC"
-            dev_info += f"\n\tApertura válvula: {valv}%"
+        st = onoff_values.get(self.onoff_st)
+        iv = "Calefaccion" if self.iv == 0 else "Refrigeracion"
+        sp = self.sp
+        ti = self.supply_water_temp
+        tr = self.return_water_temp
+        alarm = self.alarm
+        dev_info += f"\nGENERADOR {self.name}"
+        dev_info += f"\n======================"
+        dev_info += f"\n\tEstado generador: {st}"
+        dev_info += f"\n\tModo de funcionamiento: {iv}"
+        dev_info += f"\n\tConsigna de impulusión: {sp} ºC"
+        dev_info += f"\n\tTemperatura de impulusión: {ti} ºC"
+        dev_info += f"\n\tTemperatura de retorno: {tr} ºC"
+        dev_info += f"\n\tAlarma: {alarm}%"
 
-        # dev_info += f"\n\nEstado salida digital 4 {active_values.get(self.get_st4())}"
         return dev_info
 
 
@@ -498,6 +540,7 @@ class UFHCController(phi.MBDevice):
             current_value = get_value(source)
             if current_value is None:  # El canal no se utiliza
                 return
+
             self.__setattr__(channel_val_attrs.get(key), current_value)  # actualiza los atributos spx, rtx,
             # etc. siendo x el canal
             channel_info[key] = current_value
@@ -518,6 +561,32 @@ class UFHCController(phi.MBDevice):
         self.__setattr__(channel_dp_attr, channel_dp)
 
         return self.__getattribute__(channel_attr)
+
+    async def upload(self):
+        """
+        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
+        Los atributos se han actualizado desde la web
+        Consignas y modo IV
+        :return:
+        """
+        await self.iv_mode(self.iv)
+        spch_sources = (("sp" + str(idx + 1), "ch" + str(idx + 1) + "_source") for idx in range(12))
+        for sp, src in spch_sources:
+            ch_info = self.__getattribute__(src)
+            sp_value = self.__getattribute__(sp)
+            if None not in (ch_info, sp_value):
+                sp_target = ch_info.get("sp")
+                datatype = sp_target[0]
+                adr = sp_target[1]
+                target = {"bus": int(self.bus_id),
+                          "device": int(self.device_id),
+                          "datatype": datatype,
+                          "adr": adr}
+                print(f"UFHCController {self.name}. uploading value {sp_value}")
+                uploaded_value = await set_value(target, sp_value)
+
+        return 1
+
 
     async def update(self):
         """
@@ -915,7 +984,7 @@ class HeatRecoveryUnit(phi.MBDevice):
             1: DESHUMIDIFICACION
             2: FANCOIL / APOYO A LA CLIMATIZACIÓN
             4: FREE_COOLING
-            5: FREE_COOLING + DESHUMIDIFICACIÓN
+            5: FREE_COOLING + DESHUMIDIFICACIÓN (Modo anulado para no introducir humedad exterior aunque sea menor)
             6: FREE_COOLING + FANCOIL
             8: VENTILACIÓN
         - Modo Deshumidificación: Grupo de habitaciones en modo Cooling AND Temperatura ambiente de alguna
@@ -988,7 +1057,8 @@ class HeatRecoveryUnit(phi.MBDevice):
                 fancoil_mode = True
                 self.hru_mode = phi.FANCOIL
 
-        if freecooling_mode:
+        if freecooling_mode and not dehumid_mode:  # En modo deshumidificación no se activa free-cooling
+            # para no introducir más humedad exterior, aunque sea más baja que la interior.
             self.hru_mode += phi.FREE_COOLING
 
         if dehumid_mode or fancoil_mode or freecooling_mode:
@@ -1121,7 +1191,7 @@ class HeatRecoveryUnit(phi.MBDevice):
             1: DESHUMIDIFICACION
             2: FANCOIL / APOYO A LA CLIMATIZACIÓN
             4: FREE_COOLING
-            5: FREE_COOLING + DESHUMIDIFICACIÓN
+            5: FREE_COOLING + DESHUMIDIFICACIÓN  - Opción no disponible
             6: FREE_COOLING + FANCOIL
             8: VENTILACIÓN
         Param:
@@ -1195,6 +1265,24 @@ class HeatRecoveryUnit(phi.MBDevice):
         else:
             res = await self.ventilation_mode()
             return phi.VENTILACION
+
+    async def upload(self):
+        """
+        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
+        "onoff", "manual", "manual_speed", "manual_airflow", "man_hru_mode_st", "man_hru_mode"
+        :return:
+        """
+        available_modes = (0, 1, 2, 4, 6, 8)
+        if self.manual:
+            if None not in (self.speed, self.manual_speed):
+                await self.set_speed(self.manual_speed)
+            elif None not in (self.get_airflow(), self.manual_airflow):
+                await self.set_airflow(self.manual_airflow)
+        if self.man_hru_mode_st and self.man_hru_mode in available_modes:
+            await self.set_man_op_mode()
+        if self.onoff == phi.OFF:
+            await self.off_mode()
+        return 1
 
     async def update(self):
         """
@@ -1652,6 +1740,15 @@ class AirZoneManager(phi.MBDevice):
         self.ed3_aux = current_status[2]
         return self.ed1_aux, self.ed2_aux, self.ed3_aux
 
+    async def upload(self):
+        """
+        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
+        Consignas y modo IV
+        :return:
+        """
+        pass
+        return 1
+
     async def update(self):
         """
         Propaga al zonificador el modo de funcionamiento, el estado on/off, la consigna y la temperatura del grupo
@@ -1841,40 +1938,29 @@ class TempFluidController(phi.MBDevice):
         state = self.__getattribute__(states[idx])
         return state
 
-    async def man_onoff(self, circuit: int = 1,
-                        new_man_mode: [int, None] = None,
-                        new_st_value: [int, None] = None) -> [phi.Tuple[int, int], None]:
+    async def man_onoff(self, circuit: int = 1) -> [phi.Tuple[int, int], None]:
         """
         Activa y desactiva el modo manual de funcionamiento de la bomba circuladora del circuito 'circuit' y, cuando
         está activado, la arranca o para dependiendo del valor de new_st_value
         Si new_man_mode es None, devuelve el valor de activación del modo manual: 1:activado / 0:desactivado
         Returns: Tupla con el estado del modo manual y valor manual configurado para la bomba
         """
+        if circuit not in (1, 2, 3):
+            print(f"ERROR intentando activar MANUALMENTE el circuito {circuit} de {self.name}")
+            return
+
         manual_states_attributes = ("act_man_st1", "act_man_st2", "act_man_st3")
         manual_states_values_attributes = ("man_st1", "man_st2", "man_st3")
         idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
-        if new_man_mode is not None:
-            if new_man_mode not in [phi.OFF, phi.ON]:
-                print(f"\n{self.name}: Error activando modo manual para la bomba del circuito {circuit} con el "
-                      f"valor {new_man_mode}")
-            else:
-                # Actualizo el estado de activación del modo manual
-                self.__setattr__(manual_states_attributes[idx], new_man_mode)
+        circuit_manual_state_attr = manual_states_attributes[idx]
+        circuit_manual_value_attr = manual_states_values_attributes[idx]
+        circuit_manual_state = self.__getattribute__(circuit_manual_state_attr)
+        circuit_manual_value = self.__getattribute__(circuit_manual_value_attr)
+        if None not in (circuit_manual_state, circuit_manual_value):
+            print(f"Activando modo manual en circuito circuito {circuit} de {self.name}")
+            await self.onoff(circuit, circuit_manual_value)  # El método onoff propaga el valor al dispositivo
 
-        if new_st_value is not None:
-            if new_st_value not in [phi.OFF, phi.ON]:
-                print(f"\n{self.name}: Error activando la bomba del circuito {circuit} con el "
-                      f"valor {new_st_value}")
-            else:
-                self.__setattr__(manual_states_values_attributes[idx], new_st_value)
-
-        # Bomba en modo manual: propago el valor manual a la salida si está activado
-        if new_man_mode == phi.ON:
-            await self.onoff(circuit, new_st_value)
-
-        current_man_st = self.__getattribute__(manual_states_attributes[idx])
-        current_man_val = self.__getattribute__(manual_states_values_attributes[idx])
-        return current_man_st, current_man_val
+        return circuit_manual_state, circuit_manual_value
 
     async def iv_mode(self, circuit: int = 1, new_iv_mode: [int, None] = None) -> [int, None]:
         """
@@ -1965,9 +2051,7 @@ class TempFluidController(phi.MBDevice):
         setpoint = self.__getattribute__(setpoints[idx])
         return setpoint
 
-    async def man_sp(self, circuit: int = 1,
-                     man_set_sp_mode: [int, None] = None,
-                     man_sp: [int, None] = None) -> [phi.Tuple[int, int], None]:
+    async def man_sp(self, circuit: int = 1) -> [phi.Tuple[int, int], None]:
         """
         Fija la consigna de impulsión del circuito 'circuit' en lugar de utilizar el valor calculado
         desde el grupo de habitaciones.
@@ -1987,35 +2071,15 @@ class TempFluidController(phi.MBDevice):
         manual_sp_values = ("man_sp1", "man_sp1", "man_sp1")
         idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
 
-        current_man_st = self.__getattribute__(manual_sp_states[idx])
+        current_man_sp = self.__getattribute__(manual_sp_states[idx])
         current_man_val = self.__getattribute__(manual_sp_values[idx])
 
-        if man_set_sp_mode is not None:
-            if man_set_sp_mode not in [phi.OFF, phi.ON]:
-                print(f"\n{self.name}: Error activando modo manual para ajuste de consigna del circuito {circuit} "
-                      f"con el valor {man_set_sp_mode}")
-                self.__setattr__(manual_sp_states[idx], current_man_st)
-            else:
-                self.__setattr__(manual_sp_states[idx], man_set_sp_mode)
-        else:
-            self.__setattr__(manual_sp_states[idx], current_man_st)
-
-        if man_sp is not None:
-            if man_sp > 55 or man_sp < 5:
-                print(f"\n{self.name}: Error estableciendo la consigna del circuito {circuit} con el "
-                      f"valor {man_sp} (Rango 5-55 °C)")
-                self.__setattr__(manual_sp_values[idx], current_man_val)
-            else:
-                self.__setattr__(manual_sp_values[idx], man_sp)
-        else:
-            self.__setattr__(manual_sp_values[idx], current_man_val)
-
-        current_man_st = self.__getattribute__(manual_sp_states[idx])
-        current_man_val = self.__getattribute__(manual_sp_values[idx])
-        if current_man_st == phi.ON:  # Se aplica la consigna manual
+        if current_man_sp and current_man_val is not None:
+            # Actualizando consigna manualmente
+            print(f"Actualizando MANUALMENTE la consigna del circuito {circuit} de {self.name} a {current_man_val}")
             await self.sp(circuit, current_man_val)
 
-        return current_man_st, current_man_val
+        return current_man_sp, current_man_val
 
     async def ti(self, circuit: int = 1):
         """
@@ -2093,6 +2157,46 @@ class TempFluidController(phi.MBDevice):
         self.st4 = get_value(value_source=source)
         return self.st4
 
+    async def set_st4(self, new_st4_val=1):
+        """
+        Establece el valor de la salida digital 4 del controlador SIG610
+        Returns: Estado de la salida digital 4 del controlador SIG610
+        """
+        if self.st4_source is None or new_st4_val not in (0, 1):
+            return
+        datatype = self.st4_source[0]
+        adr = self.st4_source[1]
+        source = {"bus": int(self.bus_id),
+                  "device": int(self.device_id),
+                  "datatype": datatype,
+                  "adr": adr}
+        await set_value(source, new_st4_val)
+        self.st4 = new_st4_val
+        return self.st4
+
+    async def upload(self):
+        """
+        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
+        'st4'
+        :return:
+        """
+        circuits = (1, 2, 3)
+        # Atributos de las bombas:
+        pumps__manual_attrs = ('act_man_st1', 'act_man_st2', 'act_man_st3')
+        # Atributos de las consignas:
+        sps_attrs = ('act_man_sp1', 'act_man_sp2', 'act_man_sp3')
+
+        for idx, circuit in enumerate(circuits):
+            pump_manual_state = self.__getattribute__(pumps__manual_attrs[idx])
+            sp_manual_state = self.__getattribute__(sps_attrs[idx])
+            if pump_manual_state:
+                await self.man_onoff(circuit)
+            if sp_manual_state:
+                await self.man_sp(circuit)
+        await self.set_st4(self.st4)
+
+        return 1
+
     async def update(self):
         """
         Propaga a cada circuito, el modo de funcionamiento, el estado on/off y la consigna de cada uno
@@ -2128,6 +2232,7 @@ class TempFluidController(phi.MBDevice):
                 # Hay demanda de refrigeración (demanda = 1) o de calefacción (demanda = 2). Se propaga el modo iv
                 iv = 1 if roomgroup.get("iv") else 2  # roomgroup.iv es 1 en refrigeración
                 # Se arranca la bomba circuladora SI NO ESTÁ EN MODO MANUAL
+                await self.iv_mode(circuito, iv)
                 if not modo_manual_activado:
                     update_st = await self.onoff(circuito, phi.ON)
             else:
@@ -2809,6 +2914,15 @@ class Fancoil(phi.MBDevice):
         self.floor_temp = get_value(source)
         return self.floor_temp
 
+    async def upload(self):
+        """
+        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
+        Consignas y modo IV
+        :return:
+        """
+        pass
+        return 1
+
     async def update(self):
         """
         Propaga al fancoil el modo de funcionamiento, el estado on/off, la consigna y la temperatura del grupo
@@ -2899,19 +3013,31 @@ class DataSource(phi.MBDevice):
         self.brand = brand
         self.model = model
 
+
+    async def upload(self):
+        """
+        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
+        Consignas y modo IV
+        :return:
+        """
+        pass
+        return 1
+
     async def update(self):
         """
         Se actualizan los valores leídos del DataSource
+        TODO crear método update para clase DataSource
         """
-        raise NotImplementedError(f"ERROR {__file__}. Método UPDATE no implementado en DataSources")
+        pass
 
     def __repr__(self):
         """
+        TODO crear método __repr__ para clase DataSource
         Para imprimir la información actual del DataSource
         :return:
         """
-        raise NotImplementedError(f"ERROR {__file__}. Método __REPR__ no implementado en DataSources")
-
+        msg = f"DataSource {self.name}"
+        return msg
 
 # DICCIONARIO CON LAS CLASES DE DISPOSITIVOS DEL SISTEMA
 SYSTEM_CLASSES = {

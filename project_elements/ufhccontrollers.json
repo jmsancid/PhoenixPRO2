@@ -1,5 +1,105 @@
 {
   "ufhccontrollers": {
+    "uponor_x147": {
+      "iv_source": ["co", 0, 0, 1],
+      "pump_source": ["di", 12, 0, 1],
+      "ch1_source": {
+        "sp": ["hr", 0],
+        "rt": ["ir", 1],
+        "rh": ["ir", 13],
+        "ft": ["ir", 25],
+        "st": ["di", 0],
+        "coff": ["co", 3]
+      },
+      "ch2_source": {
+        "sp": ["hr", 1],
+        "rt": ["ir", 2],
+        "rh": ["ir", 14],
+        "ft": ["ir", 26],
+        "st": ["di", 1],
+        "coff": ["co", 4]
+      },
+      "ch3_source": {
+        "sp": ["hr", 2],
+        "rt": ["ir", 3],
+        "rh": ["ir", 15],
+        "ft": ["ir", 27],
+        "st": ["di", 2],
+        "coff": ["co", 5]
+      },
+      "ch4_source": {
+        "sp": ["hr", 3],
+        "rt": ["ir", 4],
+        "rh": ["ir", 16],
+        "ft": ["ir", 28],
+        "st": ["di", 3],
+        "coff": ["co", 6]
+      },
+      "ch5_source": {
+        "sp": ["hr", 4],
+        "rt": ["ir", 5],
+        "rh": ["ir", 17],
+        "ft": ["ir", 29],
+        "st": ["di", 4],
+        "coff": ["co", 7]
+      },
+      "ch6_source": {
+        "sp": ["hr", 5],
+        "rt": ["ir", 6],
+        "rh": ["ir", 18],
+        "ft": ["ir", 30],
+        "st": ["di", 5],
+        "coff": ["co", 8]
+      },
+      "ch7_source": {
+        "sp": ["hr", 6],
+        "rt": ["ir", 7],
+        "rh": ["ir", 19],
+        "ft": ["ir", 31],
+        "st": ["di", 6],
+        "coff": ["co", 9]
+      },
+      "ch8_source": {
+        "sp": ["hr", 7],
+        "rt": ["ir", 8],
+        "rh": ["ir", 20],
+        "ft": ["ir", 32],
+        "st": ["di", 7],
+        "coff": ["co", 10]
+      },
+      "ch9_source": {
+        "sp": ["hr", 8],
+        "rt": ["ir", 9],
+        "rh": ["ir", 21],
+        "ft": ["ir", 33],
+        "st": ["di", 8],
+        "coff": ["co", 11]
+      },
+      "ch10_source": {
+        "sp": ["hr", 9],
+        "rt": ["ir", 10],
+        "rh": ["ir", 22],
+        "ft": ["ir", 34],
+        "st": ["di", 9],
+        "coff": ["co", 12]
+      },
+      "ch11_source": {
+        "sp": ["hr", 10],
+        "rt": ["ir", 11],
+        "rh": ["ir", 23],
+        "ft": ["ir", 35],
+        "st": ["di", 10],
+        "coff": ["co", 13]
+      },
+      "ch12_source": {
+        "sp": ["hr", 11],
+        "rt": ["ir", 12],
+        "rh": ["ir", 24],
+        "ft": ["ir", 36],
+        "st": ["di", 11],
+        "coff": ["co", 14]
+      }
+    },
     "uponor_x148": {
       "iv_source": ["co", 0, 0, 1],
       "pump_source": ["di", 12, 0, 1],

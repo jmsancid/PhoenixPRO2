@@ -36,6 +36,7 @@ def get_modo_iv(bld: str = "1") -> [int, None]:
     """
         Obtiene el modo actual de funcionamiento del sistema: Calefacción = 0, Refrigeración = 1
         """
+    modo_iv = init_modo_iv()
     bld_data = phi.prj.get("buildings")[bld]
     if bld_data is None:
         print(f"ERROR (get_modo_iv) - No se ha definido edificio {bld}")
@@ -45,22 +46,19 @@ def get_modo_iv(bld: str = "1") -> [int, None]:
         msg = f"WARNING (get_modo_iv) - No se indicado origen de lectura del modo Frío/Calor en el " \
               f"edificio {bld}. Se toman valores por defecto"
         print(msg)
-        return get_default_t_exterior()
+        return modo_iv
     modo_iv_from_mbdev_source = iv_source.get("mbdev")
     modo_iv_from_file_source = iv_source.get("file")
     if modo_iv_from_mbdev_source not in [None, {}]:
-        print("El modo Frío/Calor se lee de un dispositivo ModBus")
         modo_iv = get_value(modo_iv_from_mbdev_source)
-        return modo_iv
+        print(f"El modo Frío/Calor se lee de un dispositivo ModBus.\nValor leido: {modo_iv}")
     elif modo_iv_from_file_source:
-        print("El modo Frío/Calor se lee de un archivo")
         modo_iv_file = phi.EXCHANGE_FOLDER + modo_iv_from_file_source
         if path.isfile(modo_iv_file):
+            print("El modo Frío/Calor se lee de un archivo")
             with open(modo_iv_file, "r") as ivf:
                 modo_iv = int(ivf.read())
-                return modo_iv
-    else:
-        return init_modo_iv()
+    return modo_iv
 
 
 def get_temp_exterior(bld: str = "1") -> [float, None]:
@@ -92,8 +90,9 @@ def get_temp_exterior(bld: str = "1") -> [float, None]:
     t_ext_from_mbdev_source = te_source.get("mbdev")
     t_ext_from_file_source = te_source.get("file")
     if t_ext_from_mbdev_source not in [None, {}]:
-        print("La temperatura exterior se lee de un dispositivo ModBus")
         t_ext = get_value(t_ext_from_mbdev_source)
+        print("La temperatura exterior se lee de un dispositivo ModBus")
+        print(f"Valor de temperatura exterior leido: {t_ext}")
         return t_ext
     elif t_ext_from_file_source:
         print("La temperatura exterior se lee de un archivo")
@@ -284,55 +283,16 @@ class Room:
 
     def iv(self):
         """
-        Obtiene el modo actual de funcionamiento, calefacción refrigeración de la habitación desde la base de
-        datos que almacena las lecturas.
-        Si iv_source es None o la respuesta del iv_source es None, el modo IV se calcula de forma automática.
-        Si iv_source sólo tiene 2 claves: la del bus y la del dispositivo ModBus asociado, quiere decir que el
-        modo IV se lee desde la web y estará almacenado en el archivo 'iv' correspondiente al dispositivo
-        ModBus asociado.
+        Obtiene el modo actual de funcionamiento, calefacción refrigeración de la habitación y está asociado al modo
+        iv del edificio, que puede calcularse en función del mes, desde un dispositivo o leerse de un fichero..
         Si se lee un 0 el modo será calefacción y si se lee un 1 el modo será refrigeración.
-        El modo IV se puede leer también de un dispositivo tipo Generador. En ese caso, el dispositivo Generador
-        deberá tener implementado un método que devuelva un 0 para calefacción y un 1 para refrigeración.
         Returns: Modo de funcionamiento Calefacción / Refrigeración de la instalación.
         Es un valor booleano asociado a la refrigeración: True = Refrigeración / False = Calefacción
-        Si no se dispone del dato, se selecciona automáticamente:
-        Junio-Septiembre = Refrigeración
-        Resto = Calefacción
         """
-        mes = phi.datetime.now().month
-        auto_cooling = phi.COOLING if 5 < mes < 10 else phi.HEATING  # Refrigeración entre junio y septiembre
-
-        if self.iv_source is None or not self.iv_source:  # Modo IV automático
-            return auto_cooling
-
-        if len(self.iv_source.keys()) == 2:  # El modo se lee desde la web. Hay que obtener el nº de esclavo
-            # del dispositivo
-            bus_id = str(
-                self.iv_source.get("bus"))  # En el JSON, el bus_id que conecta la habitación con el dispositivo
-            # se introduce como un entero, pero la clave del diccionario con los datos leídos son str
-            device_id = str(
-                self.iv_source.get("device"))  # # OJO, es el ID del Device en la base de datos, NO EL SLAVE
-            device = phi.buses.get(bus_id).get(device_id)  # Devuelve el dispositivo en el que se va a escribir
-            dev_sl = str(device.slave)  # Esclavo de cuyo archivo tmp leer el modo IV
-            ex_folder_name = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + dev_sl
-            iv_file = ex_folder_name + r"/" + phi.IV
-            try:
-                with open(iv_file, "r") as ivf:
-                    iv_value = ivf.read()
-                    if iv_value in ['1', 1, True, "True"]:
-                        iv_mode = phi.COOLING
-                    elif iv_value in ['0', 0, False, 'False']:
-                        iv_mode = phi.HEATING
-                    else:
-                        print(f"ERROR {__file__} al leer el modo IV desde la web en el archivo {iv_file}.\n"
-                              f"Valor recibido no válido\n{iv_value}")
-                        return auto_cooling
-            except FileNotFoundError as e:
-                print(f"ERROR {__file__} al leer el modo IV desde la web en el archivo {iv_file}\n{e}")
-                return auto_cooling
-
-        else:  # El modo IV se lee de un dispositivo
-            iv_mode = get_value(self.iv_source)
+        modo = ("Calefacción", "Refrigeración")
+        iv_mode = get_modo_iv(self.building_id)
+        print(f"Modo funcionamiento habitación {self.name} del edificio {self.building_id}:\n")
+        print(f"\t\t{modo[iv_mode]}")
 
         return iv_mode
 
@@ -347,6 +307,20 @@ class Room:
         setpoint = get_value(self.sp_source)
         if setpoint is None or setpoint < 0 or setpoint > 55:
             return
+        iv_mode = self.iv()
+        # Compruebo si la consigna se lee de una centralita tipo X-147
+        bus_id = str(
+            self.sp_source.get("bus"))  # En el JSON, el bus_id que conecta la habitación con el dispositivo
+        # se introduce como un entero, pero la clave del diccionario con los datos leídos son str
+        device_id = str(
+            self.sp_source.get("device"))  # # OJO, es el ID del Device en la base de datos, NO EL SLAVE
+        device = phi.buses.get(bus_id).get(device_id)  # Devuelve el dispositivo en el que se va a escribir
+        dev_model = device.model  # Modelo de centralita Uponor
+
+        if dev_model == "x147" and iv_mode:
+            setpoint += 2
+            print(f"Corrigiendo consigna de {self.name} en X-147 refrigeración (se suman 2 gradC).\n"
+                  f"Valor corregido {setpoint}")
         return setpoint
 
     def rh(self):
@@ -634,7 +608,7 @@ class RoomGroup:
         if new_iv_mode in [0, 1]:  # Se fuerza el modo IV. TODO Comprobar si esta opción tiene sentido.
             self.iv = new_iv_mode
         elif q_hab_cooling + q_hab_heating == 0:  # No se ha leído el modo IV de ninguna habitación
-            self.iv = init_modo_iv()
+            self.iv = get_modo_iv()
         else:
             self.iv = modo_iv
 

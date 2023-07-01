@@ -373,18 +373,6 @@ def load_regmapfiles() -> Tuple:
     return tuple(regmaps)
 
 
-# mbregmaps = load_regmapfiles()
-if not os.path.isfile(REGMAP_INSTANCES_FILE):
-    mbregmaps = load_regmapfiles()  # Diccionario con todos los buses.
-    # Clave principal es id del grupo
-    with open(REGMAP_INSTANCES_FILE, "wb") as rmf:
-        pickle.dump(mbregmaps, rmf)
-else:
-    # Ya se habían creado los grupos de habitaciones
-    with open(REGMAP_INSTANCES_FILE, "rb") as rmf:
-        mbregmaps = pickle.load(rmf)
-
-
 def config_devices():
     """
     Módulo para terminar de configurar los Objetos-Dispositivos del proyecto según su clase.
@@ -433,7 +421,7 @@ def config_devices():
             dev_to_config = bus_devices[device]
             print(f"\t\t... finalizando configuración del dispositivo {dev_to_config.name}")
             dev_data_key = f"{dev_to_config.__class__.__name__}_{dev_to_config.brand}_{dev_to_config.model}"
-            print(f"Base datos dispositivo:\n{devtypes[dev_data_key]}\n")
+            # print(f"Base datos dispositivo:\n{devtypes[dev_data_key]}\n")
             # Obtengo los atributos de la clase de objeto
             attrs = tuple(dev_to_config.__dict__.keys())
             # print(f"Atributos del Dispositivo:{attrs}")
@@ -456,5 +444,16 @@ def config_devices():
 
     return 1
 
+
+# mbregmaps = load_regmapfiles()
+if not os.path.isfile(REGMAP_INSTANCES_FILE):
+    mbregmaps = load_regmapfiles()  # Diccionario con todos los buses.
+    # Clave principal es id del grupo
+    with open(REGMAP_INSTANCES_FILE, "wb") as rmf:
+        pickle.dump(mbregmaps, rmf)
+else:
+    # Ya se habían creado los grupos de habitaciones
+    with open(REGMAP_INSTANCES_FILE, "rb") as rmf:
+        mbregmaps = pickle.load(rmf)
 
 dev_config = config_devices()

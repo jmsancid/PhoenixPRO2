@@ -1,31 +1,9 @@
 {
-  "me_ecodan_v2": {
+  "me_ecodan-v2": {
     "name": "ECODAN",
     "write_ops": [5, 6, 15, 16],
+    "qregsmax": 25,
     "hr": {
-      "0": {
-        "descr": {
-          "en": "System On/Off",
-          "sp": "Marcha/Paro Unidad",
-          "po": "Marcha/Paro Unidad"
-        }
-      },
-      "3": {
-        "descr": {
-          "en": "Operating Mode (2=Cooling / 3=Heating)",
-          "sp": "Modo de funcionamiento (2=Refrigeración / 3=Calefacción)",
-          "po": "Modo de funcionamiento (2=Refrigeración / 3=Calefacción)"
-        }
-      },
-      "11": {
-        "descr": {
-          "en": "SH/C Thermostat Target\nTemperature – Zone 1",
-          "sp": "Consigna impulsión climatización - Zona 1",
-          "po": "Consigna impulsión climatización - Zona 1"
-        },
-        "conv_f_read": [1],
-        "conv_f_write": [0]
-      },
       "12": {
         "descr": {
           "en": "Set Tank Water Temperature",
@@ -41,7 +19,7 @@
           "sp": "Temperatura exterior",
           "po": "Temperatura exterior"
         },
-        "conv_f_read": [10, 1]
+        "conv_f_read": [1]
       },
       "46": {
         "descr": {
@@ -49,7 +27,7 @@
           "sp": "Temperatura de retorno de agua",
           "po": "Temperatura de retorno de agua"
         },
-        "conv_f_read": [10, 1]
+        "conv_f_read": [1]
       },
       "47": {
         "descr": {
@@ -57,7 +35,7 @@
           "sp": "Temperatura de impulsión de agua",
           "po": "Temperatura de impulsión de agua"
         },
-        "conv_f_read": [10, 1]
+        "conv_f_read": [1]
       },
       "48": {
         "descr": {
@@ -65,7 +43,7 @@
           "sp": "Temperatura depósito de ACS",
           "po": "Temperatura depósito de ACS"
         },
-        "conv_f_read": [10, 1]
+        "conv_f_read": [1]
       },
       "51": {
         "descr": {
@@ -131,6 +109,31 @@
           "sp": "Energía total generada en ACS (2)",
           "po": "Energía total generada en ACS (2)"
         }
+      }
+    },
+    "ir": {
+      "0": {
+        "descr": {
+          "en": "System On/Off",
+          "sp": "Marcha/Paro Unidad",
+          "po": "Marcha/Paro Unidad"
+        }
+      },
+      "3": {
+        "descr": {
+          "en": "Operating Mode (2=Cooling / 3=Heating)",
+          "sp": "Modo de funcionamiento (2=Refrigeración / 3=Calefacción)",
+          "po": "Modo de funcionamiento (2=Refrigeración / 3=Calefacción)"
+        }
+      },
+      "11": {
+        "descr": {
+          "en": "SH/C Thermostat Target\nTemperature – Zone 1",
+          "sp": "Consigna impulsión climatización - Zona 1",
+          "po": "Consigna impulsión climatización - Zona 1"
+        },
+        "conv_f_read": [1],
+        "conv_f_write": [0]
       }
     }
   },

@@ -297,6 +297,7 @@ def get_f_modif_timestamp(path_to_file: str) -> [str, None]:
     file_exists = phi.os.path.isfile(path_to_file)
     if file_exists:
         last_mod_date = str(phi.datetime.fromtimestamp(phi.os.stat(path_to_file).st_mtime))
+        print(f"DEBUGGING {__file__}: Obteniendo fecha ultima modificacion {path_to_file}: {last_mod_date}")
         return last_mod_date
     else:
         return None
@@ -333,9 +334,11 @@ async def check_changes_from_web() -> int:
     checked = []
     for bus_id, bus in phi.buses.items():
         # devs = phi.buses.get(bus)
+        changes_from_web = False
         for dev_id, dev in bus.items():
             if first_time:  # La primera vez configuramos los dispositivos con los valores de los ficheros de
                 # intercambio
+                print(f"DEBUGGING {__file__}: Primera vez que se rellenan lecturas")
                 await update_devices_from_xch_files(dev)
                 continue
             dev_sl = str(dev.slave)
@@ -354,33 +357,53 @@ async def check_changes_from_web() -> int:
                 file_from_web_to_check = ex_folder_name + r"/" + xf + r"RW"
                 file_from_dev_to_check = ex_folder_name + r"/" + xf
                 last_mod_time = get_f_modif_timestamp(file_from_web_to_check)
-                current_value = getattr(dev, xf)  # el nombre del fichero f coincide con el atributo a comprobar
+                # print(f"check_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, "
+                #       f"atributo {xf}")
+                # Cambio la siguiente línea porque por algún motivo el atributo no está actualizado
+                # current_value = getattr(dev, xf)  # el nombre del fichero f coincide con el atributo a comprobar
+                # Para sustituir la linea anterior
+                #------------------------------------------------
+                with open(file_from_dev_to_check, "r") as curvf:
+                    current_value = curvf.read()
+                #------------------------------------------------
+
                 if None in (last_mod_time, last_reading_time):
-                    print(f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
-                          f"Última modificación {file_from_web_to_check}: {last_mod_time}\n\t"
-                          f"Última lectura: {last_reading_time}")
+                    # print(f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
+                    #       f"Última modificación {file_from_web_to_check}: {last_mod_time}\n\t"
+                    #       f"Última lectura: {last_reading_time}")
                     continue
+                print(f"Fechas de última modificación y última lectura:\n\t"
+                      f"Última modificación {file_from_web_to_check}: {last_mod_time}\n\t"
+                      f"Última lectura: {last_reading_time}")
+                with open(file_from_web_to_check, "r") as modf:
+                    web_value = modf.read()
+                    print(f"\nDEBUGGING {__file__}:"
+                          f"\n\tValor leído en la web: {web_value}"
+                          f"\n\tValor actual: {current_value}")
                 if last_mod_time > last_reading_time:  # Ha habido modificaciones desde la Web
-                    with open(file_from_web_to_check, "r") as modf:
-                        new_value = modf.read()
-                    print(f"Se ha modificado desde la Web el fichero:\n\t{file_from_web_to_check}\n"
-                          f"Valor anterior:\t{current_value} (tipo {type(getattr(dev, xf))})\n"
-                          f"Valor desde web:\t{new_value} (tipo {type(new_value)})")
-                    attr_mod[file_from_web_to_check] = new_value
-                    if new_value is not None:
-                        if '(' in new_value:  # Is Tuple
-                            val_to_write = tuple(map(int, new_value.strip('()').split(', ')))
-                            setattr(dev, xf, val_to_write)
-                        elif '.' in new_value:  # Is float
-                            setattr(dev, xf, float(new_value))
-                        elif new_value.isdecimal():  # Is int
-                            setattr(dev, xf, int(new_value))
+                    changes_from_web = True
+                    print(f"\nSe ha modificado desde la Web el fichero:\n\t{file_from_web_to_check}\n"
+                          f"\tValor anterior:\t{current_value} (tipo {type(getattr(dev, xf))})\n"
+                          f"\tValor desde web:\t{web_value} (tipo {type(web_value)})")
+                    attr_mod[file_from_dev_to_check] = web_value
+                    if web_value is not None:
+                        if '(' in web_value:  # Is Tuple
+                            val_to_write = tuple(map(int, web_value.strip('()').split(', ')))
+                        elif '.' in web_value:  # Is float
+                            val_to_write = float(web_value)
+                        elif web_value.isdecimal():  # Is int
+                            val_to_write = int(web_value)
                         else:
-                            setattr(dev, xf, str(new_value))
+                            val_to_write = str(web_value)
+                        setattr(dev, xf, val_to_write)
                         with open(file_from_dev_to_check, "w") as xf:
-                            xf.write(str(new_value))
+                            xf.write(str(web_value))
                 else:
                     attr_not_mod[file_from_web_to_check] = current_value
+            if changes_from_web:
+                changes_from_web = False
+                print(f"{__file__} Subiendo actualización a dispositivo ModBus")
+                await dev.upload()
         print(f"Archivos modificados: {attr_mod}")
         print(f"Archivos NO modificados: {attr_not_mod}")
 
@@ -517,7 +540,8 @@ async def update_devices_from_xch_files(device):
     attrs_to_update = phi.EXCHANGE_R_FILES.get(cls)  # Tupla con los archivos a actualizar (son los nombres
     # de los atributos)
     for attr in attrs_to_update:
-        attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + r"/RW/" + attr
+        # attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + attr + r"/RW"
+        attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + attr
         if not path.isfile(attr_file):
             print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_file}")
             continue

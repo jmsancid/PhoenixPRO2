@@ -1,24 +1,24 @@
 {
   "generators": {
-    "me_ecodan_v2": {
+    "me_ecodan-v2": {
       "name": "ECODAN Airzone Version",
-      "onoff_source": ["hr", 0],
+      "onoff_source": ["ir", 0],
       "on_value": 1,
       "off_value": 0,
       "demanda_source": [],
-      "sp_source":  ["hr", 11],
+      "sp_source":  ["ir", 11],
       "dhwsp_source":  ["hr", 12],
-      "iv_target": ["hr", 3],
-      "iv_source": ["hr", 3],
+      "iv_target": ["ir", 3],
+      "iv_source": ["ir", 3],
       "heating_value": 3,
-      "cooling_value": 1,
-      "alarm_source":  ["ir", 55],
-      "t_ext_source": ["ir", 35],
-      "supply_water_temp_source": ["ir", 46],
-      "return_water_temp_source": ["ir", 47],
-      "dwh_temp_source": ["ir", 48],
+      "cooling_value": 2,
+      "alarm_source":  ["hr", 55],
+      "t_ext_source": ["hr", 35],
+      "supply_water_temp_source": ["hr", 46],
+      "return_water_temp_source": ["hr", 47],
+      "dwh_temp_source": ["hr", 48],
       "t_inercia_source":  [],
-      "water_flow_source": ["ir", 51]
+      "water_flow_source": ["hr", 51]
       },
     "me_ecodan": {
       "name": "ecodan",

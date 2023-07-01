@@ -2,7 +2,86 @@
   "siber_vmcdf": {
     "name": "Recuperador de calor Siber DF Excellent",
     "write_ops": [6],
-    "qregsmax": 25,
+    "qregsmax": 4,
+    "hr": {
+      "6000": {
+        "descr": {
+          "en": "Flow rate set point (m³/h)",
+          "sp": "Caudal (m³/h, no puede leerse)",
+          "po": "Caudal (m³/h, no puede leerse)"
+        }
+      },
+      "6005": {
+        "descr": {
+          "en": "Bypass operation mode (0:auto / 1:closed / 2:open)",
+          "sp": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)",
+          "po": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)"
+        }
+      },
+      "4008": {
+        "descr": {
+          "en": "Outdoor temperature (°C)",
+          "sp": "Temperatura exterior (°C)",
+          "po": "Temperatura exterior (°C)"
+        },
+        "conv_f_read": [1]
+      },
+      "4009": {
+        "descr": {
+          "en": "Room temperature (°C)",
+          "sp": "Temperatura interior (°C)",
+          "po": "Temperatura interior (°C)"
+        },
+        "conv_f_read": [1]
+      },
+      "4010": {
+        "descr": {
+          "en": "Supply duct pressure (Pa)",
+          "sp": "Presion en conducto de impulsion (Pa)",
+          "po": "Presion en conducto de impulsion (Pa)"
+        }
+      },
+      "4011": {
+        "descr": {
+          "en": "Exhaust duct pressure (Pa)",
+          "sp": "Presion en conducto de extraccion (Pa)",
+          "po": "Presion en conducto de extraccion (Pa)"
+        }
+      },
+      "4027": {
+        "descr": {
+          "en": "Supply air flow (m³/h)",
+          "sp": "Caudal de impulsion (m³/h)",
+          "po": "Caudal de impulsion (m³/h)"
+        }
+      },
+      "4028": {
+        "descr": {
+          "en": "Exhaust air flow (m³/h)",
+          "sp": "Caudal de extraccion (m³/h)",
+          "po": "Caudal de extraccion (m³/h)"
+        }
+      },
+      "4029": {
+        "descr": {
+          "en": "Bypass state (0:init/1:opening/2:closing / 3:open / 4:closed / 255:unknown",
+          "sp": "Posicion del bypass (0:iniciando/1:abriendo/2:cerrando / 3:abierto / 4:cerrado / 255:?)",
+          "po": "Posicion del bypass (0:iniciando/1:abriendo/2:cerrando / 3:abierto / 4:cerrado / 255:?)"
+        }
+      },
+      "4030": {
+        "descr": {
+          "en": "Bypass operation mode (0:auto / 1:closed / 2:open)",
+          "sp": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto)",
+          "po": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto)"
+        }
+      }
+    }
+  },
+  "siber_vmcdf-full": {
+    "name": "Recuperador de calor Siber DF Excellent",
+    "write_ops": [6],
+    "qregsmax": 4,
     "hr": {
       "999": {
         "descr": {
@@ -66,9 +145,7 @@
           "sp": "Configuración módulo de control (0:Control Siber / 1:Modbus)",
           "po": "Configuración módulo de control (0:Control Siber / 1:Modbus)"
         }
-      }
-    },
-    "ir": {
+      },
       "4001": {
         "descr": {
           "en": "Device type",

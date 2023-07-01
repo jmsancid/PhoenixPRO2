@@ -1,7 +1,8 @@
 {
   "me_ecodan": {
-    "name": "ecodan",
+    "name": "ECODAN",
     "write_ops": [5, 6, 15, 16],
+    "qregsmax": 25,
     "hr": {
       "12": {
         "descr": {
