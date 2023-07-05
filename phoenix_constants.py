@@ -155,9 +155,10 @@ FANCOIL_RW_FILES = ('fan_auto_cont', 'actmanual_fan', 'manual_speed', 'speed_lim
 SPLIT_R_FILES = ()
 SPLIT_RW_FILES = ()
 HEATRECOVERYUNIT_R_FILES = ("onoff", "manual", "manual_speed", "hru_mode", "man_hru_mode_st", "man_hru_mode", "speed",
-                            "manual_airflow", "supply_flow", "exhaust_flow", "valv_st", "bypass_st", "dampers_st",
-                            "remote_onoff", "aux_ed2_st", "aux_ed3_st")
-HEATRECOVERYUNIT_RW_FILES = ("onoff", "manual", "manual_speed", "manual_airflow", "man_hru_mode_st", "man_hru_mode")
+                            "manual_airflow", "supply_flow", "exhaust_flow", "valv_st", "man_valv_pos",
+                            "man_dampers_pos", "bypass_st", "dampers_st", "remote_onoff", "aux_ed2_st", "aux_ed3_st")
+HEATRECOVERYUNIT_RW_FILES = ("onoff", "manual", "manual_speed", "manual_airflow", "man_hru_mode_st", "man_hru_mode",
+                             "man_valv_pos", "man_dampers_pos")
 
 AIRZONEMANAGER_R_FILES = ("iv", "sp", "rt", "sp1", "rt1", "sp2", "rt2",
                           "fan_auto_cont", "fan_speed", "damper1_st", "damper2_st",

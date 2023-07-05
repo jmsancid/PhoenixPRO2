@@ -435,6 +435,7 @@ class UFHCController(phi.MBDevice):
         self.model = model
         for attr in self.attr_list:
             self.__setattr__(attr, None)
+        self.active_channels = []  # Lista con los canales activos del controlador
         self.iv_source = None  # Origen del dato para el modo calefacción / refrigeración
         self.iv = None
         self.pump_source = None
@@ -463,6 +464,34 @@ class UFHCController(phi.MBDevice):
         self.ch11 = {"sp": None, "rt": None, "rh": None, "ft": None, "st": None, "coff": None}
         self.ch12_source = None
         self.ch12 = {"sp": None, "rt": None, "rh": None, "ft": None, "st": None, "coff": None}
+
+    async def get_active_channels(self):
+        """
+        Recoge los canales activos de la centralita a partir de las habitaciones de self.group
+        Returns: lista con los canales activos
+
+        """
+        if not self.groups:
+            print(f"ERROR {__file__} - No se ha definido grupo de habitaciones para {self.name}")
+
+        # with open(phi.ROOMGROUPS_VALUES_FILE, "r") as f:
+        #     roomgroups_values = json.load(f)
+
+        roomgroup_id = self.groups[0]  # No puede asociarse más de 1 grupo de habitaciones al controlador
+        roomgroup = phi.all_room_groups.get(roomgroup_id)  # Objeto del grupo RoomGroup
+        print(f"(devices.py/get_active_channels). Importando roomgroup de {self.name} / tipo {type(roomgroup)}")
+        if roomgroup is None:
+            print(f"ERROR {__file__} - El grupo de habitaciones {roomgroup_id} asociado {self.name} no "
+                  f"tiene información")
+            return
+        rooms = roomgroup.roomgroup  # Lista con las habitaciones del grupo (objetos Room)
+        for room in rooms:
+            channel = room.rt_source.get("adr")  # el adr de rt_source coincide con el canal
+            if channel is not None:
+                self.active_channels.append(channel)
+        print(f"(devices.py). Canales activos Controlador {self.name}: {self.active_channels}")
+
+
 
     async def iv_mode(self, new_iv_mode: [int, None] = None):
         """
@@ -569,11 +598,18 @@ class UFHCController(phi.MBDevice):
         Consignas y modo IV
         :return:
         """
+        if not self.active_channels:
+            await self.get_active_channels()
+
         await self.iv_mode(self.iv)
-        spch_sources = (("sp" + str(idx + 1), "ch" + str(idx + 1) + "_source") for idx in range(12))
+        # spch_sources = (("sp" + str(idx + 1), "ch" + str(idx + 1) + "_source") for idx in range(12))
+        # Propago únicamente la información de los canales activos
+        spch_sources = (("sp" + str(idx), "ch" + str(idx) + "_source") for idx in self.active_channels)
         for sp, src in spch_sources:
             ch_info = self.__getattribute__(src)
             sp_value = self.__getattribute__(sp)
+            if sp_value is not None and sp_value and int(sp_value) > 950:
+                continue
             if None not in (ch_info, sp_value):
                 sp_target = ch_info.get("sp")
                 datatype = sp_target[0]
@@ -593,14 +629,20 @@ class UFHCController(phi.MBDevice):
         Actualiza todos los atributos del dispositivo ModBus según las últimas lecturas
         :return:
         """
+        if not self.active_channels:
+            await self.get_active_channels()
+
         system_iv = get_modo_iv()  # Modo frío=1 / calor=0 del sistema
         print(f"DEBUGGING {__file__} - Modo de funcionamiento del sistema asociado al "
               f"Controlador UFHC {self.name} = {system_iv}")
         await self.iv_mode(system_iv)  # Actualizo el modo IV de la centralita
         await self.pump_st()  # Actualizo el estado de la bomba
-        for ch in range(12):
-            await self.set_channel_info(ch + 1)  # Los canales se identifican del 1 al 12, pero
+        # for ch in range(12):
+        # Actualizo solo la información de los canales activos
+        for ch in self.active_channels:
+            await self.set_channel_info(ch)  # Los canales se identifican del 1 al 12, pero
             # range devuelve de 0 a 11
+        print(f"(devices.py - UFHCController) Actualizando información en archivos de {self.name}")
         await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
         # correspondiente
         return 1
@@ -617,8 +659,10 @@ class UFHCController(phi.MBDevice):
             dev_info += f"\n\tModo de funcionamiento: {iv_mode[self.iv]}"
         if self.pump is not None:
             dev_info += f"\n\tEstado bomba circuladora: {pump_st[self.pump]}"
-        for ch in range(12):
-            channel_source_attr = f"ch{ch + 1}_source"
+        # for ch in range(12):
+        # Represento únicamente los canales activos
+        for ch in self.active_channels:
+            channel_source_attr = f"ch{ch}_source"
             attr_value = self.__getattribute__(channel_source_attr)
             if attr_value is not None:
                 channel_attr = f"ch{ch + 1}"
@@ -680,7 +724,6 @@ class HeatRecoveryUnit(phi.MBDevice):
         self.brand = brand
         self.model = model
         self.onoff = phi.ON
-        self.manual = False
         self.hru_modes = {phi.DESHUMIDIFICACION: False,
                           phi.FANCOIL: False,
                           phi.FREE_COOLING: False,
@@ -688,7 +731,7 @@ class HeatRecoveryUnit(phi.MBDevice):
         self.hru_mode = phi.VENTILACION
         self.man_hru_mode_st = phi.OFF  # Para fijar manualmente el modo de funcionamiento
         self.man_hru_mode = phi.VENTILACION
-        self.manual = False  # Valor manual de velocidad o caudal de aire
+        self.manual = 0  # Valor manual de velocidad o caudal de aire, compuertas y válvula. 0:desactivado
         self.flow_target = None
         self.supply_flow_source = None
         self.supply_flow = None
@@ -710,11 +753,13 @@ class HeatRecoveryUnit(phi.MBDevice):
         self.manual_speed = 2
         self.valv_source = None
         self.valv_st = None  # Estado actual de la válvula
+        self.man_valv_pos = 1  # Posición manual de la válvula
         self.bypass_target = None  # Registro y tipo de registro para operar con el bypass
         self.bypass_source = None  # Registro y tipo de registro para leer estado bypass
         self.bypass_st = None
         self.dampers_source = None
         self.dampers_st = None
+        self.man_dampers_pos = 1
         self.remote_onoff_st_source = None
         self.remote_onoff = None  # Valor del registro 8: on/off remoto del recuperador
         self.aux_ed2_source = None
@@ -1278,6 +1323,8 @@ class HeatRecoveryUnit(phi.MBDevice):
                 await self.set_speed(self.manual_speed)
             elif None not in (self.get_airflow(), self.manual_airflow):
                 await self.set_airflow(self.manual_airflow)
+            await self.set_valv_pos(self.man_valv_pos)
+            await self.set_dampers_pos(self.man_dampers_pos)
         if self.man_hru_mode_st and self.man_hru_mode in available_modes:
             await self.set_man_op_mode()
         if self.onoff == phi.OFF:
@@ -1290,12 +1337,22 @@ class HeatRecoveryUnit(phi.MBDevice):
         definidos en phi.HEATRECOVERYUNIT_R_FILES en los archivos correspondientes de phi.HEATRECOVERYUNIT_R_FILES
         TODO comprobar modificaciones desde la web como la consigna de AQ, el on/off, la velocidad del ventilador,
         TODO o el estado de válvula y compuertas
+        El valor de self.manual tiene prioridad sobre set_man_op_mode.
         Returns: resultado de la escritura modbus de los valores actualizados
         """
-        if self.man_hru_mode_st == phi.ON:
+        if self.manual:
+            if None not in (self.exhaust_flow_source, self.manual_airflow):
+                await self.set_airflow(self.manual_airflow)
+            elif None not in (self.speed1_source, self.manual_speed):
+                await self.set_manual_speed()
+            await self.set_valv_pos(self.man_valv_pos)
+            await self.set_dampers_pos(self.man_dampers_pos)
+
+        elif self.man_hru_mode_st == phi.ON:
             await self.set_man_op_mode()
         else:
             self.hru_mode = await self.activate_op_mode()  # Modo de funcionamiento seleccionado
+
         await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
         # correspondiente
 

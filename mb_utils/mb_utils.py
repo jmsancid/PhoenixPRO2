@@ -354,17 +354,19 @@ async def check_changes_from_web() -> int:
             print(f"Comprobando esclavo {dev_sl} (clase {clase})) del bus {bus_id}")
             # print(f"\tArchivos\n{xch_rw_files}")
             for xf in xch_rw_files:
-                file_from_web_to_check = ex_folder_name + r"/" + xf + r"RW"
+                # file_from_web_to_check = ex_folder_name + r"/" + xf + r"RW"  # 04/07/23 Quedo con Javi en
+                # intercambiar información en el mismo archivo
+                file_from_web_to_check = ex_folder_name + r"/" + xf
                 file_from_dev_to_check = ex_folder_name + r"/" + xf
                 last_mod_time = get_f_modif_timestamp(file_from_web_to_check)
-                # print(f"check_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, "
-                #       f"atributo {xf}")
-                # Cambio la siguiente línea porque por algún motivo el atributo no está actualizado
-                # current_value = getattr(dev, xf)  # el nombre del fichero f coincide con el atributo a comprobar
-                # Para sustituir la linea anterior
+                print(f"check_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, "
+                      f"atributo {xf}")
+                # Cambio la siguiente línea porque por algún motivo el atributo no está actualizado NO APLICA
+                current_value = getattr(dev, xf)  # el nombre del fichero xf coincide con el atributo a comprobar
+                # Para sustituir la linea anterior NO APLICA
                 #------------------------------------------------
-                with open(file_from_dev_to_check, "r") as curvf:
-                    current_value = curvf.read()
+                # with open(file_from_dev_to_check, "r") as curvf:  # ANULADO 04/07/23
+                #     current_value = curvf.read()  # ANULADO 04/07/23
                 #------------------------------------------------
 
                 if None in (last_mod_time, last_reading_time):
@@ -376,6 +378,7 @@ async def check_changes_from_web() -> int:
                       f"Última modificación {file_from_web_to_check}: {last_mod_time}\n\t"
                       f"Última lectura: {last_reading_time}")
                 with open(file_from_web_to_check, "r") as modf:
+                    print(f"Examinando file_from_web_to_check: {file_from_web_to_check}")
                     web_value = modf.read()
                     print(f"\nDEBUGGING {__file__}:"
                           f"\n\tValor leído en la web: {web_value}"
@@ -541,7 +544,7 @@ async def update_devices_from_xch_files(device):
     # de los atributos)
     for attr in attrs_to_update:
         # attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + attr + r"/RW"
-        attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + attr
+        attr_file = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + slave + r"/" + attr
         if not path.isfile(attr_file):
             print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_file}")
             continue

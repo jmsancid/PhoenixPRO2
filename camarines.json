@@ -88,7 +88,7 @@
               "5": {
                 "id": 5,
                 "name": "Comedor",
-                "groups": ["Bolarque49", "COLECTOR05", "COMEDOR", "VENTIL"],
+                "groups": ["Bolarque49", "COLECTOR05", "COMEDOR", "VENTIL", "FANCOILS"],
                 "iv_source": {"bus": 1, "device": 5, "datatype": "co", "adr": 0},
                 "sp_source": {"bus": 1, "device": 5, "datatype": "hr", "adr": 1},
                 "rt_source": {"bus": 1, "device": 5, "datatype": "ir", "adr": 2},
