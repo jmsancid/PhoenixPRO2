@@ -4,6 +4,8 @@ Lista de constantes del sistema
 """
 import os
 
+AVAILABLE_LANGUAGES = {"ESPANOL": "sp", "PORTUGUES":"po", "INGLES": "en"}
+LANGUAGE = AVAILABLE_LANGUAGES.get("ESPANOL")
 # SERIAL COMMUNICATION PORT
 # SERIAL_PORTS = {1: "/dev/ttyUSB0"}
 SERIAL_PORTS = {1: "/dev/ttySC0", 2: "/dev/ttySC0"}
@@ -34,6 +36,7 @@ PARITY_ODD = 1 if "esp32" in os.uname().sysname else "O"
 PARITY = {"N": PARITY_NONE, "E": PARITY_EVEN, "O": PARITY_ODD}  # Hace falta el diccionario para utilizar el
 # formato correcto de paridad cuando se trabaja con la ESP32 (main.load_devices)
 READING_TRIES = 5  # Nº máximo de intentos de lectura de un dispositivo
+READ_ERROR_VALUE = -1000  # Valor a utilizar para mostrar en la Web cuando falla la lectura Modbus,
 
 # VALORES PARA LAS SALIDAS DE RELÉ DE LOS CONTROLADORES DE SISTENA
 ON = 1
@@ -50,6 +53,7 @@ IV = "iv"  # Archivo para almacenar el modo de funcionamiento calefacción/refri
 MODULE_PATH = os.path.realpath(os.path.dirname(__file__))
 CONFIG_FILE = MODULE_PATH + r"/project.json"
 DEVICES_FOLDER = MODULE_PATH + r"/devices/"
+PROJECT_ELEMENTS_FOLDER = MODULE_PATH + r"/project_elements/"
 TEMP_FOLDER = "/home/pi/var/tmp/phoenix/"
 READINGS_FILE = TEMP_FOLDER + "modbus_readings.json"
 ROOMGROUPS_VALUES_FILE = TEMP_FOLDER + "roomgroups_values.json"
@@ -89,9 +93,11 @@ OFFSET_DEMANDA_CALEFACCION = 2  # Con más de 2 °C de diferencia entre consigna
 OFFSET_DEMANDA_REFRIGERACION = 1  # Con más de 1 °C de diferencia entre t_actual y consigna, t_impul más baja
 OFFSET_AGUA_CALEFACCION = 10  # Diferencia entre consigna ambiente y agua en calefaccion
 OFFSET_AGUA_REFRIGERACION = 8  # Diferencia entre consigna agua y ambiente en refrigeracion
-OFFSET_AGUA_T_ROCIO = -1.5  # Limitacion t impulsion respecto pto de rocio en modo refrigeracion
+# OFFSET_AGUA_T_ROCIO = -1.5  # Limitacion t impulsion respecto pto de rocio en modo refrigeracion
+OFFSET_AGUA_T_ROCIO = -15  # Pruebas Son Vell
 TMAX_IMPUL_CALEF = 45  # Temperatura máxima de impulsión en calefacción
-TMIN_IMPUL_REFR = 11  # Temperatura mínima de impulsión en refrigeración
+TMIN_IMPUL_REFR = 9  # Pruebas Son Vell
+# TMIN_IMPUL_REFR = 11  # Temperatura mínima de impulsión en refrigeración
 RT_LIM_CALEF = 26
 RT_LIM_REFR = 20
 ALTITUD = 696
@@ -173,7 +179,7 @@ TEMPFLUIDCONTROLLER_RW_FILES = ('iv1', 'act_man_st1', 'man_st1', 'act_man_sp1', 
                                 'iv2', 'act_man_st2', 'man_st2', 'act_man_sp2', 'man_sp2',
                                 'iv3', 'act_man_st3', 'man_st3', 'act_man_sp3', 'man_sp3',
                                 'st4')
-DATASOURCE_R_FILES = ('dato1', 'dato2', 'dato3', 'dato4', 'dato5', 'dato6', 'dato7', 'dato8', 'dato9', 'dato10')
+DATASOURCE_R_FILES = ()
 DATASOURCE_RW_FILES = ()
 # ARCHIVOS DE INTERCAMBIO DE INFORMACIÓN CON LA WEB
 EXCHANGE_R_FILES = {

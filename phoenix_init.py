@@ -75,6 +75,9 @@ def create_device_files(device) -> int:
         if not exc_file_exists:
             try:
                 open(exc_file_path, 'w').close()
+                if dev_class == "UFHCController" and "sp" in exc_filename:  # Es centralita de suelo radiante
+                    sp_bus_filename = exc_file_path + "_bus"
+                    open(sp_bus_filename, 'w').close()  # Archivo para almacenar cada X148/canal/consigna
             except OSError:
                 print(f"\n\n\tERROR creando el fichero de intercambio {exc_file_path} para el esclavo {slave}")
             else:
@@ -319,10 +322,13 @@ if not os.path.isfile(BUSES_INSTANCES_FILE):
     buses = load_buses()  # Diccionario con todos los buses.
     # Clave principal es id del grupo
     with open(BUSES_INSTANCES_FILE, "wb") as bf:
+        print(
+            f"{__file__}\n\tPRIMERA EJECUCIÓN\nCREANDO ARCHIVO DE BUSES CON LAS INSTANCIAS DE LOS DISPOSITIVOS MODBUS")
         pickle.dump(buses, bf)
 else:
     # Ya se habían creado los grupos de habitaciones
     with open(BUSES_INSTANCES_FILE, "rb") as bf:
+        print(f"{__file__}\n\t...CARGANDO ARCHIVO DE BUSES CON LAS INSTANCIAS DE LOS DISPOSITIVOS MODBUS")
         buses = pickle.load(bf)
 
 

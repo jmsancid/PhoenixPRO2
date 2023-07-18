@@ -3,7 +3,8 @@ import json
 from bisect import bisect
 
 import phoenix_init as phi
-from mb_utils.mb_utils import get_value, set_value, get_h, get_dp, get_roomgroup_values, update_xch_files_from_devices
+from mb_utils.mb_utils import get_value, set_value, get_h, get_dp, get_roomgroup_values, \
+    update_xch_files_from_devices, get_regmap
 from regops.regops import set_hb, set_lb
 from project_elements.building import get_temp_exterior, get_hrel_exterior, get_h_exterior, get_modo_iv
 
@@ -151,7 +152,7 @@ class Generator(phi.MBDevice):
              Modo calefacción / refrigeración actual
         """
         if self.iv_source is None:
-               return
+            return
 
         datatype = self.iv_source[0]
         adr = self.iv_source[1]
@@ -491,8 +492,6 @@ class UFHCController(phi.MBDevice):
                 self.active_channels.append(channel)
         print(f"(devices.py). Canales activos Controlador {self.name}: {self.active_channels}")
 
-
-
     async def iv_mode(self, new_iv_mode: [int, None] = None):
         """
         Fija el modo iv de la centralita de suelo radiante.
@@ -558,7 +557,8 @@ class UFHCController(phi.MBDevice):
         channel_attr = f"ch{channel}"
         channel_info = {"sp": None, "rt": None, "rh": None, "ft": None, "st": None, "coff": None}
         channel_val_attrs = {magnitud: f"{magnitud}{channel}" for magnitud in tuple(channel_info.keys())}
-        ch_sources = self.__getattribute__(channel_source_attr)
+        # ch_sources = self.__getattribute__(channel_source_attr)
+        ch_sources = getattr(self, channel_source_attr)
         for key, value in ch_sources.items():
             datatype = value[0]
             adr = value[1]
@@ -566,17 +566,22 @@ class UFHCController(phi.MBDevice):
                       "device": int(self.device_id),
                       "datatype": datatype,
                       "adr": adr}
-            current_value = get_value(source)
-            if current_value is None:  # El canal no se utiliza
-                return
+            # current_value = get_value(source)
+            current_value = get_value(source) if get_value(source) else phi.READ_ERROR_VALUE  # 08/07/2023 mala lectura
 
-            self.__setattr__(channel_val_attrs.get(key), current_value)  # actualiza los atributos spx, rtx,
+            # if current_value is None:  # El canal no se utiliza
+            #     return
+
+            setattr(self, channel_val_attrs.get(key), current_value)  # actualiza los atributos spx, rtx,
             # etc. siendo x el canal
             channel_info[key] = current_value
-        self.__setattr__(channel_attr, channel_info)
+        # print(f"Método set_channel_info UFHCController.\nCanal {channel}\nOrigen de datos: {ch_sources}")
+        setattr(self, channel_attr, channel_info)
         # Si los valores de rt y rh son válidos, se calcula el punto de rocío y la entalpía del canal
-        rt = self.__getattribute__(channel_val_attrs.get("rt"))
-        rh = self.__getattribute__(channel_val_attrs.get("rh"))[1]  # Se toma solo el byte bajo
+        rt = getattr(self, channel_val_attrs.get("rt"))
+        rh = getattr(self, channel_val_attrs.get("rh"))
+        if rh and rh != phi.READ_ERROR_VALUE:
+            rh = rh[1]  # Se toma solo el byte bajo
         channel_h_attr = f"h{channel}"
         channel_dp_attr = f"dp{channel}"
         channel_h = 0
@@ -586,15 +591,15 @@ class UFHCController(phi.MBDevice):
             if 100 > float(rt) > -100:
                 channel_h = await get_h(float(rt), float(rh))
                 channel_dp = await get_dp(float(rt), float(rh))
-        self.__setattr__(channel_h_attr, channel_h)
-        self.__setattr__(channel_dp_attr, channel_dp)
+        setattr(self, channel_h_attr, channel_h)
+        setattr(self, channel_dp_attr, channel_dp)
 
-        return self.__getattribute__(channel_attr)
+        return getattr(self, channel_attr)
 
     async def upload(self):
         """
         Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
-        Los atributos se han actualizado desde la web
+        Los atributos se han actualizado desde la web o desde un termostato
         Consignas y modo IV
         :return:
         """
@@ -606,10 +611,11 @@ class UFHCController(phi.MBDevice):
         # Propago únicamente la información de los canales activos
         spch_sources = (("sp" + str(idx), "ch" + str(idx) + "_source") for idx in self.active_channels)
         for sp, src in spch_sources:
-            ch_info = self.__getattribute__(src)
-            sp_value = self.__getattribute__(sp)
-            if sp_value is not None and sp_value and int(sp_value) > 950:
+            ch_info = getattr(self, src)
+            sp_value = getattr(self, sp)
+            if sp_value is not None and sp_value and float(sp_value) > 950:
                 continue
+
             if None not in (ch_info, sp_value):
                 sp_target = ch_info.get("sp")
                 datatype = sp_target[0]
@@ -623,6 +629,87 @@ class UFHCController(phi.MBDevice):
 
         return 1
 
+    async def update_attr_file(self, attr: str):
+        """
+        Actualiza el archivo de intercambio correspondiente al atributo attr, PERO SÓLO SI HA CAMBIADO SU VALOR.
+        Se hace así para poder distinguir entre un cambio en la web, que se haya hecho posteriormente a la
+        última lectura
+        En el caso de las consignas, se guarda en spx_bus (x es el canal).
+        Posteriormente se actualiza el archivo sp con el valor de la web o el valor de spx_bus
+        Args:
+            attr: atributo a guardar en el archivo de intercambio
+
+        Returns: 1 si la escritura es correcta
+        0 si la escritura no es correcta
+
+        """
+        # Compruebo si el atributo existe
+        attributes = self.__dict__.keys()
+        if attr not in attributes:
+            print(f"{attr} NO es un atributo de {self.name}")
+            return 0
+        attr_dev_file = f"{phi.EXCHANGE_FOLDER}/{self.bus_id}/{self.slave}/{attr}"
+        if not phi.os.path.isfile(attr_dev_file):
+            print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_dev_file}")
+            return 0
+        current_attr_val = f"{getattr(self, attr)}"  # Valor leído en el dispositivo
+        with open(attr_dev_file, "r") as attrf:
+            xch_value = attrf.read().strip()  # Valor compartido con la Web
+            print(f"Valor almacenado en {attr_dev_file} de {self.name}: {xch_value}")
+        if not xch_value:
+            xch_value = current_attr_val
+            with open(attr_dev_file, "w") as f:
+                f.write(current_attr_val)
+        # Gestiono las consignas, que tienen un tratamiento distinto al resto
+        if "sp" in attr:
+            print(f"Valor del atributo leído en el dispositivo: {current_attr_val} / {type(current_attr_val)}")
+            attr_dev_bus_file = f"{attr_dev_file}_bus"  # Debe comprobarse si hay cambios desde la web
+            if not phi.os.path.isfile(attr_dev_bus_file):
+                print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_dev_bus_file}")
+                print(f"Se actualiza con el valor leído en {attr_dev_file}: {current_attr_val}")
+                with open(attr_dev_bus_file, "w") as f:
+                    f.write(current_attr_val)
+                stored_sp_bus_val = current_attr_val
+            else:
+                with open(attr_dev_bus_file, "r") as f:
+                    stored_sp_bus_val = f.read().strip()  # Valor leído anteriormente en el dispositivo
+            print(f"Valor almacenado en {attr_dev_bus_file} de {self.name}: {stored_sp_bus_val} / "
+                  f"{type(stored_sp_bus_val)}")
+            if not stored_sp_bus_val:
+                stored_sp_bus_val = current_attr_val
+                with open(attr_dev_bus_file, "w") as f:
+                    f.write(current_attr_val)
+
+            if float(stored_sp_bus_val) != float(current_attr_val):  # El usuario ha cambiado la consigna.
+                # Se actualizan con el nuevo valor los archivos spx, spx_bus y el dispositivo
+                print(f"{self.name} - Consigna {stored_sp_bus_val} cambiada por usuario a {current_attr_val}")
+                with open(attr_dev_bus_file, "w") as attdbf:
+                    attdbf.write(current_attr_val)
+                with open(attr_dev_file, "w") as attdf:
+                    attdf.write(current_attr_val)
+                return 1
+            elif float(xch_value) != float(current_attr_val):  # Se ha cambiado desde la Web.
+                # Se actualiza el archivo spx_bus
+                print(f"{self.name} - Consigna {stored_sp_bus_val} cambiada desde la web a {xch_value}")
+                setattr(self, attr, xch_value)  # Se actualiza el atributo
+                print(f"Atributo {attr} actualizado desde la web a {getattr(self, attr)}")
+                with open(attr_dev_bus_file, "w") as attdbf:
+                    attdbf.write(xch_value)  # Se actualiza el archivo
+                return 1
+            else:
+                print(f"No hay que actualizar {attr} en {self.name}")
+                return 0
+        # Gestiono el resto de atributos
+        if current_attr_val == xch_value:
+            print(f"Valor leido en archivo: {xch_value} IGUAL A\nValor actual {current_attr_val}")
+            # No cambio el archivo
+            return 0
+        else:
+            print(f"Valor leido en archivo: {xch_value} DISTINTO A\nValor actual {current_attr_val}")
+            with open(attr_dev_file, "w") as attrf:
+                print(f"Actualizando archivo {attr_dev_file} desde método de clase de {self.name}")
+                attrf.write(current_attr_val)
+                return 1
 
     async def update(self):
         """
@@ -636,15 +723,21 @@ class UFHCController(phi.MBDevice):
         print(f"DEBUGGING {__file__} - Modo de funcionamiento del sistema asociado al "
               f"Controlador UFHC {self.name} = {system_iv}")
         await self.iv_mode(system_iv)  # Actualizo el modo IV de la centralita
+        await self.update_attr_file("iv")  # Actualizo archivo de intercambio iv de la centralita
         await self.pump_st()  # Actualizo el estado de la bomba
-        # for ch in range(12):
+        await self.update_attr_file("pump")  # Actualizo archivo de intercambio iv de la centralita
         # Actualizo solo la información de los canales activos
+        files_to_update = []
         for ch in self.active_channels:
-            await self.set_channel_info(ch)  # Los canales se identifican del 1 al 12, pero
-            # range devuelve de 0 a 11
-        print(f"(devices.py - UFHCController) Actualizando información en archivos de {self.name}")
-        await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
-        # correspondiente
+            await self.set_channel_info(ch)
+            channel_files = [f"sp{ch}", f"rt{ch}", f"rh{ch}", f"ft{ch}", f"st{ch}", f"coff{ch}"]
+            print(f"(devices.py - UFHCController) Actualizando información en archivos de {self.name}. Canal {ch}")
+            for f in channel_files:
+                await self.update_attr_file(f)
+        await self.upload()  # Se cargan los nuevos valores en el dispositivo
+        # await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
+        # # correspondiente.
+
         return 1
 
     def __repr__(self):
@@ -665,7 +758,7 @@ class UFHCController(phi.MBDevice):
             channel_source_attr = f"ch{ch}_source"
             attr_value = self.__getattribute__(channel_source_attr)
             if attr_value is not None:
-                channel_attr = f"ch{ch + 1}"
+                channel_attr = f"ch{ch}"
                 channel_info = self.__getattribute__(channel_attr)
                 dev_info += f"\n\tCanal {ch}:\n\t\t{channel_info}"
 
@@ -828,7 +921,7 @@ class HeatRecoveryUnit(phi.MBDevice):
 
         Returns: Velocidad actual del recuperador
         """
-        print(f"DEBUGGING {__file__}: Fijando velocidad recuperador")
+        print(f"DEBUGGING {__file__}: Fijando velocidad recuperador - {new_speed}")
         sources = {1: self.speed1_source, 2: self.speed2_source, 3: self.speed3_source}
         if all([x is None for x in sources.values()]):
             return  # El recuperador no trabaja con velocidades, sino con caudales
@@ -1341,6 +1434,7 @@ class HeatRecoveryUnit(phi.MBDevice):
         Returns: resultado de la escritura modbus de los valores actualizados
         """
         if self.manual:
+            print(f"update {self.name} - Modo manual activado")
             if None not in (self.exhaust_flow_source, self.manual_airflow):
                 await self.set_airflow(self.manual_airflow)
             elif None not in (self.speed1_source, self.manual_speed):
@@ -3069,12 +3163,49 @@ class DataSource(phi.MBDevice):
         self.groups = groups
         self.brand = brand
         self.model = model
+        self.attrs = []  # Lista donde se almacenan los nombres de los atributos del DataSource
+        self.attr_sources = []  # Lista donde se almacenan los orígenes de los atributos del DataSource
+        self._create_attrs()
 
+    def _create_attrs(self):
+        """
+        Crea los atributos del dispositivo en función de su marca y modelo, extrayéndolos de
+        PROJECT_ELEMENTS_FOLDER
+        Returns: 1 si se han creado bien los atributos
+        """
+        datasources_file = f"{phi.PROJECT_ELEMENTS_FOLDER}datasources.json"
+        ds_file_exists = phi.os.path.isfile(datasources_file)
+        if not ds_file_exists:
+            print(f"(devices.py - DataSources) - No se encuentra el archivo {datasources_file}")
+            return 0
+
+        ds_type = f"{self.brand}_{self.model}"
+        with open(datasources_file, "r") as dsf:
+            dss = json.load(dsf)
+        print(f"DataSources: {dss}")
+        ds_dict = dss.get("datasources")
+        if not ds_dict:
+            print(f"(devices.py - DataSources) - Falta la clave 'datasources' en {datasources_file}")
+            return 0
+
+        datasource = None if not ds_dict else ds_dict.get(ds_type)
+        if not datasource:
+            print(f"(devices.py - DataSources) - No se ha definido el DataSource {ds_type} en {datasources_file}")
+            return 0
+
+        for k, v in datasource.items():
+            if "_source" in k:
+                attr = k.split("_")[0]
+                setattr(self, attr, None)  # Inicializo a None el valor leído
+                setattr(self, k, v)  # Cargo el tipo de dato y el registro en el que se lee el atributo
+                self.attrs.append(attr)
+                self.attr_sources.append(k)
+        print(f"Creados los atributos {self.attrs} para {self.name}.\nSe leen desde {self.attr_sources}")
+        return 1
 
     async def upload(self):
         """
-        Escribe en el dispositivo ModBus los valores actuales de sus atributos tipo RW:
-        Consignas y modo IV
+        Al ser un DataSource, no se escribe nada en el dispositivo ModBus
         :return:
         """
         pass
@@ -3083,18 +3214,55 @@ class DataSource(phi.MBDevice):
     async def update(self):
         """
         Se actualizan los valores leídos del DataSource
-        TODO crear método update para clase DataSource
         """
-        pass
+        print(f"Actualizando DataSource {self.name}")
+        for idx, src in enumerate(self.attr_sources):
+            # print(f"Procesando {src}")
+            src_info = getattr(self, src)
+            if src_info is None:
+                print(f"No se ha definido el origen de datos para {src} en DataSources.json")
+                continue
+            datatype = src_info[0]
+            adr = src_info[1]
+            source = {"bus": int(self.bus_id),
+                      "device": int(self.device_id),
+                      "datatype": datatype,
+                      "adr": adr}
+            current_value = get_value(source)
+            setattr(self, self.attrs[idx], current_value)
+            attr_file = f"{phi.EXCHANGE_FOLDER}/{self.bus_id}/{self.slave}/{self.attrs[idx]}"
+            # print(f"Actualizando archivo {attr_file}")
+            with open(attr_file, "w") as dsf:
+                dsf.write(str(current_value))
+        else:
+            print(f"Actualización de Datasource {self.name} finalizada")
+
+        # 08/07/23 En la clase DataSource se actualizan directamente los archivos desde el método update
+        # await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
+        # # correspondiente.
+        return 1
 
     def __repr__(self):
         """
-        TODO crear método __repr__ para clase DataSource
         Para imprimir la información actual del DataSource
         :return:
         """
-        msg = f"DataSource {self.name}"
+        msg = f"\nInformación extraída de {self.name}:\n"
+        ds_regmap = get_regmap(self)  # Diccionario con el mapa de registros del DataSource
+        for idx, src in enumerate(self.attr_sources):
+            val_src = getattr(self, src)
+            datatype = val_src[0]
+            adr = str(val_src[1])  # El número de registro en el json de datasourdes es integer
+            regs = ds_regmap.get(datatype)
+            if not regs:
+                print(f"El DataSource {self.name} no tiene definidos {datatype} en su mapa de registros")
+                continue
+            ds_description = regs.get(adr).get("descr").get(phi.LANGUAGE)
+            ds_reg_value = getattr(self, self.attrs[idx])
+            msg += f"\t{ds_reg_value}\t\t{ds_description}\n"
+        # msg = f"DataSource {self.name}"
         return msg
+
 
 # DICCIONARIO CON LAS CLASES DE DISPOSITIVOS DEL SISTEMA
 SYSTEM_CLASSES = {

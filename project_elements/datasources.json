@@ -1,8 +1,19 @@
 {
   "datasources": {
     "sistena_sig426": {
-      "name": "Sensor de calidad de aire",
+      "name": "Sensor de calidad de aire Sistena SIG426",
       "aq_source": ["ir", 10]
+    },
+    "sistena_sig430": {
+      "name": "Sensor de temperatura y humedad relativa Sistena SIG430",
+      "temp_source": ["ir", 16],
+      "rh_source": ["ir", 17]
+    },
+    "sistena_sig435": {
+      "name": "Sensor de temperatura, humedad relativa y calidad del aire Sistena SIG435",
+      "temp_source": ["ir", 16],
+      "rh_source": ["ir", 17],
+      "aq_source": ["ir", 19]
     }
   }
 }

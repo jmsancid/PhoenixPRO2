@@ -11,18 +11,33 @@ from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_a
 async def main():
     print(f"\n\t\tAccediendo al controlador {phi.boardsn}\n")
 
-    changes = await check_changes_from_web()
+    # changes = await check_changes_from_web()
 
     id_lectura_actual = 0
     historico_lecturas = {"lecturas": {}}
 
     phi.collect()
+
     id_lectura_actual += 1
     print(f"\n************\t INICIANDO LECTURA {id_lectura_actual}\t************\n")
-
     # Actualizo el diccionario con las lecturas modbus, para recalcular los grupos de habitaciones y otras variables
     phi.datadb = await read_all_buses(id_lectura_actual)  # Diccionario READING_FILE con la última lectura de
     # todos los registros
+    print(f"\n************\t LECTURA MODBUS FINALIZADA {id_lectura_actual}\t************\n")
+
+    print(f"\n************\t ACTUALIZANDO CENTRALITAS X148 {str(phi.datetime.now())}\t************\n")
+    # Actualizo las instancias de los Controladores de suelo radiante con las últimas lecturas
+    bus_updating_results = await update_all_buses("UFHCController")
+    print(f"\n************\t FINALIZADA ACTUALIZACIÓN CENTRALITAS X148 {str(phi.datetime.now())}\t************\n")
+
+    print(f"\n************\t COMPROBANDO CAMBIOS EN LA WEB {str(phi.datetime.now())}\t************\n")
+
+    # Tras las lecturas de los buses, compruebo si el usuario ha cambiado la consigna en algún termostato
+    # (revisando el fichero correspondiente) o si ha habido algún cambio desde la web: nueva consigna,
+    # modos manuales, etc.
+    changes = await check_changes_from_web()
+
+    print(f"\n************\t FINALIZADA COMPROBACIÓN CAMBIOS EN LA WEB {str(phi.datetime.now())}\t************\n")
 
     # Actualizo las lecturas de todas las habitaciones y grupos de habitaciones del proyecto
     roomgroup_updating_results = await update_roomgroups_values()

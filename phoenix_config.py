@@ -115,7 +115,8 @@ class MBDevice:
 
             else:
                 print(f'{str(datetime.now())} -\tNo se ha podido realizar la lectura de {quan} registros desde la '
-                      f'dirección {adr} del esclavo {self.slave} con la operación {mbop} en el puerto {self.port}\n')
+                      f'dirección {adr} del esclavo {self.slave}/{self.name} con la operación {mbop} en el '
+                      f'puerto {self.port}\n')
                 print("... cerrando conexión con el dispositivo Modbus\n")
                 self.conn.close()
                 return

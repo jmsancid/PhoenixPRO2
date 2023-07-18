@@ -1,0 +1,48 @@
+{
+  "sistena_sig435": {
+    "name": "Controlador SIG-435 para leer temperatura, humedad relativa y calidad de aire",
+    "write_ops": [6],
+    "qregsmax": 25,
+    "hr": {
+      "0": {
+        "descr": {
+          "en": "Device ID and sensor model",
+          "sp": "ID del dispositivo y modelo de sonda",
+          "po": "ID del dispositivo y modelo de sonda"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "ModBus address",
+          "sp": "Dirección del dispositivo en el ModBus",
+          "po": "Dirección del dispositivo en el ModBus"
+        }
+      }
+    },
+    "ir": {
+      "16": {
+        "descr": {
+          "en": "Temperature (ºC)",
+          "sp": "Temperatura (ºC)",
+          "po": "Temperatura (ºC)"
+        },
+        "conv_f_read": [1]
+      },
+      "17": {
+        "descr": {
+          "en": "Relative Humidity %",
+          "sp": "Humedad relativa %",
+          "po": "Humedad relativa %"
+        },
+        "conv_f_read": [1]
+      },
+      "19": {
+        "descr": {
+          "en": "Air quality (CO2 ppm)",
+          "sp": "Calidad de aire (ppm de CO2)",
+          "po": "Calidad de aire (ppm de CO2)"
+        }
+      }
+    }
+  }
+}

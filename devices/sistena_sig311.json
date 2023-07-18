@@ -1,7 +1,7 @@
 {
   "sistena_sig311": {
     "name": "Controlador SIG-311 para Fancoils",
-    "write_ops": [5, 6],
+    "write_ops": [6],
     "qregsmax": 25,
     "hr": {
       "0": {

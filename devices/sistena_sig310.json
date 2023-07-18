@@ -1,7 +1,7 @@
 {
   "sistena_sig310": {
     "name": "Controlador SIG-310 para Recuperador de Calor",
-    "write_ops": [5, 6],
+    "write_ops": [6],
     "qregsmax": 25,
     "hr": {
       "0": {
