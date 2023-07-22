@@ -39,8 +39,10 @@ async def main():
 
     print(f"\n************\t FINALIZADA COMPROBACIÓN CAMBIOS EN LA WEB {str(phi.datetime.now())}\t************\n")
 
+    print(f"\n************\t ACTUALIZANDO GRUPOS DE HABITACIONES {str(phi.datetime.now())}\t************\n")
     # Actualizo las lecturas de todas las habitaciones y grupos de habitaciones del proyecto
     roomgroup_updating_results = await update_roomgroups_values()
+    print(f"\n************\t FINALIZADA ACTUALIZACIÓN GRUPOS DE HABITACIONES {str(phi.datetime.now())}\t************\n")
 
     # Propago los valores calculados a los dispositivos del proyecto
     bus_updating_results = await update_all_buses()

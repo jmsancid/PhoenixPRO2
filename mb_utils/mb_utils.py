@@ -482,6 +482,7 @@ async def update_all_buses(device_type=None):
             update = await device.update()  # El método update toma los valores de las últimas lecturas
             if repr(device) is not None:
                 print(repr(device))
+            print(f"Finalizada actualización de {device.name} / {device.brand}_{device.model}")
     with open(phi.BUSES_INSTANCES_FILE, "wb") as bf:
         print(
             f"{__file__} (mbutils) \n\tACTUALIZANDO ARCHIVO buses CON INSTANCIAS DE LOS DISPOSITIVOS")
@@ -522,7 +523,7 @@ async def update_xch_files_from_devices(device):
             print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_file}")
             continue
         attr_value = f"{getattr(device, attr)}"
-        if attr_value is not None:
+        if attr_value not in (None, "None", ""):
             with open(attr_file, "w") as f:
                 f.write(attr_value)
             with open(attr_file, "r") as f:

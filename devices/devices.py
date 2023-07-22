@@ -389,13 +389,13 @@ class Generator(phi.MBDevice):
         tr = self.return_water_temp
         alarm = self.alarm
         dev_info += f"\nGENERADOR {self.name}"
-        dev_info += f"\n======================"
+        dev_info += f"\n================================"
         dev_info += f"\n\tEstado generador: {st}"
         dev_info += f"\n\tModo de funcionamiento: {iv}"
-        dev_info += f"\n\tConsigna de impulusión: {sp} ºC"
-        dev_info += f"\n\tTemperatura de impulusión: {ti} ºC"
+        dev_info += f"\n\tConsigna de impulsión: {sp} ºC"
+        dev_info += f"\n\tTemperatura de impulsión: {ti} ºC"
         dev_info += f"\n\tTemperatura de retorno: {tr} ºC"
-        dev_info += f"\n\tAlarma: {alarm}%"
+        dev_info += f"\n\tAlarma: {alarm}"
 
         return dev_info
 
@@ -3165,7 +3165,8 @@ class DataSource(phi.MBDevice):
         self.model = model
         self.attrs = []  # Lista donde se almacenan los nombres de los atributos del DataSource
         self.attr_sources = []  # Lista donde se almacenan los orígenes de los atributos del DataSource
-        self._create_attrs()
+        if self.brand and self.model:  # Creo los atributos sólo si se ha definido marca y modelo
+            self._create_attrs()
 
     def _create_attrs(self):
         """
@@ -3179,6 +3180,7 @@ class DataSource(phi.MBDevice):
             print(f"(devices.py - DataSources) - No se encuentra el archivo {datasources_file}")
             return 0
 
+        print(f"Creando atributos de {self.__dict__}")
         ds_type = f"{self.brand}_{self.model}"
         with open(datasources_file, "r") as dsf:
             dss = json.load(dsf)
