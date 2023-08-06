@@ -146,11 +146,11 @@ UFHCCONTROLLER_RW_FILES = ('iv', 'sp1', 'sp2', 'sp3', 'sp4', 'sp5', 'sp6', 'sp7'
                            'coff1', 'coff2', 'coff3', 'coff4', 'coff5', 'coff6', 'coff7', 'coff8', 'coff9',
                            'coff10', 'coff11', 'coff12')
 GENERATOR_R_FILES = ("onoff_st", "manual_onoff_mode", "manual_onoff", "sp", "manual_sp_mode", "manual_sp",
-                     "dhwsp", "iv", "manual_iv_mode", "manual_iv", "alarm", "t_ext", "supply_water_temp",
+                     "dhw_sp", "dhw_t", "iv", "manual_iv_mode", "manual_iv", "alarm", "t_ext", "supply_water_temp",
                      "return_water_temp", "t_inercia", "water_flow",
                      "eelectrica_consumida", "ecooling_consumida", "eheating_consumida", "edhw_consumida",
                      "cop", "eer")
-GENERATOR_RW_FILES = ("manual_onoff_mode", "manual_onoff", "manual_sp_mode", "manual_sp", "dhwsp",
+GENERATOR_RW_FILES = ("manual_onoff_mode", "manual_onoff", "manual_sp_mode", "manual_sp", "dhw_sp",
                       "manual_iv_mode", "manual_iv")
 
 FANCOIL_R_FILES = ('onoff_st', 'demand', 'iv', 'sp', 'rt',

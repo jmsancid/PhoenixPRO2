@@ -56,7 +56,8 @@ class Generator(phi.MBDevice):
         self.manual_sp_mode = 0  # Modo manual de selección de la consigna de impulsión del generador
         self.manual_sp = None  # Valor manual de la consigna de impulsión del generador, leída desde la web
         self.dwh_temp_source = None
-        self.dhwsp = None  # Consigna ACS
+        self.dhw_sp = None  # Consigna ACS
+        self.dhw_t = None  # Temperatura depósito ACS
         self.iv_source = None  # Registro para leer el modo actual de funcionamiento, calefacción o refrigeración
         self.iv_target = None  # Registro para fijar el modo actual de funcionamiento, calefacción o refrigeración
         self.heating_value = None  # Valor para pasar el generador a calefacción en iv_target
@@ -271,15 +272,15 @@ class Generator(phi.MBDevice):
                 print(f"{self.name}: Error escribiendo la consigna de ACS {new_dhwsp} para el generador {self.name}.\n"
                       f"Está fuera del límite {phi.TMAX_ACS}.")
                 # Se limita a la temperatura máxima en calefacción y a la mínima en refrigeración
-                self.dhwsp = phi.TMAX_ACS
+                self.dhw_sp = phi.TMAX_ACS
             else:
                 # Se propaga la nueva consigna en el byte bajo
                 res = await set_value(source, new_dhwsp)  # Escritura Modbus
-                self.dhwsp = new_dhwsp
+                self.dhw_sp = new_dhwsp
         else:
-            self.dhwsp = current_dhwsp
+            self.dhw_sp = current_dhwsp
 
-        return self.dhwsp
+        return self.dhw_sp
 
     async def get_generator_info(self):
         """
@@ -329,7 +330,7 @@ class Generator(phi.MBDevice):
         await self.set_manual_onoff()
         await self.set_manual_iv()
         await self.set_manual_sp()
-        await self.set_dhwsp(self.dhwsp)
+        await self.set_dhwsp(self.dhw_sp)
         return 1
 
     async def update(self):
