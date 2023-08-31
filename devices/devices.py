@@ -1202,7 +1202,7 @@ class HeatRecoveryUnit(phi.MBDevice):
         group_id = self.groups[0]  # El recuperador sólo puede estar asociado a un grupo de habitaciones
         group = phi.all_room_groups.get(group_id)
         group_cooling_mode = group.iv  # Modo calefacción (False) o refrigeración (True) del grupo
-        group_rt = [float(room.rt()) for room in group.roomgroup if room.rt() is not None]  # Tª de las habitaciones
+        group_rt = [float(room.get_rt()) for room in group.roomgroup if room.get_rt() is not None]  # Tª de las habitaciones
         group_sp = group.air_sp  # Consigna de ambiente calculada para el grupo
         group_wsp = group.water_sp  # Consigna de impulsión de agua para el grupo
         group_demand = group.demand  # 0-No demanda / 1-Demanda Refrig / 2-Demanda Calef.
@@ -1958,10 +1958,10 @@ class AirZoneManager(phi.MBDevice):
         roomgroup = phi.all_room_groups.get(self.groups[0])  # Accedo al grupo de habitaciones del zonificador
         room1 = roomgroup.roomgroup[0]
         room2 = roomgroup.roomgroup[1]
-        sp1 = room1.sp()
-        rt1 = room1.rt()
-        sp2 = room2.sp()
-        rt2 = room2.rt()
+        sp1 = room1.get_sp()
+        rt1 = room1.get_rt()
+        sp2 = room2.get_sp()
+        rt2 = room2.get_rt()
         await self.set_sp(sp1, 1)  # Actualizo la consigna de la zona 1
         await self.set_rt(rt1, 1)  # Actualizo la temperatura ambiente de la zona 1
         await self.set_sp(sp2, 2)  # Actualizo la consigna de la zona 2

@@ -426,14 +426,14 @@ async def update_roomgroups_values():
     roomgroups_values = {}
     for roomgroup_id, roomgroup in phi.all_room_groups.items():
         roomgroups_values[roomgroup_id] = {}
-        roomgroups_values[roomgroup_id]["iv"] = roomgroup.iv
+        roomgroups_values[roomgroup_id]["iv"] = roomgroup.get_iv_mode
         roomgroups_values[roomgroup_id]["demanda"] = roomgroup.demand
         roomgroups_values[roomgroup_id]["water_sp"] = roomgroup.water_sp
         roomgroups_values[roomgroup_id]["air_sp"] = roomgroup.air_sp
         roomgroups_values[roomgroup_id]["air_rt"] = roomgroup.air_rt
         roomgroups_values[roomgroup_id]["air_dp"] = roomgroup.air_dp
         roomgroups_values[roomgroup_id]["air_h"] = roomgroup.air_h
-        roomgroups_values[roomgroup_id]["aq"] = roomgroup.aq
+        roomgroups_values[roomgroup_id]["aq"] = roomgroup.get_aq
         roomgroups_values[roomgroup_id]["aq_sp"] = roomgroup.aq_sp
     # Actualizo el fichero con la información de los grupos de habitaciones para actualizar los dispositivos del
     # proyecto vinculados a los mismos

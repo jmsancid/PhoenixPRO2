@@ -231,13 +231,22 @@ class Room:
         self.name = name
         self.groups = groups
         self.iv_source = iv_source  # Dispositivo del que leer el modo Calefacción / Refrigeración
+        self.iv = self.get_iv_mode()
         self.sp_source = sp_source
+        self.sp = self.get_sp()
         self.rt_source = rt_source
+        self.rt = self.get_rt()
         self.rh_source = rh_source
+        self.rh = self.get_rh()
+        self.dp = self.calc_dp()
+        self.h = self.calc_h(phi.ALTITUD)
         self.st_source = st_source
+        self.st = self.get_st()
         self.af = af  # Caudal de aire asociado a la habitación cuando forma parte de zonificador
         self.aq_source = aq_source
+        self.aq = self.get_aq()
         self.aqsp_source = aqsp_source
+        self.aqsp = self.get_aqsp()
         self.offsetairref = offsetairref
         self.offsetaircal = offsetaircal
 
@@ -246,67 +255,68 @@ class Room:
         Para imprimir la información de la habitación
         Returns:
         """
-        modo = "Refrigeración" if self.iv() else "Calefacción"
-        sp = self.sp()
-        rh = self.rh()
-        rt = self.rt()
-        st = self.st()
-        dp = self.dp()
-        h = self.h()
+        modo = "Refrigeración" if self.iv else "Calefacción"
+        # sp = self.get_sp()
+        # rh = self.get_rh()
+        # rt = self.get_rt()
+        # st = self.get_st()
+        # dp = self.calc_dp()
+        # h = self.h()
         room_info = f"""\nDatos de la habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id}
             Modo: {modo}
-            Consigna: {sp}
-            Humedad relativa: {rh}
-            Temperatura ambiente: {rt}
-            Estado actuador: {st}
-            Temperatura de rocío: {dp}
-            Entalpía: {h}
+            Consigna: {self.sp}
+            Humedad relativa: {self.rh}
+            Temperatura ambiente: {self.rt}
+            Estado actuador: {self.st}
+            Temperatura de rocío: {self.dp}
+            Entalpía: {self.calc_h}
             """
-        if None not in (sp, rt) and sp < 50 and rt < 50:
+        if None not in (self.sp, self.rt) and self.sp < 50 and self.rt < 50:
             return room_info
         else:
             msg = f"\nHabitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id} " \
                   f"tiene una consigna o una temperatura no válidas"
             return msg
 
-    def dp(self):
+    def calc_dp(self):
         """
         Calcula el punto de rocío con temp en celsius y hr en %.
         Si la temperatura o la humedad no tienen valores válidos, se devuelve None
         """
         # print(f"Calculando temperatura de rocío de {self.name}")
-        rt = self.rt()
-        rh = self.rh()
+        # rt = self.get_rt()
+        # rh = self.get_rh()
         nullvalues = ("", None, "false", 0)
-        if any((rt in nullvalues, rh in nullvalues)):
+        if any((self.rt in nullvalues, self.rh in nullvalues)):
             return
-        t_rocio = (rh / 100) ** (1 / 8) * (112 + 0.9 * rt) + 0.1 * rt - 112
+        t_rocio = (self.rh / 100) ** (1 / 8) * (112 + 0.9 * self.rt) + 0.1 * self.rt - 112
         return round(t_rocio, 1)
 
-    def h(self, altitud=phi.ALTITUD):
+    def calc_h(self, altitud=phi.ALTITUD):
         """
         Calcula la entalpia con temp en celsius y hr en %. Por defecto se toma la altitud de Madrid
         """
         # print(f"Calculando entalpía de {self.name}")
         entalpia = None
-        rt = self.rt()
-        rh = self.rh()
+        # rt = self.get_rt()
+        # rh = self.get_rh()
         pres_total = 101325 if altitud is None else 101325 * (1 - 2.25577 * 0.00001 * altitud) ** 5.2559
-        print(f"DEBUGGING {__file__} Calculando entalpia: {rt} / {rh}")
-        if None in (rt, rh) or rh == 0.0:
+        print(f"DEBUGGING {__file__} Calculando entalpia: {self.rt} / {self.rh}")
+        if None in (self.rt, self.rh) or self.rh == 0.0:
             return entalpia
-        pres_vap_sat = 10 ** (7.5 * rt / (273.159 + rt - 35.85) + 2.7858)  # Pa
+        pres_vap_sat = 10 ** (7.5 * self.rt / (273.159 + self.rt - 35.85) + 2.7858)  # Pa
         # print(f"presion vapor saturado: {pres_vap_sat}")
-        pres_vap = pres_vap_sat * rh / 100  # Pa
+        pres_vap = pres_vap_sat * self.rh / 100  # Pa
         # print(f"presion total: {pres_total}")
         # print(f"presion vapor: {pres_vap}")
         pres_aire_seco = pres_total - pres_vap  # Pa
         # print(f"presion aire seco: {pres_aire_seco}")
         hum_especifica = 0.621954 * (pres_vap / pres_aire_seco)  # kg agua / hg aire seco
-        entalpia = (1.006 + 1.86 * hum_especifica) * rt + 2501 * hum_especifica
+        entalpia = (1.006 + 1.86 * hum_especifica) * self.rt + 2501 * hum_especifica
+        self.h = self.calc_h()
         return round(entalpia, 1)
 
-    def iv(self):
+    def get_iv_mode(self):
         """
         Obtiene el modo actual de funcionamiento, calefacción refrigeración de la habitación y está asociado al modo
         iv del edificio, que puede calcularse en función del mes, desde un dispositivo o leerse de un fichero..
@@ -319,10 +329,10 @@ class Room:
         iv_mode = phi.system_iv
         print(f"Modo funcionamiento habitación {self.name} del edificio {self.building_id}:")
         print(f"\t\t{modo[iv_mode]}\n")
+        self.iv = iv_mode
+        return self.iv
 
-        return iv_mode
-
-    def sp(self):
+    def get_sp(self):
         """
         Obtiene el valor actual de la consigna de la habitación desde la base de datos que almacena las lecturas
         Returns: valor de la consigna actual de la habitación
@@ -333,7 +343,7 @@ class Room:
         setpoint = get_value(self.sp_source)
         if setpoint is None or setpoint < 0 or setpoint > 55:
             return
-        iv_mode = self.iv()
+        # iv_mode = self.get_iv_mode()
         # Compruebo si la consigna se lee de una centralita tipo X-147
         bus_id = str(
             self.sp_source.get("bus"))  # En el JSON, el bus_id que conecta la habitación con el dispositivo
@@ -343,13 +353,14 @@ class Room:
         device = phi.buses.get(bus_id).get(device_id)  # Devuelve el dispositivo en el que se va a escribir
         dev_model = device.model  # Modelo de centralita Uponor
 
-        if dev_model == "x147" and iv_mode:
+        if dev_model == "x147" and self.iv:
             setpoint += 2
             print(f"Corrigiendo consigna de {self.name} en X-147 refrigeración (se suman 2 gradC).\n"
                   f"Valor corregido {setpoint}\n")
+        self.sp = setpoint
         return setpoint
 
-    def rh(self):
+    def get_rh(self):
         """
         Obtiene el valor actual de la humedad relativa de la habitación desde la base de datos que almacena las lecturas
         Returns: valor de la humedad relativa actual de la habitación
@@ -357,9 +368,10 @@ class Room:
         # print(f"leyendo humedad relativa de {self.name}")
         rh_read = get_value(self.rh_source)  # La HR del X148 se obtiene como tupla HB y LB y la HR es el LB
         relative_humidity = rh_read if rh_read is None else rh_read[1]
+        self.rh = relative_humidity
         return relative_humidity
 
-    def rt(self):
+    def get_rt(self):
         """
         Obtiene el valor actual de la temperatura de la habitación desde la base de datos que almacena las lecturas
         Returns: valor de la temperatura actual de la habitación
@@ -370,9 +382,10 @@ class Room:
         rt_read = get_value(self.rt_source)
         if rt_read is None or rt_read < 0 or rt_read > 55:
             return
+        self.rt = rt_read
         return rt_read
 
-    def st(self):
+    def get_st(self):
         """
         Obtiene el estado actual del actuador de UFHC asociado a la habitación desde la base de datos que
         almacena las lecturas
@@ -380,18 +393,20 @@ class Room:
         """
         # print(f"leyendo estado del actuador de {self.name}")
         actuator_status = get_value(self.st_source) if self.st_source is not None and self.st_source else None
+        self.st = actuator_status
         return actuator_status
 
-    def aq(self):
+    def get_aq(self):
         """
         Obtiene el valor actual de la calidad de aire de la habitación desde la base de datos que almacena las lecturas
         Returns: valor de la calidad de aire actual de la habitación
         """
         # print(f"leyendo calidad de aire de {self.name}")
         air_quality = get_value(self.aq_source) if self.aq_source is not None and self.aq_source else None
+        self.aq = air_quality
         return air_quality
 
-    def aqsp(self):
+    def get_aqsp(self):
         """
         Obtiene el valor de la consigna actual de calidad de aire de la habitación desde la base de datos que
         almacena las lecturas.
@@ -400,6 +415,7 @@ class Room:
         # print(f"leyendo consigna calidad de aire de {self.name}")
         air_quality_setpoint = get_value(self.aqsp_source) if self.aqsp_source is not None and self.aqsp_source \
             else None
+        self.aqsp = air_quality_setpoint
         return air_quality_setpoint
 
     async def update(self):
@@ -408,24 +424,24 @@ class Room:
         Returns 1 cuando termina la actualización:
         """
         print(f"Iniciando actualización de la habitación {self.name}")
-        iv = self.iv()
-        rt = self.rt()
-        rh = self.rh()
-        sp = self.sp()
-        tr = self.dp()
-        h = self.h()
-        st = self.st()
-        aq = self.aq()
-        aqsp = self.aqsp()
-        print(f"\nCalefacción/Refrigeración (1=Refrigeración): {iv}"
-              f"\nTemperatura habitación: {rt}"
-              f"\nHumedad relativa: {rh}"
-              f"\nConsigna: {sp}"
-              f"\nTemperatura de rocío: {tr}"
-              f"\nEntalpía: {h}"
-              f"\nEstado actuador: {st}"
-              f"\nCalidad de aire: {aq}"
-              f"\nConsigna de calidad de aire: {aqsp}\n")
+        self.iv = self.get_iv_mode()
+        self.rt = self.get_rt()
+        self.rh = self.get_rh()
+        self.sp = self.get_sp()
+        self.dp = self.calc_dp()
+        self.h = self.calc_h()
+        self.st = self.get_st()
+        self.aq = self.get_aq()
+        self.aqsp = self.get_aqsp()
+        print(f"\nCalefacción/Refrigeración (1=Refrigeración): {self.iv}"
+              f"\nTemperatura habitación: {self.rt}"
+              f"\nHumedad relativa: {self.rh}"
+              f"\nConsigna: {self.sp}"
+              f"\nTemperatura de rocío: {self.dp}"
+              f"\nEntalpía: {self.h}"
+              f"\nEstado actuador: {self.st}"
+              f"\nCalidad de aire: {self.aq}"
+              f"\nConsigna de calidad de aire: {self.aqsp}\n")
         return 1
 
 
@@ -511,24 +527,24 @@ class RoomGroup:
             print(f"Calculando consignas del grupo {self.id_rg}. Datos habitación {room.name}")
             null_values = ["", None, 0, 0.0, "0", "0.0", "true", "false"]
             # Calidad de aire
-            room_aq = room.aq() if room.aq() is not None else 0
-            room_aq_sp = room.aqsp() if room.aqsp() is not None else phi.AIR_QUALITY_DEFAULT_SETPOINT
+            room_aq = room.aq if room.aq is not None else 0
+            room_aq_sp = room.aqsp if room.aqsp is not None else phi.AIR_QUALITY_DEFAULT_SETPOINT
             group_aq = max(group_aq, room_aq)
             if room_aq > room_aq_sp:  # Se necesita ventilar
                 group_aq_sp = min(group_aq_sp, room_aq_sp)
 
             # El primer valor a tomar para la temperatura ambiente y la consigna
             # del grupo de habitaciones es el de la primera habitación.
-            rt = room.rt()  # Temperatura ambiente del objeto Room
-            sp = room.sp()  # Consigna del objeto Room
+            rt = room.rt  # Temperatura ambiente del objeto Room
+            sp = room.sp  # Consigna del objeto Room
             if None in [sp, rt]:
                 print(f"DEBUGGING {__file__}. La consigna {sp} o la temperatura {rt} del grupo {self.roomgroup} "
                       f"son nulos")
                 continue
             group_air_temperature = rt if group_air_temperature is None else group_air_temperature
             air_sp = sp + room.offsetairref if cooling else sp + room.offsetaircal
-            dp = room.dp()  # Temperatura de rocío del objeto Room
-            h = room.h()  # Entalpia del objeto Room
+            dp = room.dp  # Temperatura de rocío del objeto Room
+            h = room.h  # Entalpia del objeto Room
 
             group_air_temperature_setpoint = air_sp if group_air_temperature_setpoint is None \
                 else group_air_temperature_setpoint
@@ -623,7 +639,7 @@ class RoomGroup:
         q_hab_heating = 0  # Contador de habitaciones en modo Heating
         n_hab = len(self.roomgroup)  # nº de habitaciones del grupo
         for room in self.roomgroup:
-            room_modo_iv = room.iv()  # Obtengo el modo IV de la habitación
+            room_modo_iv = room.iv  # Obtengo el modo IV de la habitación
             if room_modo_iv in ['1', 1, True, 'True']:
                 q_hab_cooling += 1
             elif room_modo_iv in ['0', 0, False, 'False']:
