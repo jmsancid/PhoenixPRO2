@@ -426,14 +426,14 @@ async def update_roomgroups_values():
     roomgroups_values = {}
     for roomgroup_id, roomgroup in phi.all_room_groups.items():
         roomgroups_values[roomgroup_id] = {}
-        roomgroups_values[roomgroup_id]["iv"] = roomgroup.get_iv_mode
+        roomgroups_values[roomgroup_id]["iv"] = roomgroup.iv
         roomgroups_values[roomgroup_id]["demanda"] = roomgroup.demand
         roomgroups_values[roomgroup_id]["water_sp"] = roomgroup.water_sp
         roomgroups_values[roomgroup_id]["air_sp"] = roomgroup.air_sp
         roomgroups_values[roomgroup_id]["air_rt"] = roomgroup.air_rt
         roomgroups_values[roomgroup_id]["air_dp"] = roomgroup.air_dp
         roomgroups_values[roomgroup_id]["air_h"] = roomgroup.air_h
-        roomgroups_values[roomgroup_id]["aq"] = roomgroup.get_aq
+        roomgroups_values[roomgroup_id]["aq"] = roomgroup.aq
         roomgroups_values[roomgroup_id]["aq_sp"] = roomgroup.aq_sp
     # Actualizo el fichero con la información de los grupos de habitaciones para actualizar los dispositivos del
     # proyecto vinculados a los mismos
@@ -469,6 +469,8 @@ async def update_all_buses(device_type=None):
     """
     Actualiza los datos en todos los dispositivos en función de los valores calculados para los grupos de
     habitaciones
+    Como las centralitas de suelo radiante (UFHCControlLer ya se habían actualizado, si no se especifica
+    "device_type", se actualiza todo excepto los UFHCControler
     Returns: 1
     Args:
         device_type (object): Si se especifica el nombre de un tipo de dispositivo, UFHCController por ejemplo,
@@ -478,8 +480,9 @@ async def update_all_buses(device_type=None):
     for idbus, bus in phi.buses.items():
         for iddevice, device in bus.items():
             dev_class = device.__class__.__name__
-            if device_type and device_type != dev_class:
+            if device_type and device_type != dev_class or device_type is None and dev_class == "UFHCController":
                 continue
+
             print(f"\nActualizando valores del dispositivo {device.name}")
             update = await device.update()  # El método update toma los valores de las últimas lecturas
             if repr(device) is not None:

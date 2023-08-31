@@ -313,7 +313,7 @@ class Room:
         # print(f"presion aire seco: {pres_aire_seco}")
         hum_especifica = 0.621954 * (pres_vap / pres_aire_seco)  # kg agua / hg aire seco
         entalpia = (1.006 + 1.86 * hum_especifica) * self.rt + 2501 * hum_especifica
-        self.h = self.calc_h()
+        self.h = round(entalpia, 1)
         return round(entalpia, 1)
 
     def get_iv_mode(self):
