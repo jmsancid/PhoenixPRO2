@@ -32,7 +32,7 @@ def get_default_t_exterior() -> float:
     return t_ext
 
 
-def get_modo_iv(bld: str = "1") -> [int, None]:
+async def get_modo_iv(bld: str = "1") -> [int, None]:
     """
         Obtiene el modo actual de funcionamiento del sistema: Calefacción = 0, Refrigeración = 1
         """
@@ -48,10 +48,31 @@ def get_modo_iv(bld: str = "1") -> [int, None]:
         print(msg)
         return modo_iv
     modo_iv_from_mbdev_source = iv_source.get("mbdev")
-    modo_iv_from_file_source = iv_source.get("file")
-    if modo_iv_from_mbdev_source not in [None, {}]:
-        modo_iv = get_value(modo_iv_from_mbdev_source)
-        print(f"El modo Frío/Calor se lee de un dispositivo ModBus.\nValor leido: {modo_iv}")
+    modo_iv_from_file_source = iv_source.get("file")  # El modo_iv siempre se va a guardar en este archivo
+    if modo_iv_from_mbdev_source not in [None, {}]:  # Si el modo IV se obtiene de un  dispositivo, ese dispositivo
+        # debe tener un atributo iv que vale 0 en calefacción y 1 en refrigeración
+        # modo_iv = get_value(modo_iv_from_mbdev_source)
+        bus_id = str(
+            modo_iv_from_mbdev_source.get("bus"))  # En el JSON, el bus_id que conecta la habitación con el dispositivo
+        # se introduce como un entero, pero la clave del diccionario con los datos leídos son str
+        device_id = str(
+            modo_iv_from_mbdev_source.get("device"))  # # OJO, es el ID del Device en la base de datos, NO EL SLAVE
+        device = phi.buses.get(bus_id).get(device_id)  # Devuelve el dispositivo en el que se va a escribir
+        # modo_iv = await device.iv_mode()
+        modo_iv = await device.iv_mode()
+        print(f"El modo Frío/Calor se lee del dispositivo ModBus {device.name}.\n\tValor leido: {modo_iv}")
+        modo_iv_file = phi.EXCHANGE_FOLDER + modo_iv_from_file_source
+        modo_iv_file_exists = path.isfile(modo_iv_file)
+        if not modo_iv_file_exists:
+            try:
+                open(modo_iv_file, 'w').close()
+            except OSError:
+                print(f"\n\n\tERROR creando el fichero para el modo IV {modo_iv_file}")
+            else:
+                print(f"\n\t...creado el fichero para el modo IV {modo_iv_file}")
+        with open(modo_iv_file, "w") as ivf:
+            print(f"Guardando el modo Frío/Calor en {modo_iv_file}")
+            ivf.write(str(modo_iv))
     elif modo_iv_from_file_source:
         modo_iv_file = phi.EXCHANGE_FOLDER + modo_iv_from_file_source
         if path.isfile(modo_iv_file):
@@ -92,7 +113,11 @@ def get_temp_exterior(bld: str = "1") -> [float, None]:
     if t_ext_from_mbdev_source not in [None, {}]:
         t_ext = get_value(t_ext_from_mbdev_source)
         print("La temperatura exterior se lee de un dispositivo ModBus")
-        print(f"Valor de temperatura exterior leido: {t_ext}")
+        print(f"Valor de temperatura exterior leido: {t_ext}\n")
+        t_ext_file = phi.EXCHANGE_FOLDER + t_ext_from_file_source
+        with open(t_ext_file, "w") as ivf:
+            print(f"Guardando temperatura exterior en {t_ext_file}")
+            ivf.write(str(t_ext))
         return t_ext
     elif t_ext_from_file_source:
         print("La temperatura exterior se lee de un archivo")
@@ -290,9 +315,10 @@ class Room:
         Es un valor booleano asociado a la refrigeración: True = Refrigeración / False = Calefacción
         """
         modo = ("Calefacción", "Refrigeración")
-        iv_mode = get_modo_iv(self.building_id)
-        print(f"Modo funcionamiento habitación {self.name} del edificio {self.building_id}:\n")
-        print(f"\t\t{modo[iv_mode]}")
+        # iv_mode = get_modo_iv(self.building_id)
+        iv_mode = phi.system_iv
+        print(f"Modo funcionamiento habitación {self.name} del edificio {self.building_id}:")
+        print(f"\t\t{modo[iv_mode]}\n")
 
         return iv_mode
 
@@ -320,7 +346,7 @@ class Room:
         if dev_model == "x147" and iv_mode:
             setpoint += 2
             print(f"Corrigiendo consigna de {self.name} en X-147 refrigeración (se suman 2 gradC).\n"
-                  f"Valor corregido {setpoint}")
+                  f"Valor corregido {setpoint}\n")
         return setpoint
 
     def rh(self):
@@ -455,7 +481,7 @@ class RoomGroup:
         # print(f"\t...Calculando temperatura de impulsión para el grupo de habitaciones {self.id_rg}")
         # Obtengo el modo de funcionamiento Calefacción/Refrigeración del con el método iv() de la
         # primera habitación del grupo
-        self.iv = await self.iv_mode()
+        self.iv = self.iv_mode()
         cooling = self.iv
         if len(self.roomgroup) == 0:
             raise ValueError(f"No se han añadido habitaciones al grupo {self.id_rg}")
@@ -573,7 +599,7 @@ class RoomGroup:
         print(repr(self))
         return 1
 
-    async def iv_mode(self, new_iv_mode: [int, None] = None):
+    def iv_mode(self, new_iv_mode: [int, None] = None):
         """
         Procesa el modo de funcionamiento Calefacción (new_iv_mode = 0) / Refrigeración (iv_mode = 1) grupo de
         habitaciones.
@@ -608,7 +634,8 @@ class RoomGroup:
         if new_iv_mode in [0, 1]:  # Se fuerza el modo IV. TODO Comprobar si esta opción tiene sentido.
             self.iv = new_iv_mode
         elif q_hab_cooling + q_hab_heating == 0:  # No se ha leído el modo IV de ninguna habitación
-            self.iv = get_modo_iv()
+            # self.iv = get_modo_iv()
+            self.iv = phi.system_iv
         else:
             self.iv = modo_iv
 

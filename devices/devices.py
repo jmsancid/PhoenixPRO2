@@ -163,6 +163,9 @@ class Generator(phi.MBDevice):
                   "adr": adr}
         current_iv_mode = get_value(source)  # Valor del modo IV en el generador. No confundir con el modo IV del
         # sistema ya que podrían tener distintos valores.
+        print(f"Valor actual IV en la ecodan: {current_iv_mode} - {type(current_iv_mode)}")
+        print(f"Valor actual modo refr en la ecodan: {self.cooling_value} - {type(self.cooling_value)}")
+        print(f"Valor actual modo calefen la ecodan: {self.heating_value} - {type(self.heating_value)}")
         if current_iv_mode is None:  # No se ha leído el modo de funcionamiento
             return
         if current_iv_mode == self.cooling_value:
@@ -179,7 +182,7 @@ class Generator(phi.MBDevice):
                   "datatype": iv_set_datatype,
                   "adr": iv_set_adr}
         if new_iv_mode is None:
-            self.iv = current_iv_mode
+            return self.iv
         elif new_iv_mode == phi.HEATING:
             res = await set_value(target, self.heating_value)
             self.iv = phi.HEATING
@@ -189,7 +192,8 @@ class Generator(phi.MBDevice):
         else:
             print(f"ERROR {__file__}\n\tValor no válido, {new_iv_mode}, para modo Calefacción/Refrigeración "
                   f"en {self.name}. Ver JSON {self.brand}-{self.model}.JSON")
-            self.iv = current_iv_mode
+            # self.iv = current_iv_mode
+            self.iv = phi.system_iv
 
         return self.iv
 
@@ -340,7 +344,7 @@ class Generator(phi.MBDevice):
 
         Returns: resultado de la escritura modbus de los valores actualizados o los valores manuales.
         """
-        system_iv = get_modo_iv()  # Modo frío=1 / calor=0 del sistema
+        system_iv = await get_modo_iv()  # Modo frío=1 / calor=0 del sistema
         print(f"DEBUGGING {__file__} - Modo de funcionamiento del sistema asociado al "
               f"generador {self.name} = {system_iv}")
 
@@ -548,6 +552,7 @@ class UFHCController(phi.MBDevice):
         """
         Actualiza los diccionarios de cada canal con la consigna, temperatura ambiente, humedad relativa,
         temperatura del suelo, estado del actuador y autorización para refrigeración
+        Si el modelo es X147, la consigna es la leída por Modbus, convertida a gradC + 2
         Param:
             channel: Canal a actualizar
         Returns:
@@ -560,6 +565,8 @@ class UFHCController(phi.MBDevice):
         channel_val_attrs = {magnitud: f"{magnitud}{channel}" for magnitud in tuple(channel_info.keys())}
         # ch_sources = self.__getattribute__(channel_source_attr)
         ch_sources = getattr(self, channel_source_attr)
+        print(f"(método set_channel_info) Valor almacenado modo IV X147: {self.iv} ")
+
         for key, value in ch_sources.items():
             datatype = value[0]
             adr = value[1]
@@ -568,7 +575,16 @@ class UFHCController(phi.MBDevice):
                       "datatype": datatype,
                       "adr": adr}
             # current_value = get_value(source)
-            current_value = get_value(source) if get_value(source) else phi.READ_ERROR_VALUE  # 08/07/2023 mala lectura
+            current_value = get_value(source)
+            if current_value:
+                if "sp" in key and "x147" in self.model.lower() and self.iv:
+                    print(f"(método set_channel_info) Valor almacenado consigna X147:sl-{self.slave} - canal: {channel}"
+                          f" {current_value} / ({type(current_value)})")
+                    current_value += 2.0  # En refrigeración, la consigna de los ttos es 2 gradC superior a la leída
+                    print(f"(método set_channel_info) Valor corregido consigna X147: {current_value} "
+                          f"({type(current_value)})")
+            else:
+                current_value = phi.READ_ERROR_VALUE  # 08/07/2023 mala lectura
 
             # if current_value is None:  # El canal no se utiliza
             #     return
@@ -614,8 +630,21 @@ class UFHCController(phi.MBDevice):
         for sp, src in spch_sources:
             ch_info = getattr(self, src)
             sp_value = getattr(self, sp)
-            if sp_value is not None and sp_value and float(sp_value) > 950:
-                continue
+            print(f"\n\tValor actual de la consigna de {ch_info} antes de terminar upload:"
+                  f" {sp_value}/{type(sp_value)}\n")
+            sp_value_corr = sp_value
+            if sp_value is not None and sp_value:
+                if float(sp_value) > 950:
+                    continue
+                else:
+                    if "x147" in self.model.lower() and self.iv:
+                        print(
+                            f"(método x147 upload) Valor real consigna:sl-{self.slave} - canal: {src}"
+                            f" {sp_value} / ({type(sp_value)})")
+                        sp_value_corr = float(sp_value) - 2.0  # En refrig, la consigna a escribir es 2 gradC
+                        # inferior a la de los ttos
+                        print(f"(método set_channel_info) Valor consigna a escribir X147: {sp_value_corr} "
+                              f"({type(sp_value_corr)})")
 
             if None not in (ch_info, sp_value):
                 sp_target = ch_info.get("sp")
@@ -625,8 +654,10 @@ class UFHCController(phi.MBDevice):
                           "device": int(self.device_id),
                           "datatype": datatype,
                           "adr": adr}
-                print(f"UFHCController {self.name}. uploading value {sp_value}")
-                uploaded_value = await set_value(target, sp_value)
+                print(f"UFHCController {self.name}. uploading value {sp_value_corr}")
+                uploaded_value = await set_value(target, sp_value_corr)
+                uploaded_value = get_value(target)
+                print(f"UPLOAD - Comprobando valor de atributo escrito: {uploaded_value}")
 
         return 1
 
@@ -635,7 +666,8 @@ class UFHCController(phi.MBDevice):
         Actualiza el archivo de intercambio correspondiente al atributo attr, PERO SÓLO SI HA CAMBIADO SU VALOR.
         Se hace así para poder distinguir entre un cambio en la web, que se haya hecho posteriormente a la
         última lectura
-        En el caso de las consignas, se guarda en spx_bus (x es el canal).
+        En el caso de las consignas, la leída en el dispositivo se guarda en spx_bus (x es el canal) y la leída
+        en la web se guarda en spx.
         Posteriormente se actualiza el archivo sp con el valor de la web o el valor de spx_bus
         Args:
             attr: atributo a guardar en el archivo de intercambio
@@ -653,14 +685,18 @@ class UFHCController(phi.MBDevice):
         if not phi.os.path.isfile(attr_dev_file):
             print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_dev_file}")
             return 0
-        current_attr_val = f"{getattr(self, attr)}"  # Valor leído en el dispositivo
+        current_attr_val = getattr(self, attr)  # Valor leído en el dispositivo
+        print(f"\n\tValor actual del atributo {attr} antes de terminar update:"
+              f" {current_attr_val}/{type(current_attr_val)}\n"
+              f"\tArchivo del que se recoge el atributo: {attr_dev_file}\n")
         with open(attr_dev_file, "r") as attrf:
             xch_value = attrf.read().strip()  # Valor compartido con la Web
             print(f"Valor almacenado en {attr_dev_file} de {self.name}: {xch_value}")
         if not xch_value:
+            print("\n\t\tel archivo de intercambio está vacío\n")
             xch_value = current_attr_val
             with open(attr_dev_file, "w") as f:
-                f.write(current_attr_val)
+                f.write(str(current_attr_val))
         # Gestiono las consignas, que tienen un tratamiento distinto al resto
         if "sp" in attr:
             print(f"Valor del atributo leído en el dispositivo: {current_attr_val} / {type(current_attr_val)}")
@@ -668,8 +704,11 @@ class UFHCController(phi.MBDevice):
             if not phi.os.path.isfile(attr_dev_bus_file):
                 print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_dev_bus_file}")
                 print(f"Se actualiza con el valor leído en {attr_dev_file}: {current_attr_val}")
-                with open(attr_dev_bus_file, "w") as f:
-                    f.write(current_attr_val)
+                try:
+                    with open(attr_dev_bus_file, "w") as f:
+                        f.write(str(current_attr_val))
+                except FileNotFoundError as e:
+                    print(f"\n\tError guardando valor en spx_bus file\n{e}\n")
                 stored_sp_bus_val = current_attr_val
             else:
                 with open(attr_dev_bus_file, "r") as f:
@@ -679,29 +718,37 @@ class UFHCController(phi.MBDevice):
             if not stored_sp_bus_val:
                 stored_sp_bus_val = current_attr_val
                 with open(attr_dev_bus_file, "w") as f:
-                    f.write(current_attr_val)
+                    f.write(str(current_attr_val))
 
-            if float(stored_sp_bus_val) != float(current_attr_val):  # El usuario ha cambiado la consigna.
+            # if float(stored_sp_bus_val) != float(current_attr_val):  # El usuario ha cambiado la consigna.
+            if float(stored_sp_bus_val) != current_attr_val:  # El usuario ha cambiado la consigna.
                 # Se actualizan con el nuevo valor los archivos spx, spx_bus y el dispositivo
-                print(f"{self.name} - Consigna {stored_sp_bus_val} cambiada por usuario a {current_attr_val}")
+                print(f"{self.name} - Consigna {stored_sp_bus_val} cambiada en termostato a {current_attr_val}")
                 with open(attr_dev_bus_file, "w") as attdbf:
-                    attdbf.write(current_attr_val)
+                    attdbf.write(str(current_attr_val))
                 with open(attr_dev_file, "w") as attdf:
-                    attdf.write(current_attr_val)
+                    attdf.write(str(current_attr_val))
+                setattr(self, attr, current_attr_val)  # Se actualiza el atributo
                 return 1
-            elif float(xch_value) != float(current_attr_val):  # Se ha cambiado desde la Web.
+            elif float(xch_value) != current_attr_val:  # Se ha cambiado desde la Web.
                 # Se actualiza el archivo spx_bus
                 print(f"{self.name} - Consigna {stored_sp_bus_val} cambiada desde la web a {xch_value}")
-                setattr(self, attr, xch_value)  # Se actualiza el atributo
-                print(f"Atributo {attr} actualizado desde la web a {getattr(self, attr)}")
+                setattr(self, attr, float(xch_value))  # Se actualiza el atributo
+                print(f"Atributo {attr} actualizado desde la web a {getattr(self, attr)}/{type(getattr(self, attr))}")
                 with open(attr_dev_bus_file, "w") as attdbf:
-                    attdbf.write(xch_value)  # Se actualiza el archivo
+                    attdbf.write(str(xch_value))  # Se actualiza el archivo
+                with open(attr_dev_file, "w") as attdbf:
+                    attdbf.write(str(xch_value))  # Se actualiza el archivo
+                print("\n\tCOMPROBANDO ACTUALIZACIÓN DE ARCHIVO")
+                with open(attr_dev_bus_file, "r") as attdbf:
+                    file_content = attdbf.read()
+                    print(f"\n\tValor guardado en el archivo leído desde el termostato {file_content}")
                 return 1
             else:
                 print(f"No hay que actualizar {attr} en {self.name}")
                 return 0
         # Gestiono el resto de atributos
-        if current_attr_val == xch_value:
+        if str(current_attr_val) == xch_value:
             print(f"Valor leido en archivo: {xch_value} IGUAL A\nValor actual {current_attr_val}")
             # No cambio el archivo
             return 0
@@ -709,7 +756,7 @@ class UFHCController(phi.MBDevice):
             print(f"Valor leido en archivo: {xch_value} DISTINTO A\nValor actual {current_attr_val}")
             with open(attr_dev_file, "w") as attrf:
                 print(f"Actualizando archivo {attr_dev_file} desde método de clase de {self.name}")
-                attrf.write(current_attr_val)
+                attrf.write(str(current_attr_val))
                 return 1
 
     async def update(self):
@@ -720,10 +767,10 @@ class UFHCController(phi.MBDevice):
         if not self.active_channels:
             await self.get_active_channels()
 
-        system_iv = get_modo_iv()  # Modo frío=1 / calor=0 del sistema
+        # system_iv = get_modo_iv()  # Modo frío=1 / calor=0 del sistema
         print(f"DEBUGGING {__file__} - Modo de funcionamiento del sistema asociado al "
-              f"Controlador UFHC {self.name} = {system_iv}")
-        await self.iv_mode(system_iv)  # Actualizo el modo IV de la centralita
+              f"Controlador UFHC {self.name} = {phi.system_iv}")
+        await self.iv_mode(phi.system_iv)  # Actualizo el modo IV de la centralita
         await self.update_attr_file("iv")  # Actualizo archivo de intercambio iv de la centralita
         await self.pump_st()  # Actualizo el estado de la bomba
         await self.update_attr_file("pump")  # Actualizo archivo de intercambio iv de la centralita
@@ -3235,6 +3282,16 @@ class DataSource(phi.MBDevice):
             setattr(self, self.attrs[idx], current_value)
             attr_file = f"{phi.EXCHANGE_FOLDER}/{self.bus_id}/{self.slave}/{self.attrs[idx]}"
             # print(f"Actualizando archivo {attr_file}")
+            print(f"\t\t\tProcesando archivo {attr_file}")
+            exc_file_exists = phi.os.path.isfile(attr_file)
+            if not exc_file_exists:
+                try:
+                    open(attr_file, 'w').close()
+                except OSError:
+                    print(f"\n\n\tERROR creando el fichero de intercambio {attr_file} para el esclavo {self.slave}")
+                else:
+                    print(f"\n\t...creado el archivo de intercambio {attr_file} "
+                          f"para el esclavo {self.slave}")
             with open(attr_file, "w") as dsf:
                 dsf.write(str(current_value))
         else:

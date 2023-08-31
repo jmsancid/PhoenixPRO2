@@ -98,6 +98,8 @@ async def set_value(value_source: [dict, None], new_value: [int, float]) -> [int
         print(f"Operación de escritura no habilitada para el registro {adr} de tipo {datatype}")
 
     res = await device.write(modbus_operation, int(adr), modbus_value)
+    print(f"Operación Modbus, adr, valor a escribir, resultado {modbus_operation}, {int(adr)}, "
+          f"{modbus_value}/{type(modbus_value)}, {res}")
 
     return res
 
@@ -399,8 +401,8 @@ async def check_changes_from_web() -> int:
                         else:
                             val_to_write = str(web_value)
                         setattr(dev, xf, val_to_write)
-                        with open(xch_file_to_check, "w") as xf:
-                            xf.write(str(web_value))
+                        with open(xch_file_to_check, "w") as xchf:
+                            xchf.write(str(web_value))
                 else:
                     attr_not_mod[xch_file_to_check] = current_value
             if changes:

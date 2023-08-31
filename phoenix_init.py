@@ -7,12 +7,14 @@ from gc import \
     collect
 from phoenix_config import *
 from phoenix_constants import *
-from project_elements.building import Room, RoomGroup
+from project_elements.building import Room, RoomGroup, init_modo_iv, get_modo_iv
 from devices.devices import SYSTEM_CLASSES
 
 
 init_time = datetime.now()
 print(f"Hora inicio: {str(init_time)}")
+
+system_iv = init_modo_iv()  # Inicializamos el modo de funcionamiento frío_calor
 
 
 # system_classes = list(SYSTEM_CLASSES.values())  # Clases de dispositivos del sistema
@@ -132,6 +134,67 @@ if buildings is None:
     print("ERROR (phoenix-config: load_buildings) - No se ha definido ningún edificio en el fichero de "
           "configuración del proyecto,\n\n\t...Abandonando el programa.")
     sys.exit()
+
+def create_o_data_files():
+    """
+    Se crean los archivos generales de intercambio de Modo_IV, Temperatura exterior, humedad relativa exterior y
+    calidad de aire exterior
+
+    Returns: 1 si se crea, 0 si no se crea
+
+    """
+    print("\nCREANDO ARCHIVOS DE INTERCAMBIO DE T, HR Y AQ EXTERIORES Y DE MODO IV DEL SISTEMA")
+    bus_id = "1"  # Los archivos exteriores siempre irán en el bus 1
+    # Compruebo si existe el directorio de intercambio de registros:
+    reg_folder_exists = os.path.isdir(EXCHANGE_FOLDER)
+    if not reg_folder_exists:
+        try:
+            os.mkdir(EXCHANGE_FOLDER)
+        except OSError:
+            print(f"ERROR Creando el directorio de intercambio con la web: {EXCHANGE_FOLDER}")
+        else:
+            print(f"\n\n\tDirectorio de intercambio con la web {EXCHANGE_FOLDER}  -  CREADO\n")
+    else:
+        print(f"\n\tEl fichero de intercambio, {EXCHANGE_FOLDER}, ya existe.")
+    bus_folder_name = EXCHANGE_FOLDER + r"/" + bus_id
+    bus_folder_exists = os.path.isdir(bus_folder_name)
+    if not bus_folder_exists:
+        try:
+            os.mkdir(bus_folder_name)
+        except OSError:
+            print(f"\n\tERROR Creando el directorio de intercambio con la web: {bus_folder_name} para el "
+                  f"bus {bus_id}\n")
+            return 0
+        else:
+            print(f"\n\t\t...directorio para bus {bus_id} en {bus_folder_name}  -  CREADO")
+
+    o_files = {"1000": TEMP_EXT_FILE, "2000": HR_EXT_FILE, "3000": AQ_EXT_FILE, "5000": MODO_IV_FILE}
+    for d, f in o_files.items():
+        full_d_name = bus_folder_name + r"/" + d
+        d_exists = os.path.isdir(full_d_name)
+        if not d_exists:
+            try:
+                os.mkdir(full_d_name)
+            except OSError:
+                print(f"ERROR Creando el directorio de intercambio con la web: {full_d_name}")
+            else:
+                print(f"\n\n\tDirectorio de intercambio con la web {full_d_name}  -  CREADO\n")
+        else:
+            print(f"\n\tEl fichero de intercambio, {full_d_name}, ya existe.")
+
+        f_exists = os.path.isfile(f)
+        if not f_exists:
+            print(f"Intentando crear {f}")
+            try:
+                open(f, 'w').close()
+            except OSError:
+                print(f"\n\n\tERROR creando el fichero de valores exteriores o modo IV: {f}")
+                return 0
+            else:
+                print(f"\n\t...creado el fichero{f}")
+    print("Ficheros de valores exteriores y modo IV creados\n")
+    return 1
+create_o_data_files()
 
 
 def load_roomgroups():

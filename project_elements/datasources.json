@@ -14,6 +14,15 @@
       "temp_source": ["ir", 16],
       "rh_source": ["ir", 17],
       "aq_source": ["ir", 19]
+    },
+    "circutor_cemc21": {
+      "name": "Contador Energía Eléctrica Circutor CEM-C21",
+      "act-e1_source": ["ir", 0],
+      "act-e2_source": ["ir", 1],
+      "react-e1_source": ["ir", 4],
+      "react-e2_source": ["ir", 5],
+      "tot-pow1_source": ["ir", 1868],
+      "tot-pow2_source": ["ir", 1869]
     }
   }
 }

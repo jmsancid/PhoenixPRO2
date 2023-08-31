@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import asyncio
+import sys
 
 import phoenix_init as phi
 
@@ -25,6 +26,9 @@ async def main():
     # todos los registros
     print(f"\n************\t LECTURA MODBUS FINALIZADA {id_lectura_actual}\t************\n")
 
+    phi.system_iv = await phi.get_modo_iv()  # Variable global con el modo de funcionamiento del sistema
+    print(f"\nMODO de funcionamiento del sistema: {phi.system_iv}")
+
     print(f"\n************\t ACTUALIZANDO CENTRALITAS X148 {str(phi.datetime.now())}\t************\n")
     # Actualizo las instancias de los Controladores de suelo radiante con las últimas lecturas
     bus_updating_results = await update_all_buses("UFHCController")
@@ -36,12 +40,12 @@ async def main():
     # (revisando el fichero correspondiente) o si ha habido algún cambio desde la web: nueva consigna,
     # modos manuales, etc.
     changes = await check_changes_from_web()
-
     print(f"\n************\t FINALIZADA COMPROBACIÓN CAMBIOS EN LA WEB {str(phi.datetime.now())}\t************\n")
 
     print(f"\n************\t ACTUALIZANDO GRUPOS DE HABITACIONES {str(phi.datetime.now())}\t************\n")
     # Actualizo las lecturas de todas las habitaciones y grupos de habitaciones del proyecto
     roomgroup_updating_results = await update_roomgroups_values()
+    sys.exit()
     print(f"\n************\t FINALIZADA ACTUALIZACIÓN GRUPOS DE HABITACIONES {str(phi.datetime.now())}\t************\n")
 
     # Propago los valores calculados a los dispositivos del proyecto

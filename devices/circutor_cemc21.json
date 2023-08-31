@@ -1,0 +1,373 @@
+{
+  "circutor_cemc21": {
+    "name": "Contador Energía Eléctrica Circutor CEM-C21",
+    "write_ops": [16],
+    "qregsmax": 25,
+    "ir": {
+      "0": {
+        "descr": {
+          "en": "Imported active energy, bytes 3, 4 (Wh)",
+          "sp": "Energía activa, bytes 3, 4 (Wh)",
+          "po": "Energía activa, bytes 3, 4 (Wh)"
+        }
+      },
+      "1": {
+        "descr": {
+          "en": "Imported active energy, bytes 1, 2 (Wh)",
+          "sp": "Energía activa importada, bytes 1, 2  (Wh)",
+          "po": "Energía activa importada, bytes 1, 2  (Wh)"
+        }
+      },
+      "4": {
+        "descr": {
+          "en": "Q1 Imported reactive energy, bytes 3, 4 (VAr)",
+          "sp": "Q1 Energía reactiva, bytes 3, 4 (VAr)",
+          "po": "Q1 Energía reactiva, bytes 3, 4 (VAr)"
+        }
+      },
+      "5": {
+        "descr": {
+          "en": "Q1 Imported reactive energy, bytes 1, 2 (VAr)",
+          "sp": "Q1 Energía reactiva importada, bytes 1, 2  (VAr)",
+          "po": "Q1 Energía reactiva importada, bytes 1, 2  (VAr)"
+        }
+      },
+      "6": {
+        "descr": {
+          "en": "Q2 Imported reactive energy, bytes 3, 4 (VAr)",
+          "sp": "Q2 Energía reactiva importada, bytes 3, 4 (VAr)",
+          "po": "Q2 Energía reactiva importada, bytes 3, 4 (VAr)"
+        }
+      },
+      "7": {
+        "descr": {
+          "en": "Q2 Imported reactive energy, bytes 1, 2 (VAr)",
+          "sp": "Q2 Energía reactiva importada, bytes 1, 2  (VAr)",
+          "po": "Q2 Energía reactiva importada, bytes 1, 2  (VAr)"
+        }
+      },
+      "8": {
+        "descr": {
+          "en": "Q3 Imported reactive Energy, bytes 3, 4 (VAr)",
+          "sp": "Q3 Energía reactiva importada, bytes 3, 4 (VAr)",
+          "po": "Q3 Energía reactiva importada, bytes 3, 4 (VAr)"
+        }
+      },
+      "9": {
+        "descr": {
+          "en": "Q3 Imported reactive Energy, Bytes 1, 2  (VAr)",
+          "sp": "Q3 Energía reactiva importada, Bytes 1, 2  (VAr)",
+          "po": "Q3 Energía reactiva importada, Bytes 1, 2  (VAr)"
+        }
+      },
+      "10": {
+        "descr": {
+          "en": "Q4 Imported reactive Energy, bytes 3, 4 (VAr)",
+          "sp": "Q4 Energía reactiva importada, bytes 3, 4 (VAr)",
+          "po": "Q4 Energía reactiva importada, bytes 3, 4 (VAr)"
+        }
+      },
+      "11": {
+        "descr": {
+          "en": "Q4 Imported reactive Energy, bytes 1, 2 (VAr)",
+          "sp": "Q4 Energía reactiva importada, bytes 1, 2 (VAr)",
+          "po": "Q4 Energía reactiva importada, bytes 1, 2 (VAr)"
+        }
+      },
+      "1842": {
+        "descr": {
+          "en": "Phase 1 Voltage, Bytes 3, 4 (x10)",
+          "sp": "Tensión de la Fase 1, Bytes 3, 4 (x10)",
+          "po": "Tensión de la Fase 1, Bytes 3, 4 (x10)"
+        }
+      },
+      "1843": {
+        "descr": {
+          "en": "Phase 1 Voltage, Bytes 1, 2 (x10)",
+          "sp": "Tensión de la Fase 1, Bytes 1, 2 (x10)",
+          "po": "Tensión de la Fase 1, Bytes 1, 2 (x10)"
+        }
+      },
+      "1844": {
+        "descr": {
+          "en": "Phase 2 Voltage, Bytes 3, 4 (x10)",
+          "sp": "Tensión de la Fase 2, Bytes 3, 4 (x10)",
+          "po": "Tensión de la Fase 2, Bytes 3, 4 (x10)"
+        }
+      },
+      "1845": {
+        "descr": {
+          "en": "Phase 2 Voltage, Bytes 1, 2 (x10)",
+          "sp": "Tensión de la Fase 2, Bytes 1, 2 (x10)",
+          "po": "Tensión de la Fase 2, Bytes 1, 2 (x10)"
+        }
+      },
+      "1846": {
+        "descr": {
+          "en": "Phase 3 Voltage, Bytes 3, 4 (x10)",
+          "sp": "Tensión de la Fase 3, Bytes 3, 4 (x10)",
+          "po": "Tensión de la Fase 3, Bytes 3, 4 (x10)"
+        }
+      },
+      "1847": {
+        "descr": {
+          "en": "Phase 2 Voltage, Bytes 1, 2 (x10)",
+          "sp": "Tensión de la Fase 3, Bytes 1, 2 (x10)",
+          "po": "Tensión de la Fase 3, Bytes 1, 2 (x10)"
+        }
+      },
+      "1848": {
+        "descr": {
+          "en": "Phase 1 Current, Bytes 3, 4 (x100)",
+          "sp": "Intensidad de la Fase 1, Bytes 3, 4 (x100)",
+          "po": "Intensidad de la Fase 1, Bytes 3, 4 (x100)"
+        }
+      },
+      "1849": {
+        "descr": {
+          "en": "Phase 1 Current, Bytes 1, 2 (x100)",
+          "sp": "Intensidad de la Fase 1, Bytes 1, 2 (x100)",
+          "po": "Intensidad de la Fase 1, Bytes 1, 2 (x100)"
+        }
+      },
+      "1850": {
+        "descr": {
+          "en": "Phase 2 Current, Bytes 3, 4 (x100)",
+          "sp": "Intensidad de la Fase 2, Bytes 3, 4 (x100)",
+          "po": "Intensidad de la Fase 2, Bytes 3, 4 (x100)"
+        }
+      },
+      "1851": {
+        "descr": {
+          "en": "Phase 2 Current, Bytes 1, 2 (x100)",
+          "sp": "Intensidad de la Fase 2, Bytes 1, 2 (x100)",
+          "po": "Intensidad de la Fase 2, Bytes 1, 2 (x100)"
+        }
+      },
+      "1852": {
+        "descr": {
+          "en": "Phase 3 Current, Bytes 3, 4 (x100)",
+          "sp": "Intensidad de la Fase 3, Bytes 3, 4 (x100)",
+          "po": "Intensidad de la Fase 3, Bytes 3, 4 (x100)"
+        }
+      },
+      "1853": {
+        "descr": {
+          "en": "Phase 2 Current, Bytes 1, 2 (x100)",
+          "sp": "Intensidad de la Fase 3, Bytes 1, 2 (x100)",
+          "po": "Intensidad de la Fase 3, Bytes 1, 2 (x100)"
+        }
+      },
+      "1854": {
+        "descr": {
+          "en": "Phase 1 Cos phi, Bytes 3, 4 (x100)",
+          "sp": "Cos phi de la Fase 1, Bytes 3, 4 (x100)",
+          "po": "Cos phi de la Fase 1, Bytes 3, 4 (x100)"
+        }
+      },
+      "1855": {
+        "descr": {
+          "en": "Phase 1 Cos phi, Bytes 1, 2 (x100)",
+          "sp": "Cos phi de la Fase 1, Bytes 1, 2 (x100)",
+          "po": "Cos phi de la Fase 1, Bytes 1, 2 (x100)"
+        }
+      },
+      "1856": {
+        "descr": {
+          "en": "Phase 2 Cos phi, Bytes 3, 4 (x100)",
+          "sp": "Cos phi de la Fase 2, Bytes 3, 4 (x100)",
+          "po": "Cos phi de la Fase 2, Bytes 3, 4 (x100)"
+        }
+      },
+      "1857": {
+        "descr": {
+          "en": "Phase 2 Cos phi, Bytes 1, 2 (x100)",
+          "sp": "Cos phi de la Fase 2, Bytes 1, 2 (x100)",
+          "po": "Cos phi de la Fase 2, Bytes 1, 2 (x100)"
+        }
+      },
+      "1858": {
+        "descr": {
+          "en": "Phase 3 Cos phi, Bytes 3, 4 (x100)",
+          "sp": "Cos phi de la Fase 3, Bytes 3, 4 (x100)",
+          "po": "Cos phi de la Fase 3, Bytes 3, 4 (x100)"
+        }
+      },
+      "1859": {
+        "descr": {
+          "en": "Phase 2 Cos phi, Bytes 1, 2 (x100)",
+          "sp": "Cos phi de la Fase 3, Bytes 1, 2 (x100)",
+          "po": "Cos phi de la Fase 3, Bytes 1, 2 (x100)"
+        }
+      },
+      "1862": {
+        "descr": {
+          "en": "Phase 1 active power, Bytes 3, 4",
+          "sp": "Potencia activa de la Fase 1, Bytes 3, 4",
+          "po": "Potencia activa de la Fase 1, Bytes 3, 4"
+        }
+      },
+      "1863": {
+        "descr": {
+          "en": "Phase 1 active power, Bytes 1, 2",
+          "sp": "Potencia activa de la Fase 1, Bytes 1, 2",
+          "po": "Potencia activa de la Fase 1, Bytes 1, 2"
+        }
+      },
+      "1864": {
+        "descr": {
+          "en": "Phase 2 active power, Bytes 3, 4",
+          "sp": "Potencia activa de la Fase 2, Bytes 3, 4",
+          "po": "Potencia activa de la Fase 2, Bytes 3, 4"
+        }
+      },
+      "1865": {
+        "descr": {
+          "en": "Phase 2 active power, Bytes 1, 2",
+          "sp": "Potencia activa de la Fase 2, Bytes 1, 2",
+          "po": "Potencia activa de la Fase 2, Bytes 1, 2"
+        }
+      },
+      "1866": {
+        "descr": {
+          "en": "Phase 3 active power, Bytes 3, 4",
+          "sp": "Potencia activa de la Fase 3, Bytes 3, 4",
+          "po": "Potencia activa de la Fase 3, Bytes 3, 4"
+        }
+      },
+      "1867": {
+        "descr": {
+          "en": "Phase 2 active power, Bytes 1, 2",
+          "sp": "Potencia activa de la Fase 3, Bytes 1, 2",
+          "po": "Potencia activa de la Fase 3, Bytes 1, 2"
+        }
+      },
+      "1868": {
+        "descr": {
+          "en": "Total active power, Bytes 3, 4",
+          "sp": "Potencia activa total, Bytes 3, 4",
+          "po": "Potencia activa total, Bytes 3, 4"
+        }
+      },
+      "1869": {
+        "descr": {
+          "en": "Total active power, Bytes 1, 2",
+          "sp": "Potencia activa total, Bytes 1, 2",
+          "po": "Potencia activa total, Bytes 1, 2"
+        }
+      },
+      "1870": {
+        "descr": {
+          "en": "Phase 1 reactive power, Bytes 3, 4",
+          "sp": "Potencia reactiva de la Fase 1, Bytes 3, 4",
+          "po": "Potencia reactiva de la Fase 1, Bytes 3, 4"
+        }
+      },
+      "1871": {
+        "descr": {
+          "en": "Phase 1 reactive power, Bytes 1, 2",
+          "sp": "Potencia reactiva de la Fase 1, Bytes 1, 2",
+          "po": "Potencia reactiva de la Fase 1, Bytes 1, 2"
+        }
+      },
+      "1872": {
+        "descr": {
+          "en": "Phase 2 reactive power, Bytes 3, 4",
+          "sp": "Potencia reactiva de la Fase 2, Bytes 3, 4",
+          "po": "Potencia reactiva de la Fase 2, Bytes 3, 4"
+        }
+      },
+      "1873": {
+        "descr": {
+          "en": "Phase 2 reactive power, Bytes 1, 2",
+          "sp": "Potencia reactiva de la Fase 2, Bytes 1, 2",
+          "po": "Potencia reactiva de la Fase 2, Bytes 1, 2"
+        }
+      },
+      "1874": {
+        "descr": {
+          "en": "Phase 3 reactive power, Bytes 3, 4",
+          "sp": "Potencia reactiva de la Fase 3, Bytes 3, 4",
+          "po": "Potencia reactiva de la Fase 3, Bytes 3, 4"
+        }
+      },
+      "1875": {
+        "descr": {
+          "en": "Phase 2 reactive power, Bytes 1, 2",
+          "sp": "Potencia reactiva de la Fase 3, Bytes 1, 2",
+          "po": "Potencia reactiva de la Fase 3, Bytes 1, 2"
+        }
+      },
+      "1876": {
+        "descr": {
+          "en": "Total reactive power, Bytes 3, 4",
+          "sp": "Potencia reactiva total, Bytes 3, 4",
+          "po": "Potencia reactiva total, Bytes 3, 4"
+        }
+      },
+      "1877": {
+        "descr": {
+          "en": "Total reactive power, Bytes 1, 2",
+          "sp": "Potencia reactiva total, Bytes 1, 2",
+          "po": "Potencia reactiva total, Bytes 1, 2"
+        }
+      },
+      "1878": {
+        "descr": {
+          "en": "Phase 1 apparent power, Bytes 3, 4",
+          "sp": "Potencia aparente de la Fase 1, Bytes 3, 4",
+          "po": "Potencia aparente de la Fase 1, Bytes 3, 4"
+        }
+      },
+      "1879": {
+        "descr": {
+          "en": "Phase 1 apparent power, Bytes 1, 2",
+          "sp": "Potencia aparente de la Fase 1, Bytes 1, 2",
+          "po": "Potencia aparente de la Fase 1, Bytes 1, 2"
+        }
+      },
+      "1880": {
+        "descr": {
+          "en": "Phase 2 apparent power, Bytes 3, 4",
+          "sp": "Potencia aparente de la Fase 2, Bytes 3, 4",
+          "po": "Potencia aparente de la Fase 2, Bytes 3, 4"
+        }
+      },
+      "1881": {
+        "descr": {
+          "en": "Phase 2 apparent power, Bytes 1, 2",
+          "sp": "Potencia aparente de la Fase 2, Bytes 1, 2",
+          "po": "Potencia aparente de la Fase 2, Bytes 1, 2"
+        }
+      },
+      "1882": {
+        "descr": {
+          "en": "Phase 3 apparent power, Bytes 3, 4",
+          "sp": "Potencia aparente de la Fase 3, Bytes 3, 4",
+          "po": "Potencia aparente de la Fase 3, Bytes 3, 4"
+        }
+      },
+      "1883": {
+        "descr": {
+          "en": "Phase 2 apparent power, Bytes 1, 2",
+          "sp": "Potencia aparente de la Fase 3, Bytes 1, 2",
+          "po": "Potencia aparente de la Fase 3, Bytes 1, 2"
+        }
+      },
+      "1884": {
+        "descr": {
+          "en": "Total apparent power, Bytes 3, 4",
+          "sp": "Potencia aparente total, Bytes 3, 4",
+          "po": "Potencia aparente total, Bytes 3, 4"
+        }
+      },
+      "1885": {
+        "descr": {
+          "en": "Total apparent power, Bytes 1, 2",
+          "sp": "Potencia aparente total, Bytes 1, 2",
+          "po": "Potencia aparente total, Bytes 1, 2"
+        }
+      }
+    }
+  }
+}

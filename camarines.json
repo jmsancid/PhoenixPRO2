@@ -11,11 +11,15 @@
       "1": {
         "id": 1,
         "onoff_source": {"bus": 1, "device": 1},
-        "iv_source": {"bus": 1, "device": 7, "datatype": "hr", "adr": 3},
+        "iv_source": {
+            "mbdev": {"bus": 1, "device": 7, "datatype": "ir", "adr": 3},
+            "file": "/1/5000/modo_iv"
+          },
         "name": "Bolarque49",
         "o_data": {
           "te_source": {
-            "mbdev": {"bus": 1, "device": 9, "datatype": "hr", "adr": 4008}
+            "mbdev": {"bus": 1, "device": 9, "datatype": "hr", "adr": 4008},
+            "file": "/1/1000/temp"
           },
           "rh_source": {},
           "aq_source": {}
@@ -516,6 +520,19 @@
             "class": "datasource",
             "brand": "sistena",
             "model": "sig426"
+          },
+          "16": {
+            "id": 16,
+            "name": "Contador energía eléctrica Circutor CEM-C21",
+            "groups": ["Bolarque49"],
+            "slave": 1,
+            "baudrate": 9600,
+            "databits": 8,
+            "parity": "E",
+            "stopbits": 1,
+            "class": "datasource",
+            "brand": "circutor",
+            "model": "cemc21"
           }
         }
       }
