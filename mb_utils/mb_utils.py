@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 from asyncio import create_task, gather
 from os import path
 import phoenix_init as phi
@@ -43,6 +44,62 @@ def get_value(value_source: [dict, None]) -> [int, float, bool, phi.Tuple]:
                 else:
                     print(f"get_value - No se han encontrado datos del dispositivo {device_id} en el bus {bus_id}")
                     print(f"get_value\n{phi.datadb}")
+
+
+def save_value(value_target: [dict, None], new_value: [int, float, bool, phi.Tuple]) -> [int, float, bool, phi.Tuple]:
+    """
+    Actualiza el valor de un determinado registro ModBus almacenado en "datadb"
+    Params value_target: diccionario que indica el bus, id del dispositivo en el bus (no confundir con la
+    dirección del esclavo en el ModBus), el tipo de registro, el registro a actualizar y su valor
+    Returns: valor almacenado en la base de datos (diccionario) datadb
+    None si el valor que se quiere leer no existe en la base de datos
+    """
+    # print(f"get_value value_source: {value_source}")
+    if value_target is None:
+        return
+    bus_id = str(value_target.get("bus"))  # En el JSON, el bus_id que conecta la habitación con el dispositivo
+    # se introduce como un entero, pero la clave del diccionario con los datos leídos son str
+    device_id = str(value_target.get("device"))  # OJO, es el ID del Device en la base de datos, NO EL SLAVE
+    datatype = value_target.get("datatype")
+    adr = str(value_target.get("adr"))  # Sucede lo mismo que con el bus_id
+    if any([bus_id is None, device_id is None, datatype is None, adr is None]):
+        print(f"ERROR - No se ha podido leer el valor del {datatype} {adr} en esclavo {device_id}/bus{bus_id}")
+        return
+    if phi.datadb is not None:
+        buses_data = phi.datadb.get("buses")
+        if buses_data is not None:
+            bus = buses_data.get(bus_id)
+            if bus is not None:
+                # Busco bus_id del dispositivo con device_id
+                device_data = {}
+                device = None
+                for device in bus:
+                    if device == device_id:
+                        device_data = bus[device]
+                        break
+                if device_data not in [None, {}]:
+                    regs = device_data["data"].get(datatype)
+                    if regs is not None:
+                        old_value = regs.get(adr)
+                        if old_value is not None:
+                            # print("Device: ", device, "bus: ",
+                            #       phi.datadb["buses"][bus_id][device_id]["data"][datatype][adr] )
+                            # sys.exit()
+                            if isinstance(old_value, float):
+                                phi.datadb["buses"][bus_id][device_id]["data"][datatype][adr] = float(new_value)
+                        elif isinstance(old_value, int):
+                            phi.datadb["buses"][bus_id][device_id]["data"][datatype][adr] = int(new_value)
+                        else:
+                            phi.datadb["buses"][bus_id][device]["data"][datatype][adr] = new_value
+                        print(f"\nsave_value. Valor anterior {old_value}/{type(old_value)} "
+                              f"actualizado a {new_value}/{type(new_value)}")
+                        check_new_value = get_value(value_target)
+                        print(f"save_value. Comprobando actualización. "
+                              f"Nuevo valor leído en db: {check_new_value}\n")
+                        return check_new_value
+                else:
+                    print(f"save_value - No se han encontrado datos del dispositivo {device_id} en el bus {bus_id}")
+                    print(f"save_value\n{phi.datadb}")
 
 
 async def set_value(value_source: [dict, None], new_value: [int, float]) -> [int, None]:

@@ -3,7 +3,7 @@ import json
 from bisect import bisect
 
 import phoenix_init as phi
-from mb_utils.mb_utils import get_value, set_value, get_h, get_dp, get_roomgroup_values, \
+from mb_utils.mb_utils import get_value, save_value, set_value, get_h, get_dp, get_roomgroup_values, \
     update_xch_files_from_devices, get_regmap
 from regops.regops import set_hb, set_lb
 from project_elements.building import get_temp_exterior, get_hrel_exterior, get_h_exterior, get_modo_iv
@@ -122,6 +122,7 @@ class Generator(phi.MBDevice):
             else:
                 gen_onoff_value = self.on_value if new_st_value == phi.ON else self.off_value
                 res = await set_value(target, gen_onoff_value)
+                dbval = save_value(target, gen_onoff_value)
                 self.onoff_st = new_st_value
 
         return self.onoff_st
@@ -194,7 +195,7 @@ class Generator(phi.MBDevice):
                   f"en {self.name}. Ver JSON {self.brand}-{self.model}.JSON")
             # self.iv = current_iv_mode
             self.iv = phi.system_iv
-
+        dbval = save_value(target, self.iv)
         return self.iv
 
     async def set_manual_iv(self):
@@ -239,6 +240,8 @@ class Generator(phi.MBDevice):
                 # Se propaga la nueva consigna en el byte bajo
                 res = await set_value(source, new_sp)  # Escritura Modbus
                 self.sp = new_sp
+            dbval = save_value(source, self.sp)
+
         return self.sp
 
     async def set_manual_sp(self):
@@ -284,6 +287,8 @@ class Generator(phi.MBDevice):
         else:
             self.dhw_sp = current_dhwsp
 
+        dbval = save_value(source, self.dhw_sp)  # Se actualiza la base de datos
+
         return self.dhw_sp
 
     async def get_generator_info(self):
@@ -321,7 +326,8 @@ class Generator(phi.MBDevice):
                       "adr": adr}
             current_attr_val = get_value(source)
             if current_attr_val is not None:
-                self.__setattr__(v, current_attr_val)
+                # self.__setattr__(v, current_attr_val)
+                setattr(self, v, current_attr_val)
                 print(f"{self.name}. Valor de {v}:\t{current_attr_val}")
         return 1
 
@@ -527,6 +533,7 @@ class UFHCController(phi.MBDevice):
             res = await set_value(target, new_iv_mode)
             self.iv = new_iv_mode
 
+        dbval = save_value(target, self.iv)
         return self.iv
 
     async def pump_st(self):
@@ -545,6 +552,7 @@ class UFHCController(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
         self.pump = get_value(source)
+        dbval = save_value(source, self.pump)
 
         return self.pump
 
@@ -576,7 +584,7 @@ class UFHCController(phi.MBDevice):
                       "adr": adr}
             # current_value = get_value(source)
             current_value = get_value(source)
-            if current_value:
+            if current_value not in (None, ""):
                 if "sp" in key and "x147" in self.model.lower() and self.iv:
                     print(f"(método set_channel_info) Valor almacenado consigna X147:sl-{self.slave} - canal: {channel}"
                           f" {current_value} / ({type(current_value)})")
@@ -656,6 +664,7 @@ class UFHCController(phi.MBDevice):
                           "adr": adr}
                 print(f"UFHCController {self.name}. uploading value {sp_value_corr}")
                 uploaded_value = await set_value(target, sp_value_corr)
+                dbval = save_value(target, sp_value_corr)
                 uploaded_value = get_value(target)
                 print(f"UPLOAD - Comprobando valor de atributo escrito: {uploaded_value}")
 
@@ -757,6 +766,7 @@ class UFHCController(phi.MBDevice):
             with open(attr_dev_file, "w") as attrf:
                 print(f"Actualizando archivo {attr_dev_file} desde método de clase de {self.name}")
                 attrf.write(str(current_attr_val))
+                setattr(self, attr, current_attr_val)  # Se actualiza el atributo
                 return 1
 
     async def update(self):
@@ -804,10 +814,12 @@ class UFHCController(phi.MBDevice):
         # Represento únicamente los canales activos
         for ch in self.active_channels:
             channel_source_attr = f"ch{ch}_source"
-            attr_value = self.__getattribute__(channel_source_attr)
+            # attr_value = self.__getattribute__(channel_source_attr)
+            attr_value = getattr(self, channel_source_attr)
             if attr_value is not None:
                 channel_attr = f"ch{ch}"
-                channel_info = self.__getattribute__(channel_attr)
+                # channel_info = self.__getattribute__(channel_attr)
+                channel_info = getattr(self, channel_attr)
                 dev_info += f"\n\tCanal {ch}:\n\t\t{channel_info}"
 
         return dev_info
@@ -958,6 +970,7 @@ class HeatRecoveryUnit(phi.MBDevice):
         if res:
             self.supply_flow = new_airflow
             self.exhaust_flow = new_airflow
+            dbval = save_value(target, self.exhaust_flow)
         return self.supply_flow, self.exhaust_flow
 
     async def set_speed(self, new_speed: [int, None] = None):
@@ -1003,6 +1016,7 @@ class HeatRecoveryUnit(phi.MBDevice):
             else:
                 res = await set_value(target, phi.OFF)
                 self.speed = 0
+            dbval = save_value(target, self.speed)
 
         if current_speed == 0:  # No se ha seleccionado ninguna velocidad y el recuperador estaba apagado
             self.speed = 0
@@ -1033,11 +1047,14 @@ class HeatRecoveryUnit(phi.MBDevice):
                 self.speed = 0
                 if spd_value == phi.ON:
                     res = await set_value(target, phi.OFF)
+                    dbval = save_value(target, phi.OFF)
             elif self.manual_speed == spd:
                 res = await set_value(target, phi.ON)
+                dbval = save_value(target, phi.ON)
                 self.speed = spd
             else:
                 res = await set_value(target, phi.OFF)
+                dbval = save_value(target, phi.OFF)
 
         return self.speed
 
@@ -1089,6 +1106,7 @@ class HeatRecoveryUnit(phi.MBDevice):
             self.dampers_st = current_pos
         else:
             res = await set_value(source, new_pos)
+            dbval = save_value(source, new_pos)
             self.dampers_st = new_pos
 
         print(f"DEBUGGING {__file__}: Posición calculada compuertas {self.dampers_st}\n(0=sin recirculación)")
@@ -1122,6 +1140,7 @@ class HeatRecoveryUnit(phi.MBDevice):
             valv_operation = "No se puede actuar sobre " if self.valv_st is None else f"{states[new_pos]}"
             print(f"DEBUGGING {__file__}: {valv_operation} válvula")
             res = await set_value(source, new_pos)
+            dbval = save_value(source, new_pos)
             self.valv_st = new_pos
 
         # print(f"DEBUGGING {__file__}: Estado válvula {self.valv_st}\t(0 = Cerrada)")
@@ -1159,6 +1178,7 @@ class HeatRecoveryUnit(phi.MBDevice):
                           "datatype": tgt_datatype,
                           "adr": tgt_adr}
             res = await set_value(target, new_pos)
+            dbval = save_value(target, new_pos)
             self.bypass_st = new_pos if res else current_pos
 
         return self.bypass_st
@@ -1629,6 +1649,7 @@ class AirZoneManager(phi.MBDevice):
             self.onoff_st = 0 if current_st == 0 else 1
         else:
             res = await set_value(target, new_status)
+            dbval = save_value(target, new_status)
             self.onoff_st = new_status
         return self.onoff_st
 
@@ -1686,6 +1707,7 @@ class AirZoneManager(phi.MBDevice):
         # Se activa el modo indicado en iv_mode
         elif new_iv_mode in [0, 1, 2]:
             res = await set_value(target, new_iv_mode)
+            dbval = save_value(target, new_iv_mode)
             self.iv = new_iv_mode
         else:
             print(f"ERROR - Modo calefacción/refrigeración {new_iv_mode} no válido para el zonificador {self.name}")
@@ -1733,8 +1755,11 @@ class AirZoneManager(phi.MBDevice):
         else:
             print(f"airzonemanager.set_sp: Actualizando consigna con valor {new_sp_value} en {target_name}")
             res = await set_value(source, new_sp_value)
-            self.__setattr__(sp_target, new_sp_value)
-        return self.__getattribute__(sp_target)
+            dbval = save_value(source, new_sp_value)
+            # self.__setattr__(sp_target, new_sp_value)
+            setattr(self, sp_target, new_sp_value)
+        # return self.__getattribute__(sp_target)
+        return getattr(self, sp_target)
 
     async def set_rt(self, new_rt_value: [int, float, None] = None, target: [int, None] = None):
         """
@@ -1777,8 +1802,11 @@ class AirZoneManager(phi.MBDevice):
         else:
             print(f"airzonemanager.set_rt: Actualizando temperatura con valor {new_rt_value} en {target_name}")
             res = await set_value(source, new_rt_value)
-            self.__setattr__(rt_target, new_rt_value)
-        return self.__getattribute__(rt_target)
+            dbval = save_value(source, new_rt_value)
+            setattr(self, rt_target, new_rt_value)
+            # self.__setattr__(rt_target, new_rt_value)
+        # return self.__getattribute__(rt_target)
+        return getattr(self, rt_target)
 
     async def fan_auto_cont_mode(self, new_fan_auto_cont_mode: [int, None] = None):
         """
@@ -1805,6 +1833,7 @@ class AirZoneManager(phi.MBDevice):
         current_auto_cont_mode = get_value(value_source=source)
         if new_fan_auto_cont_mode is not None:
             res = await set_value(source, new_fan_auto_cont_mode)  # Escritura en el dispositivo ModBus
+            dbval = save_value(source, new_fan_auto_cont_mode)
 
         self.fan_auto_cont = CONTINUO if new_fan_auto_cont_mode == CONTINUO else AUTO
         return self.fan_auto_cont
@@ -1845,6 +1874,7 @@ class AirZoneManager(phi.MBDevice):
             # Selecciono velocidad automática del ventilador
             auto_speed = 3  # 3 es velocidad automática del ventilador
             res = await set_value(manual_speed_target, auto_speed)
+            dbval = save_value(manual_speed_target, auto_speed)
             self.fan_speed = auto_speed
         elif man_speed is None:
             self.fan_speed = current_speed
@@ -1854,6 +1884,7 @@ class AirZoneManager(phi.MBDevice):
                   f"Rango: (0, 1, 2, 3)")
         else:
             res = await set_value(manual_speed_target, man_speed)
+            dbval = save_value(manual_speed_target, man_speed)
             self.fan_speed = man_speed
         return self.fan_speed
 
@@ -1884,6 +1915,7 @@ class AirZoneManager(phi.MBDevice):
             self.remote_onoff = current_status
         else:
             res = await set_value(source, onoff_mode)
+            dbval = save_value(source, onoff_mode)
             self.remote_onoff = onoff_mode
         return self.remote_onoff
 
@@ -2130,11 +2162,15 @@ class TempFluidController(phi.MBDevice):
                 self.__setattr__(states[idx], current_st)
             else:
                 res = await set_value(target, new_st_value)
-                self.__setattr__(states[idx], new_st_value)
+                dbval = save_value(target, new_st_value)
+                setattr(self, states[idx], new_st_value)
+                # self.__setattr__(states[idx], new_st_value)
         else:
-            self.__setattr__(states[idx], current_st)
+            # self.__setattr__(states[idx], current_st)
+            setattr(self, states[idx], current_st)
 
-        state = self.__getattribute__(states[idx])
+        # state = self.__getattribute__(states[idx])
+        state = getattr(self, states[idx])
         return state
 
     async def man_onoff(self, circuit: int = 1) -> [phi.Tuple[int, int], None]:
@@ -2201,8 +2237,11 @@ class TempFluidController(phi.MBDevice):
                     return msg
                 new_val = set_hb(current_register_value, int(new_iv_mode))
                 res = await set_value(target, new_val)  # Escritura Modbus
-                self.__setattr__(modes[idx], new_iv_mode)
-        mode = self.__getattribute__(modes[idx])
+                dbval = save_value(target, new_val)
+                setattr(self, modes[idx], new_iv_mode)
+                # self.__setattr__(modes[idx], new_iv_mode)
+        # mode = self.__getattribute__(modes[idx])
+        mode = getattr(self, modes[idx])
         return mode
 
     async def sp(self, circuit: int = 1, new_sp: [int, None] = None) -> [int, None]:
@@ -2246,8 +2285,11 @@ class TempFluidController(phi.MBDevice):
                 # Se propaga la nueva consigna en el byte bajo
                 new_val = set_lb(current_register_value, int(new_sp))
                 res = await set_value(source, new_val)  # Escritura Modbus
-                self.__setattr__(setpoints[idx], new_sp)
-        setpoint = self.__getattribute__(setpoints[idx])
+                dbval = save_value(source, new_val)
+                setattr(self, setpoints[idx], new_sp)
+                # self.__setattr__(setpoints[idx], new_sp)
+        # setpoint = self.__getattribute__(setpoints[idx])
+        setpoint = getattr(self, setpoints[idx])
         return setpoint
 
     async def man_sp(self, circuit: int = 1) -> [phi.Tuple[int, int], None]:
@@ -2370,6 +2412,7 @@ class TempFluidController(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
         await set_value(source, new_st4_val)
+        dbval = save_value(source, new_st4_val)
         self.st4 = new_st4_val
         return self.st4
 
@@ -2592,6 +2635,7 @@ class Fancoil(phi.MBDevice):
             self.onoff_st = 0 if current_st_mode == 0 else 1
         else:
             res = await set_value(target, new_status)
+            dbval = save_value(target, new_status)
             self.onoff_st = new_status
         return self.onoff_st
 
@@ -2661,6 +2705,7 @@ class Fancoil(phi.MBDevice):
         # Se activa el modo indicado en iv_mode
         elif new_iv_mode in [phi.HEATING, phi.COOLING]:
             res = await set_value(target, new_iv_mode)
+            dbval = save_value(target, new_iv_mode)
             self.iv = new_iv_mode
         else:
             print(f"ERROR - Modo calefacción/refrigeración {new_iv_mode} no válido para el fancoil {self.name}")
@@ -2697,6 +2742,7 @@ class Fancoil(phi.MBDevice):
         else:
             print(f"fancoil.set_sp: Actualizando consigna con valor {new_sp_value} en fancoil {self.name}")
             res = await set_value(source, new_sp_value)
+            dbval = save_value(source, new_sp_value)
             self.sp = new_sp_value
         return self.sp
 
@@ -2736,6 +2782,7 @@ class Fancoil(phi.MBDevice):
             # await self.manual_fan_speed(manual_mode=phi.OFF)  # Se activa la selección automática de velocidad
             print(f"fancoil.set_sp: Actualizando temperatura ambiente con valor {new_rt_value} en fancoil {self.name}")
             res = await set_value(source, new_rt_value)
+            dbval = save_value(source, new_rt_value)
             self.rt = new_rt_value
         return self.rt
 
@@ -2789,11 +2836,13 @@ class Fancoil(phi.MBDevice):
             # Actualizo el modo del ventilador para refrigeración (byte alto)
             new_val_cooling = set_hb(current_value, int(fan_mode_cooling))
             res = await set_value(source, new_val_cooling)  # Escritura en el dispositivo ModBus
+            dbval = save_value(source, new_val_cooling)
             cont_cooling = new_val_cooling
         if fan_mode_heating is not None:
             # Actualizo el modo del ventilador para refrigeración (byte alto)
             new_val_heating = set_lb(current_value, int(fan_mode_heating))
             res = await set_value(source, new_val_heating)  # Escritura en el dispositivo ModBus
+            dbval = save_value(source, new_val_heating)
             cont_heating = new_val_heating
         if cooling:
             self.fan_auto_cont = CONTINUO if cont_cooling == CONTINUO else AUTO
@@ -2860,6 +2909,7 @@ class Fancoil(phi.MBDevice):
                 print(f"{self.name} - Actualizando valor velocidad manual al valor {new_man_speed} en el esclavo "
                       f"{self.slave}, dirección  {manual_speed_target}")
                 res = await set_value(manual_speed_target, new_man_speed)  # Escritura en el dispositivo ModBus
+                dbval = save_value(manual_speed_target, new_man_speed)
         else:
             man_speed = current_man_speed
 
@@ -2867,6 +2917,7 @@ class Fancoil(phi.MBDevice):
             print(f"{self.name} - Estableciendo al valor {manual_mode} para el Ajuste Manual de Velocidad "
                   f"en el esclavo {self.slave}, dirección  {manual_mode_target}")
             res = await set_value(manual_mode_target, manual_mode)  # Se activa o desactiva el modo manual indicado
+            dbval = save_value(manual_mode_target, manual_mode)
             self.manual_fan = (manual_mode, man_speed)
             if manual_mode:
                 self.fan_speed = self.manual_fan[1]
@@ -2962,6 +3013,7 @@ class Fancoil(phi.MBDevice):
             else:  # Se modifica la velocidad mínima
                 new_limits = set_lb(current_limits, min_speed)
                 res = await set_value(source, new_limits)
+                dbval = save_value(source, new_limits)
                 self.speed_limit = (current_max, min_speed)
         elif min_speed in [None, 0]:
             # Sólo se modifica la velocidad máxima
@@ -2972,10 +3024,12 @@ class Fancoil(phi.MBDevice):
             else:  # Se modifica la velocidad máxima
                 new_limits = set_hb(current_limits, max_speed)
                 res = await set_value(source, new_limits)
+                dbval = save_value(source, new_limits)
                 self.speed_limit = (max_speed, current_min)
         else:  # Se modifican las velocidades máxima y mínima de funcionamiento del fancoil.
             new_limits = max_speed * 256 + min_speed
             res = await set_value(source, new_limits)
+            dbval = save_value(source, new_limits)
             self.speed_limit = (max_speed, min_speed)
         return self.speed_limit
 
@@ -3025,9 +3079,11 @@ class Fancoil(phi.MBDevice):
             else:
                 # Se actualiza el valor de posición manual de la válvula
                 res = await set_value(target, new_position)  # Escritura en el dispositivo ModBus
+                dbval = save_value(target, new_position)
 
         if manual_mode is not None:
             res = await set_value(source, manual_mode)  # Se activa o desactiva el modo manual indicado
+            dbval = save_value(source, manual_mode)
             self.manual_valv_st = manual_mode
             self.manual_valv_pos = new_position
         else:
@@ -3061,6 +3117,7 @@ class Fancoil(phi.MBDevice):
             self.remote_onoff = current_status
         else:
             res = await set_value(source, onoff_mode)
+            dbval = save_value(source, onoff_mode)
             self.remote_onoff = onoff_mode
         return self.remote_onoff
 
@@ -3090,6 +3147,7 @@ class Fancoil(phi.MBDevice):
             self.sd_aux = current_status
         else:
             res = await set_value(source, onoff_mode)
+            dbval = save_value(source, onoff_mode)
             self.sd_aux = onoff_mode
         return self.sd_aux
 
