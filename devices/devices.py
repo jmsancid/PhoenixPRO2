@@ -2524,6 +2524,8 @@ class TempFluidController(phi.MBDevice):
         circuits = (1, 2, 3)
 
         for circuit in circuits:
+            await self.iv_mode(circuit)
+            await self.sp(circuit)
             await self.man_onoff(circuit)  # Recoge el valor del atributo de activación manual de la bomba
             await self.man_sp(circuit)  # Recoge el valor del atributo de activación manual de la consigna
 
@@ -2557,8 +2559,8 @@ class TempFluidController(phi.MBDevice):
         st4_attr = "st4"  # Atributo asociado a la salida digital 4 del controlador
         # El modo IV se toma del sistema: 1 = refrigeración / 0 = calefacción, pero al circuito hay que propagar
         # un 1 para refrigeración y un 2 para calefacción
-        system_modo_iv = await phi.get_modo_iv()
-        tempfluidcontroller_iv = system_modo_iv if system_modo_iv == 1 else 2
+        # system_modo_iv = await phi.get_modo_iv()
+        tempfluidcontroller_iv = phi.system_iv if phi.system_iv == 1 else 2
 
         for circ in range(q_grupos):  # circ toma valores desde 0 hasta q_grupos - 1
             circuito = circ + 1
@@ -2576,12 +2578,13 @@ class TempFluidController(phi.MBDevice):
                       f"\tDemanda del grupo: {group_demand}")
 
             # Los valores de lectura y escritura proceden de la web por lo que hay que ver si se han modificado.
-            # Sólo se actualiza EL ESTADO DE LAS BOMBAS y LA CONSIGNA MANUAL
+            # Sólo se actualiza EL ESTADO DE LAS BOMBAS, LA CONSIGNA MANUAL y LA CONSIGNA REAL
             modo_iv_attr = "iv" + str(circuito)
             pump_man_activation_attr = "act_man_st" + str(circuito)
             pump_man_value_attr = "man_st" + str(circuito)
             sp_man_activation_attr = "act_man_sp" + str(circuito)
             sp_man_value_attr = "man_sp" + str(circuito)
+            spx = "sp" + str(circuito)
 
             iv = await self.iv_mode(circuito)
             if iv != tempfluidcontroller_iv:
@@ -2638,10 +2641,22 @@ class TempFluidController(phi.MBDevice):
                     else:
                         print(f"UPDATE TempFluidController - Algo ha ido mal procesando la consigna del "
                               f"circuito {circuito}")
+                print(f"{self.name}.{attrname}: {getattr(self, attrname)}")
+                changed = await check_changes_from_web(self.bus_id, self, attrname)
+                if changed:
+                    print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
+
+
+            # Finalmente se actualiza la consigna real
+            print(f"{self.name}.{spx}: {getattr(self, spx)}")
+            changed = await check_changes_from_web(self.bus_id, self, spx)
+            if changed:
+                print(f"{self.name}.{spx} ha cambiado en la web: {getattr(self, spx)}")
 
             iv = await self.iv_mode(circuito)
             pump_man_activation, pump_man_value = await self.man_onoff(circuito)
             sp_man_activation, sp_man_value = await self.man_sp(circuito)
+            spx = await self.sp(circuito)
             print(f"UPDATE TempFluidController {self.name}, circuito {circuito}: "
                   f"Valores de los atributos DESPUÉS de comprobar actualización desde la web")
             print(f"\tModo IV: {iv}\n"
@@ -2649,6 +2664,7 @@ class TempFluidController(phi.MBDevice):
                   f"\tValor manual bomba: {pump_man_value}\n"
                   f"\tConsigna manual habilitada: {sp_man_activation}\n"
                   f"\tValor manual consigna: {sp_man_value}\n"
+                  f"\tValor aplicado consigna: {spx}\n"
                   )
         return 1
 
