@@ -2196,10 +2196,12 @@ class TempFluidController(phi.MBDevice):
             circuit: Circuito al que aplicar el estado: 1, 2 ó 3.
         Returns: Estado de la bomba circuladora circuito 'circuit'
         """
-        target_id = "st"+str(circuit)+"_target"
-        state_id = "st"+str(circuit)
-        st_target = getattr(self, target_id)
-        st_value = getattr(self, state_id)
+        targets = ("st1_target", "st2_target", "st3_target")
+        states = ("st1", "st2", "st3")
+        idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
+
+        # st_target = self.__getattribute__(targets[idx])
+        st_target = getattr(self, targets[idx])
         if st_target is None or circuit not in (1, 2, 3):
             return
         datatype = st_target[0]
@@ -2209,32 +2211,28 @@ class TempFluidController(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
         current_st = get_value(target)
-        if not new_st_value is None:
+        if new_st_value is not None:
             if new_st_value not in [phi.OFF, phi.ON]:
                 print(f"{self.name}: Error accionando la bomba del circuito {circuit} con el valor {new_st_value}")
-                val_to_write = current_st
+                # self.__setattr__(states[idx], current_st)
+                setattr(self, states[idx], current_st)
             else:
-                val_to_write = new_st_value
+                res = await set_value(target, new_st_value)
+                dbval = save_value(target, new_st_value)
+                setattr(self, states[idx], new_st_value)
+                # self.__setattr__(states[idx], new_st_value)
         else:
-            val_to_write = current_st
+            # self.__setattr__(states[idx], current_st)
+            setattr(self, states[idx], current_st)
 
-        setattr(self, state_id, val_to_write)
-        if val_to_write == current_st:
-            print(f"No cambia el estado de la bomba del circuito {circuit} de {self.name}")
-            return current_st  
-        res = await set_value(target, val_to_write)  # Escritura Modbus
-        dbval = save_value(target, val_to_write)  # se guarda el valor a escribir en el json con las lecturas
-        state = getattr(self, state_id)
-        return state  # devuelve el estado actual del modo on-off
+        # state = self.__getattribute__(states[idx])
+        state = getattr(self, states[idx])
+        return state
 
-
-    async def man_onoff(self, circuit: int = 1, new_man_mode: [int, None] = None) -> [phi.Tuple[int, int], None]:
+    async def man_onoff(self, circuit: int = 1) -> [phi.Tuple[int, int], None]:
         """
         Activa y desactiva el modo manual de funcionamiento de la bomba circuladora del circuito 'circuit' y, cuando
         está activado, la arranca o para dependiendo del valor de new_st_value
-        parameters:
-        circuit: identificación del circuito a procesar
-        new_man_mode: nuevo valor del funcionamiento manual del circuito
         Si new_man_mode es None, devuelve el valor de activación del modo manual: 1:activado / 0:desactivado
         Returns: Tupla con el estado del modo manual y valor manual configurado para la bomba
         """
@@ -2242,38 +2240,18 @@ class TempFluidController(phi.MBDevice):
             print(f"ERROR intentando activar MANUALMENTE el circuito {circuit} de {self.name}")
             return
 
-        manual_activation_attribute = "act_man_st" + str(circuit)
-        manual_state_attribute = "man_st" + str(circuit)
-        current_manual_state = getattr(self, manual_activation_attribute)
-        current_manual_value = getattr(self, manual_state_attribute)
+        manual_states_attributes = ("act_man_st1", "act_man_st2", "act_man_st3")
+        manual_states_values_attributes = ("man_st1", "man_st2", "man_st3")
+        idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
+        circuit_manual_state_attr = manual_states_attributes[idx]
+        circuit_manual_value_attr = manual_states_values_attributes[idx]
+        circuit_manual_state = getattr(self, circuit_manual_state_attr)
+        circuit_manual_value = getattr(self, circuit_manual_value_attr)
+        if None not in (circuit_manual_state, circuit_manual_value):
+            print(f"Activando modo manual en circuito circuito {circuit} de {self.name}")
+            await self.onoff(circuit, circuit_manual_value)  # El método onoff propaga el valor al dispositivo
 
-        if not new_man_mode is None and new_man_mode in (phi.ON, phi.OFF):  # se ha activado el modo manual
-            # el valor de manual_state_attribute se escribe desde la web
-            # se propaga el valor manual de la bomba al circuito correspondiente
-            setattr(self, manual_activation_attribute, new_man_mode)
-            await self.onoff(circuit, manual_state_attribute)
-
-        if not new_man_mode is None:
-            if new_man_mode not in [phi.OFF, phi.ON]:  # Activación manual incorrecta
-                print(f"{self.name}: Error activando el modo manual de la bomba del circuito {circuit} "
-                      f"con el valor {new_man_mode}")
-                val_to_write = current_manual_state
-            else:
-                val_to_write = new_man_mode
-        else:
-            val_to_write = current_manual_state
-
-        if val_to_write == current_manual_state:
-            print(f"No cambia el estado de activación manual de la bomba del circuito {circuit} de {self.name}")
-            return current_manual_state, current_manual_value
-
-        setattr(self, current_manual_state, val_to_write)  # se actualiza el atributo del estado del modo manual
-        # el valor del modo manual, man_stx sólo se activa desde la web
-        manual_state = getattr(self, manual_activation_attribute)
-        manual_value = getattr(self, manual_state_attribute)
-
-        return manual_state, manual_value
-
+        return circuit_manual_state, circuit_manual_value
 
     async def iv_mode(self, circuit: int = 1, new_iv_mode: [int, None] = None) -> [int, None]:
         """
@@ -2286,10 +2264,12 @@ class TempFluidController(phi.MBDevice):
             2: Calor
         Returns: Modo actual de funcionamiento del circuito 
         """
-        source = "iv" + str(circuit) + "_source"
-        mode_attr = "iv" + str(circuit)
+        sources = ("iv1_source", "iv2_source", "iv3_source")
+        modes = ("iv1", "iv2", "iv3")
+        idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
 
-        iv_mode_source = getattr(self, source)
+        # iv_mode_source = self.__getattribute__(sources[idx])
+        iv_mode_source = getattr(self, sources[idx])
         if iv_mode_source is None or circuit not in (1, 2, 3):
             return
         datatype = iv_mode_source[0]
@@ -2299,32 +2279,30 @@ class TempFluidController(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
 
+        current_register_value = None
         current_iv_sp = get_value(value_source=target)  # El SIG610 almacena CONSIGNA en byte bajo y MODO en byte alto
         if current_iv_sp is not None:
             current_iv, current_sp = current_iv_sp
-            print(f"Modo off/frio/calor actual del circuito {circuit} de {self.name}: {current_iv}")
-            print(f"Consigna actual del circuito {circuit} de {self.name}: {current_sp}")
-        else:
-            print(f"No se ha podido leer el modo del circuito {circuit} de {self.name}")
-            return
-        if not new_iv_mode is None:
+            # self.__setattr__(modes[idx], current_iv)
+            setattr(self, modes[idx], current_iv)
+            current_register_value = current_iv * 256 + current_sp
+        if new_iv_mode is not None:
             if new_iv_mode not in [0, 1, 2]:
                 print(f"{self.name}: Error activando el modo del circuito {circuit} con el valor {new_iv_mode}")
-                mode_to_write = current_iv
                 # Se mantiene el modo actual
             else:
                 # Se propaga el nuevo modo de funcionamiento
-                mode_to_write = new_iv_mode
-
-            if mode_to_write == current_iv:
-                return current_iv  # No ha cambiado el modo. No hay nada que actualizar
-
-            # Actualizo el valor del modo de funcionamiento (byte alto)
-            new_val = set_hb(current_iv_sp, int(mode_to_write))
-            dbval = save_value(target, new_val)
-            res = await set_value(target, new_val)  # Escritura Modbus
-            setattr(self, mode_attr, mode_to_write)
-        mode = getattr(self, mode_attr)
+                # Actualizo el valor del modo de funcionamiento (byte alto)
+                if None in (current_register_value, new_iv_mode):
+                    msg = f"DEBUGGING {__file__}: Error propagando el modo de I/V a {self.name}"
+                    return msg
+                new_val = set_hb(current_register_value, int(new_iv_mode))
+                res = await set_value(target, new_val)  # Escritura Modbus
+                dbval = save_value(target, new_val)
+                setattr(self, modes[idx], new_iv_mode)
+                # self.__setattr__(modes[idx], new_iv_mode)
+        # mode = self.__getattribute__(modes[idx])
+        mode = getattr(self, modes[idx])
         return mode
 
     async def sp(self, circuit: int = 1, new_sp: [int, None] = None) -> [int, None]:
@@ -2335,10 +2313,11 @@ class TempFluidController(phi.MBDevice):
             new_sp: Nueva consigna a aplicar
         Returns: Consigna de control de temperatura de impulsión de agua del circuito 'circuit' 
         """
-        source = "sp" + str(circuit) + "_source"
-        sp_attr = "sp" + str(circuit)
+        sources = ("sp1_source", "sp2_source", "sp3_source")
+        setpoints = ("sp1", "sp2", "sp3")
+        idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
 
-        sp_source = getattr(self, source)
+        sp_source = getattr(self, sources[idx])
         if sp_source is None or circuit not in (1, 2, 3):
             return
         datatype = sp_source[0]
@@ -2348,43 +2327,33 @@ class TempFluidController(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
 
+        current_register_value = None
         current_iv_sp = get_value(value_source=source)  # El SIG610 almacena CONSIGNA en byte bajo y MODO en byte alto
-        if not current_iv_sp is None:
-            current_iv_sp_value = current_iv_sp[0] * 256 + current_iv_sp[1]
-            current_iv, current_sp = current_iv_sp
-            print(f"Modo off/frio/calor actual del circuito {circuit} de {self.name}: {current_iv}")
-            print(f"Consigna actual del circuito {circuit} de {self.name}: {current_sp}")
-        else:
-            print(f"No se ha podido leer la consigna del circuito {circuit} de {self.name}")
-            return
 
-        sp_to_write = current_sp
-        print(f"tempfluidcontroller, \n"
-              f"current_iv_sp = {current_iv_sp}, \n"
-              f"current_iv = {current_iv}, \n"
-              f"current_sp = {current_sp}")
-        if not new_sp is None:
+        if current_iv_sp is not None:
+            current_iv, current_sp = current_iv_sp
+            setattr(self, setpoints[idx], current_sp)
+            current_register_value = current_iv * 256 + current_sp
+        else:
+            print(f"DEBUGGING {__file__}. El valor actual del registro {adr} del dispositivo {self.name} "
+                  f"es {current_iv_sp}")
+            return
+        if new_sp is not None:
             if new_sp > 55 or new_sp < 5:
                 print(f"{self.name}: Error escribiendo la consigna {new_sp} para el circuito {circuit}")
                 # Se mantiene la consigna actual
             else:
-                sp_to_write = new_sp
-
-            if sp_to_write == current_sp:
-                return current_sp  # No se ha cambiado la consigna. No hay nada que actualizar.
-
-        # Se propaga la nueva consigna en el byte bajo.
-        print(f"\ntempfluidcontroller, \n"
-              f"sp_to_write = {sp_to_write}, \n")
-
-        new_val = set_lb(current_iv_sp_value, sp_to_write)
-        dbval = save_value(source, new_val)  # Se actualiza la base de datos de lecturas con el nuevo valor
-        res = await set_value(source, new_val)  # Escritura Modbus
-        setattr(self, sp_attr, sp_to_write)
-        setpoint = getattr(self, sp_attr)
+                # Se propaga la nueva consigna en el byte bajo
+                new_val = set_lb(current_register_value, int(new_sp))
+                res = await set_value(source, new_val)  # Escritura Modbus
+                dbval = save_value(source, new_val)
+                setattr(self, setpoints[idx], new_sp)
+                # self.__setattr__(setpoints[idx], new_sp)
+        # setpoint = self.__getattribute__(setpoints[idx])
+        setpoint = getattr(self, setpoints[idx])
         return setpoint
 
-    async def man_sp(self, circuit: int = 1, man_set_sp_mode: [int, None] = None) -> [phi.Tuple[int, int], None]:
+    async def man_sp(self, circuit: int = 1) -> [phi.Tuple[int, int], None]:
         """
         Fija la consigna de impulsión del circuito 'circuit' en lugar de utilizar el valor calculado
         desde el grupo de habitaciones.
@@ -2395,31 +2364,24 @@ class TempFluidController(phi.MBDevice):
             circuit: circuito en el que se va a fijar la consigna de forma manual en lugar de la calculada
             para el grupo de habitaciones
             man_set_sp_mode: estado activado o desactivado del ajuste manual de la consigna
-            man_sp: valor manual de consigna a aplicar, leída desde el archivo de intercambio
+            man_sp: valor manual de consigna a aplicar.
         Si man_set_sp_mode es None, devuelve el valor de activación del ajuste manual de consigna:
-        1:activado / 0:desactivado y el valor de consigna configurada como manual.
+        1:activado / 0:desactivado y el valor de consigna configurado como manual.
         Returns: Tupla con el estado del ajuste manual de la consigna y valor manual configurado
         """
-        sp_man_activation_attr = "act_man_sp" + str(circuit)
-        man_sp_value = "man_sp" + str(circuit)
+        manual_sp_states = ("act_man_sp1", "act_man_sp2", "act_man_sp3")
+        manual_sp_values = ("man_sp1", "man_sp1", "man_sp1")
+        idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
 
-        current_man_sp_val = getattr(self, man_sp_value)
+        current_man_sp = getattr(self, manual_sp_states[idx])
+        current_man_val = getattr(self, manual_sp_values[idx])
 
-        if not man_set_sp_mode is None:
-            if man_set_sp_mode in (phi.ON, phi.OFF):
-                setattr(self, sp_man_activation_attr, man_set_sp_mode)
+        if current_man_sp and current_man_val is not None:
+            # Actualizando consigna manualmente
+            print(f"Actualizando MANUALMENTE la consigna del circuito {circuit} de {self.name} a {current_man_val}")
+            await self.sp(circuit, current_man_val)
 
-            if man_set_sp_mode == phi.ON:
-                print(f"Actualizando MANUALMENTE la consigna del circuito {circuit} de {self.name} a "
-                      f"{current_man_sp_val}")
-                # Consigna manual activada
-                await self.sp(circuit, current_man_sp_val)  # La consigna manual se escribe en la base de datos
-                # de lecturas y en el atributo de spx
-
-        current_man_sp_activation = getattr(self, sp_man_activation_attr)
-        current_man_sp_val = getattr(self, man_sp_value)
-
-        return current_man_sp_activation, current_man_sp_val
+        return current_man_sp, current_man_val
 
     async def ti(self, circuit: int = 1):
         """
@@ -2428,10 +2390,11 @@ class TempFluidController(phi.MBDevice):
             circuit: Circuito cuya temperatura de impulsión se desea leer: 1, 2 ó 3.
         Returns: Temperatura de impulsión del circuito 'circuit'
         """
-        ti_source_attr = "ti" + str(circuit) + "_source"
-        ti_attr = "ti" + str(circuit)
+        sources = ("ti1_source", "ti2_source", "ti3_source")
+        values = ("ti1", "ti2", "ti3")
+        idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
 
-        ti_source = getattr(self, ti_source_attr)
+        ti_source = getattr(self, sources[idx])
         if ti_source is None or circuit not in (1, 2, 3):
             return
         datatype = ti_source[0]
@@ -2447,8 +2410,8 @@ class TempFluidController(phi.MBDevice):
             await self.onoff(circuit, phi.OFF)
             return
         else:
-            setattr(self, ti_attr, current_ti)
-        ti = getattr(self, ti_attr)
+            setattr(self, values[idx], current_ti)
+        ti = getattr(self, values[idx])
         return ti
 
     async def valv(self, circuit: int = 1):
@@ -2458,12 +2421,11 @@ class TempFluidController(phi.MBDevice):
             circuit: Circuito cuya temperatura de impulsión se desea leer: 1, 2 ó 3.
         Returns: % apertura válvula del circuito 'circuit'
         """
-        v_source_attr = "v" + str(circuit) + "_source"
-        v_attr = "v" + str(circuit)
         sources = ("v1_source", "v2_source", "v3_source")
         values = ("v1", "v2", "v3")
+        idx = circuit - 1  # Índice de los valores del circuito en las listas de atributos
 
-        valv_source = getattr(self, v_source_attr)
+        valv_source = getattr(self, sources[idx])
         if valv_source is None or circuit not in (1, 2, 3):
             return
         datatype = valv_source[0]
@@ -2477,8 +2439,8 @@ class TempFluidController(phi.MBDevice):
             print(f"{self.name}: Error leyendo la posición de la válvula del circuito {circuit}")
             return
         else:
-            setattr(self, v_attr, current_pos)
-        valv_position = getattr(self, v_attr)
+            setattr(self, values[idx], current_pos)
+        valv_position = getattr(self, values[idx])
         return valv_position
 
     def get_st4(self):
@@ -2502,7 +2464,7 @@ class TempFluidController(phi.MBDevice):
         Establece el valor de la salida digital 4 del controlador SIG610
         Returns: Estado de la salida digital 4 del controlador SIG610
         """
-        if self.st4_source is None or new_st4_val not in (phi.ON, phi.OFF):
+        if self.st4_source is None or new_st4_val not in (0, 1):
             return
         datatype = self.st4_source[0]
         adr = self.st4_source[1]
@@ -2522,11 +2484,18 @@ class TempFluidController(phi.MBDevice):
         :return:
         """
         circuits = (1, 2, 3)
+        # Atributos de las bombas:
+        pumps__manual_attrs = ('act_man_st1', 'act_man_st2', 'act_man_st3')
+        # Atributos de las consignas:
+        sps_attrs = ('act_man_sp1', 'act_man_sp2', 'act_man_sp3')
 
-        for circuit in circuits:
-            await self.man_onoff(circuit)  # Recoge el valor del atributo de activación manual de la bomba
-            await self.man_sp(circuit)  # Recoge el valor del atributo de activación manual de la consigna
-
+        for idx, circuit in enumerate(circuits):
+            pump_manual_state = getattr(self, pumps__manual_attrs[idx])
+            sp_manual_state = getattr(self, sps_attrs[idx])
+            if pump_manual_state:
+                await self.man_onoff(circuit)
+            if sp_manual_state:
+                await self.man_sp(circuit)
         await self.set_st4(self.st4)
 
         return 1
@@ -2539,118 +2508,88 @@ class TempFluidController(phi.MBDevice):
         Returns: resultado de la escritura modbus de los valores actualizados o los valores manuales.
         """
         await self.upload()  # Compruebo el estado de los modos manuales
-
-        # Se actualizan los valores que son de SÓLO LECTURA, calculados desde los grupos de habitaciones
-
+        bomba_manual = {0: self.act_man_st1, 1: self.act_man_st2, 2: self.act_man_st3}
+        valores_bomba_manual = {0: self.man_st1, 1: self.man_st2, 2: self.man_st3}
+        consigna_manual = {0: self.act_man_sp1, 1: self.act_man_sp2, 2: self.act_man_sp3}
+        valores_consigna_manual = {0: self.man_sp1, 1: self.man_sp2, 2: self.man_sp3}
         with open(phi.ROOMGROUPS_VALUES_FILE, "r") as f:
             roomgroups_values = json.load(f)
 
-        q_grupos = 0
-        if self.groups:
-            print(f"(tempfluidcontroller update). Se han definido los siguientes grupos en {self.name}: {self.groups}")
-            q_grupos = len(self.groups)  # Cantidad de grupos de habitaciones definidos en el controlador
-            # El primer grupo se asocia al circuito 1, el segundo, si existe, al 2 y el tercero al circuito 3
-        else:
-            print(f"(tempfluidcontroller update). No se han definido grupos de habitaciones en {self.name}")
-            return
-
-        st4_attr = "st4"  # Atributo asociado a la salida digital 4 del controlador
-        # El modo IV se toma del sistema: 1 = refrigeración / 0 = calefacción, pero al circuito hay que propagar
-        # un 1 para refrigeración y un 2 para calefacción
-        system_modo_iv = await phi.get_modo_iv()
-        tempfluidcontroller_iv = system_modo_iv if system_modo_iv == 1 else 2
-
-        for circ in range(q_grupos):  # circ toma valores desde 0 hasta q_grupos - 1
-            circuito = circ + 1
-            roomgroup = roomgroups_values.get(self.groups[circ])  # Diccionario con datos del grupo de habitaciones
-            # asociado al controlador de temperatura de impulsión
+        for idx, roomgroup_id in enumerate(self.groups):
+            circuito = idx + 1
+            await self.onoff(circuito)
+            await self.iv_mode(circuito)
+            await self.sp(circuito)
+            await self.ti(circuito)
+            await self.valv(circuito)
+            self.get_st4()
+            update_st = None
+            modo_manual_activado = bomba_manual.get(idx)
+            valor_bomba_manual = valores_bomba_manual.get(idx)
+            consigna_manual_activada = consigna_manual.get(idx)
+            valor_consigna_manual = valores_consigna_manual.get(idx)
+            roomgroup = roomgroups_values.get(roomgroup_id)  # Objeto del grupo RoomGroup
             if roomgroup is None:
-                print(f"No se ha encontrado información del grupo de habitaciones {self.groups[circ]}")
-                return
+                continue
+            print(f"DEBUGGING {__file__}.\tCONTROL Tª IMPULSION.\n\tDatos del grupo de habitaciones\n{roomgroup}\n\n")
+            if roomgroup.get("demanda") != 0:
+                # Hay demanda de refrigeración (demanda = 1) o de calefacción (demanda = 2). Se propaga el modo iv
+                iv = 1 if roomgroup.get("iv") else 2  # roomgroup.iv es 1 en refrigeración
+                # Se arranca la bomba circuladora SI NO ESTÁ EN MODO MANUAL
+                await self.iv_mode(circuito, iv)
+                if not modo_manual_activado:
+                    update_st = await self.onoff(circuito, phi.ON)
             else:
-                group_sp = int(round(roomgroup.get("water_sp"), 0))  # Se extrae la consigna de agua del grupo
-                group_demand = roomgroup.get("demanda")  # Se extrae la demanda del grupo
-                group_name = self.groups[circ]
-                print(f"(tempfluidcontroller update) Valores del grupo {group_name}\n"
-                      f"\tConsigna a escribir en controlador: {group_sp}\n"
-                      f"\tDemanda del grupo: {group_demand}")
+                iv = 0
+                # No hay demanda. Se para la bomba circuladora SI NO ESTÁ EN MODO MANUAL
+                if not modo_manual_activado:
+                    update_st = await self.onoff(circuito, phi.OFF)
+                else:
+                    update_st = valor_bomba_manual
+            update_iv = await self.iv_mode(circuito, iv)  # Se actualiza el modo de funcionamiento al dispositivo
+            sp = int(roomgroup.get("water_sp"))  # water_sp es float, pero en el dispositivo se escribe un int
+            if not consigna_manual_activada:
+                update_sp = await self.sp(circuito, sp)
+            else:
+                update_sp = valor_consigna_manual
 
-            # Los valores de lectura y escritura proceden de la web por lo que hay que ver si se han modificado.
-            # Sólo se actualiza EL ESTADO DE LAS BOMBAS y LA CONSIGNA MANUAL
-            modo_iv_attr = "iv" + str(circuito)
-            pump_man_activation_attr = "act_man_st" + str(circuito)
-            pump_man_value_attr = "man_st" + str(circuito)
-            sp_man_activation_attr = "act_man_sp" + str(circuito)
-            sp_man_value_attr = "man_sp" + str(circuito)
+        print(f"UPDATE Controlador Tª impulsión {self.name}: "
+              f"Valores de los atributos ANTES de comprobar actualización desde la web")
 
-            iv = await self.iv_mode(circuito)
-            if iv != tempfluidcontroller_iv:
-                # Se actualiza el modo IV del circuito
-                new_iv = await self.iv_mode(circuito, tempfluidcontroller_iv)
-                print(f"Se actualiza a {new_iv} el modo IV del circuito {circuito} de {self.name}")
+        list_of_modified_rw_attr = []
+        for attrname in phi.EXCHANGE_R_FILES.get(self.__class__.__name__):
+            print(f"{self.name}.{attrname}: {getattr(self, attrname)}")
+            changed = await check_changes_from_web(self.bus_id, self, attrname)
+            if changed:
+                list_of_modified_rw_attr.append(attrname)
+                print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
 
-            pump_man_activation, pump_man_value = await self.man_onoff(circuito)
-            sp_man_activation, sp_man_value = await self.man_sp(circuito)
-            print(f"UPDATE TempFluidController {self.name}, circuito {circuito}: "
-                  f"Valores de los atributos ANTES de comprobar actualización desde la web")
-            print(f"\tModo IV: {iv}\n"
-                  f"\tMando manual bomba habilitado: {pump_man_activation}\n"
-                  f"\tValor manual bomba: {pump_man_value}\n"
-                  f"\tConsigna manual habilitada: {sp_man_activation}\n"
-                  f"\tValor manual consigna: {sp_man_value}\n"
-            )
+        for idx in range(3):
+            circuito = idx + 1
+            act_man_st = "act_man_st"+str(circuito)
+            manual_val = "man_st"+str(circuito)
+            if (act_man_st in list_of_modified_rw_attr or manual_val in list_of_modified_rw_attr):
+                print(f"Se ha modificado el modo manual de la bomba del circuito {circuito} de {self.name} a "
+                      f"{getattr(self, act_man_st)}. "
+                      f"Orden manual para bomba: {getattr(self, manual_val)}")
+                await self.man_onoff(circuito)
+                # Hay que actualizar los
 
-            # Primero se actualizan los atributos con los valores manuales de estado bomba y consigna
-            man_values_attrs = (pump_man_value_attr, sp_man_value_attr)
-            for attrname in man_values_attrs:
-                print(f"{self.name}.{attrname}: {getattr(self, attrname)}")
-                changed = await check_changes_from_web(self.bus_id, self, attrname)
-                if changed:
-                    print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
+            act_man_sp = "act_man_sp"+str(circuito)
+            manual_sp = "man_sp"+str(circuito)
+            if (act_man_sp in list_of_modified_rw_attr or manual_sp in list_of_modified_rw_attr):
+                print(f"Se ha modificado el modo manual de la bomba del circuito {circuito} de {self.name} a "
+                      f"{getattr(self, act_man_sp)}. "
+                      f"Orden manual para bomba: {getattr(self, manual_sp)}")
+                await self.man_sp(circuito)
 
-            # Luego se actualizan los atributos que habilitan los valores manuales y se procesan
-            man_values_attrs = (pump_man_activation_attr, sp_man_activation_attr)
-            for attrname in man_values_attrs:
-                print(f"{self.name}.{attrname}: {getattr(self, attrname)}")
-                changed = await check_changes_from_web(self.bus_id, self, attrname)
-                if changed:
-                    print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
-                new_val = getattr(self, attrname)
-                if "st" in attrname:  # Ha cambiado la habilitación manual de la bomba
-                    if new_val == phi.ON:  # Modo manual activado. Se propaga la acción manual de la bomba
-                        await self.man_onoff(circuito, new_val)
-                    elif new_val == phi.OFF: # Modo manual desactivado. Se arranca si hay demanda y se para si no
-                        if group_demand != 0:  # El grupo tiene demanda
-                            print(f"El grupo {group_name} tiene demanda: {group_demand}. Se arranca bomba")
-                            await self.onoff(circuito, phi.ON)
-                        else:
-                            print(f"El grupo {group_name} no tiene demanda: {group_demand}. Se para la bomba")
-                            await self.onoff(circuito, phi.OFF)
-                    else:
-                        print(f"UPDATE TempFluidController - Algo ha ido mal procesando la bomba del "
-                              f"circuito {circuito}")
-                elif "sp" in attrname: # Ha cambiado la habilitación manual de la consigna
-                    if new_val == phi.ON:  # Consigna manual activada. Se propaga la consigna manual
-                        await self.man_sp(circuito, new_val)
-                    elif new_val == phi.OFF: # Consigna manual desactivada. Se propaga la consigna de agua del grupo
-                        print(f"El grupo {group_name} tiene una consigna calculada de : {group_sp}.")
-                        await self.sp(circuito, group_sp)
-                    else:
-                        print(f"UPDATE TempFluidController - Algo ha ido mal procesando la consigna del "
-                              f"circuito {circuito}")
+        print(f"UPDATE Controlador Tª impulsión {self.name}: "
+              f"Valores de los atributos DESPUÉS de comprobar actualización desde la web")
 
-            iv = await self.iv_mode(circuito)
-            pump_man_activation, pump_man_value = await self.man_onoff(circuito)
-            sp_man_activation, sp_man_value = await self.man_sp(circuito)
-            print(f"UPDATE TempFluidController {self.name}, circuito {circuito}: "
-                  f"Valores de los atributos DESPUÉS de comprobar actualización desde la web")
-            print(f"\tModo IV: {iv}\n"
-                  f"\tMando manual bomba habilitado: {pump_man_activation}\n"
-                  f"\tValor manual bomba: {pump_man_value}\n"
-                  f"\tConsigna manual habilitada: {sp_man_activation}\n"
-                  f"\tValor manual consigna: {sp_man_value}\n"
-                  )
-        return 1
+        for attrname in phi.EXCHANGE_R_FILES.get(self.__class__.__name__):
+            print(f"{self.name}.{attrname}: {getattr(self, attrname)}")
+        # await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
+        # correspondiente
 
     def __repr__(self):
         """

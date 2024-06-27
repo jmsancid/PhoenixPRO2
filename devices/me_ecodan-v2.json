@@ -21,17 +21,9 @@
         },
         "conv_f_read": [1]
       },
-      "46": {
-        "descr": {
-          "en": "Water Inlet Temperature",
-          "sp": "Temperatura de retorno de agua",
-          "po": "Temperatura de retorno de agua"
-        },
-        "conv_f_read": [1]
-      },
       "47": {
         "descr": {
-          "en": "Water Outlet Temperature",
+          "en": "Water outlet Temperature",
           "sp": "Temperatura de impulsión de agua",
           "po": "Temperatura de impulsión de agua"
         },
@@ -42,6 +34,14 @@
           "en": "Tank Water Temperature",
           "sp": "Temperatura depósito de ACS",
           "po": "Temperatura depósito de ACS"
+        },
+        "conv_f_read": [1]
+      },
+      "50": {
+        "descr": {
+          "en": "Water Inlet Temperature",
+          "sp": "Temperatura de retorno de agua",
+          "po": "Temperatura de retorno de agua"
         },
         "conv_f_read": [1]
       },

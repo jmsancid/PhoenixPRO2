@@ -201,7 +201,7 @@ def set_lb(val: int, lb_new_val: int) -> int:
     return val_to_ret
 
 
-def get_bits(val: int) -> Tuple[int]:
+def get_bits(val: int) -> Tuple[int, ...]:
     """
     Devuelve una Tupla con los valores de los 16 bits de 'val'
     Param:

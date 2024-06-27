@@ -1,94 +1,21 @@
 #!/usr/bin/env python3
 import json
 import sys
-import pickle
-from datetime import datetime
-from gc import \
-    collect
+# import pickle
+from datetime import timedelta
+from gc import collect
 from phoenix_config import *
 from phoenix_constants import *
 from project_elements.building import Room, RoomGroup, init_modo_iv, get_modo_iv
 from devices.devices import SYSTEM_CLASSES
+from file_utils import (create_outdoors_data_files, create_device_files,
+                        load_devices_instances, save_devices_instances_file,
+                        load_room_instances, save_room_instances_file,
+                        load_roomgroups_instances, save_roomgroups_instances_file,
+                        save_mbregmaps_file, load_mbregmaps,
+                        get_f_modif_timestamp)
 
-
-init_time = datetime.now()
-print(f"Hora inicio: {str(init_time)}")
-
-system_iv = init_modo_iv()  # Inicializamos el modo de funcionamiento frío_calor
-
-
-# system_classes = list(SYSTEM_CLASSES.values())  # Clases de dispositivos del sistema
-def create_device_files(device) -> int:
-    """
-    Se crea una carpeta (si no existe) en el directorio phoenix_constants.EXCHANGE_FOLDER (/home/pi/var/tmp/reg/)
-    con el nombre 'slave, y se crean, si no existen, los archivos de intercambio correspondientes según
-    aparecen en phoenix_constants.'dev_class'_FILES, que son tuplas con los nombres de los archivos a crear.
-    Params:
-        device: dispositivo ModBus
-    Returns:
-        0 - Si no se pueden crear los archivos
-        1 - Si se pueden crear los archivos
-    """
-    bus_id = device.bus_id
-    slave = str(device.slave)
-    dev_class = device.__class__.__name__
-
-    file_names = EXCHANGE_R_FILES.get(dev_class)
-    if file_names is None:
-        return 0
-    # Compruebo si existe el directorio de intercambio de registros:
-    reg_folder_exists = os.path.isdir(EXCHANGE_FOLDER)
-    if not reg_folder_exists:
-        try:
-            os.mkdir(EXCHANGE_FOLDER)
-        except OSError:
-            print(f"ERROR Creando el directorio de intercambio con la web: {EXCHANGE_FOLDER}")
-        else:
-            print(f"\n\n\tDirectorio de intercambio con la web {EXCHANGE_R_FILES}  -  CREADO\n")
-    else:
-        print(f"\n\tEl fichero de intercambio, {EXCHANGE_FOLDER}, ya existe.")
-    bus_folder_name = EXCHANGE_FOLDER + r"/" + bus_id
-    bus_folder_exists = os.path.isdir(bus_folder_name)
-    if not bus_folder_exists:
-        try:
-            os.mkdir(bus_folder_name)
-        except OSError:
-            print(f"\n\tERROR Creando el directorio de intercambio con la web: {bus_folder_name} para el "
-                  f"bus {bus_id}\n")
-            return 0
-        else:
-            print(f"\n\t\t...directorio para bus {bus_id} en {bus_folder_name}  -  CREADO")
-    sl_folder_name = bus_folder_name + r"/" + slave
-    print(f"\t\tProcesando carpeta {sl_folder_name}")
-    sl_folder_exists = os.path.isdir(sl_folder_name)
-    if not sl_folder_exists:
-        try:
-            os.mkdir(sl_folder_name)
-        except OSError:
-            print(f"\n\tERROR Creando el directorio de intercambio con la web: {sl_folder_name} para el "
-                  f"esclavo {slave}\n")
-        else:
-            print(f"\n\t\t...directorio para esclavo {slave} en {sl_folder_name}  -  CREADO")
-    contador_archivos_creados = 0
-    for exc_filename in file_names:
-        exc_file_path = sl_folder_name + r"/" + exc_filename
-        print(f"\t\t\tProcesando archivo {exc_file_path}")
-        exc_file_exists = os.path.isfile(exc_file_path)
-        if not exc_file_exists:
-            try:
-                open(exc_file_path, 'w').close()
-                if dev_class == "UFHCController" and "sp" in exc_filename:  # Es centralita de suelo radiante
-                    sp_bus_filename = exc_file_path + "_bus"
-                    open(sp_bus_filename, 'w').close()  # Archivo para almacenar cada X148/canal/consigna
-            except OSError:
-                print(f"\n\n\tERROR creando el fichero de intercambio {exc_file_path} para el esclavo {slave}")
-            else:
-                contador_archivos_creados += 1
-                print(f"\n\t...creado el archivo de intercambio nº {contador_archivos_creados}: {exc_file_path} "
-                      f"para el esclavo {slave}")
-    return 1
-
-
+# Para obtener el número de serie del controlador
 def get_boardsn() -> str:
     """
     Obtiene el número de serie de la centralita
@@ -103,10 +30,7 @@ def get_boardsn() -> str:
         sys.exit()
 
 
-# INICIALIZACIÓN DE VARIABLES GLOBALES
-boardsn = get_boardsn()
-
-
+# Para cargar los datos del JSON del proyecto
 def load_project() -> [dict, None]:
     """
     Crea un diccionario con los datos del proyecto a partir del JSON de configuración.
@@ -122,95 +46,16 @@ def load_project() -> [dict, None]:
         return
 
 
-# Cargo el proyecto y compruebo si existe el JSON de configuración y si el proyecto tiene definidos edificios
-prj = load_project()
-if prj is None:
-    print("\nERROR cargando la configuración del proyecto.\n...Abandonando el programa")
-    sys.exit()
-# print(prj)
-
-buildings = prj.get("buildings")
-if buildings is None:
-    print("ERROR (phoenix-config: load_buildings) - No se ha definido ningún edificio en el fichero de "
-          "configuración del proyecto,\n\n\t...Abandonando el programa.")
-    sys.exit()
-
-def create_o_data_files():
+# Para cargar los grupos de habitaciones que sirven para calcular temperaturas de impulsión, etc
+def load_rooms():
     """
-    Se crean los archivos generales de intercambio de Modo_IV, Temperatura exterior, humedad relativa exterior y
-    calidad de aire exterior
-
-    Returns: 1 si se crea, 0 si no se crea
-
-    """
-    print("\nCREANDO ARCHIVOS DE INTERCAMBIO DE T, HR Y AQ EXTERIORES Y DE MODO IV DEL SISTEMA")
-    bus_id = "1"  # Los archivos exteriores siempre irán en el bus 1
-    # Compruebo si existe el directorio de intercambio de registros:
-    reg_folder_exists = os.path.isdir(EXCHANGE_FOLDER)
-    if not reg_folder_exists:
-        try:
-            os.mkdir(EXCHANGE_FOLDER)
-        except OSError:
-            print(f"ERROR Creando el directorio de intercambio con la web: {EXCHANGE_FOLDER}")
-        else:
-            print(f"\n\n\tDirectorio de intercambio con la web {EXCHANGE_FOLDER}  -  CREADO\n")
-    else:
-        print(f"\n\tEl fichero de intercambio, {EXCHANGE_FOLDER}, ya existe.")
-    bus_folder_name = EXCHANGE_FOLDER + r"/" + bus_id
-    bus_folder_exists = os.path.isdir(bus_folder_name)
-    if not bus_folder_exists:
-        try:
-            os.mkdir(bus_folder_name)
-        except OSError:
-            print(f"\n\tERROR Creando el directorio de intercambio con la web: {bus_folder_name} para el "
-                  f"bus {bus_id}\n")
-            return 0
-        else:
-            print(f"\n\t\t...directorio para bus {bus_id} en {bus_folder_name}  -  CREADO")
-
-    o_files = {"1000": TEMP_EXT_FILE, "2000": HR_EXT_FILE, "3000": AQ_EXT_FILE, "5000": MODO_IV_FILE}
-    for d, f in o_files.items():
-        full_d_name = bus_folder_name + r"/" + d
-        d_exists = os.path.isdir(full_d_name)
-        if not d_exists:
-            try:
-                os.mkdir(full_d_name)
-            except OSError:
-                print(f"ERROR Creando el directorio de intercambio con la web: {full_d_name}")
-            else:
-                print(f"\n\n\tDirectorio de intercambio con la web {full_d_name}  -  CREADO\n")
-        else:
-            print(f"\n\tEl fichero de intercambio, {full_d_name}, ya existe.")
-
-        f_exists = os.path.isfile(f)
-        if not f_exists:
-            print(f"Intentando crear {f}")
-            try:
-                open(f, 'w').close()
-            except OSError:
-                print(f"\n\n\tERROR creando el fichero de valores exteriores o modo IV: {f}")
-                return 0
-            else:
-                print(f"\n\t...creado el fichero{f}")
-    print("Ficheros de valores exteriores y modo IV creados\n")
-    return 1
-create_o_data_files()
-
-
-def load_roomgroups():
-    """
-    Crea las instancias de las clases que forman parte del edificio: Rooms y RoomGroups.
-    Dichas clases se almacenan en el módulo "building.py"
-    Se considera que tanto cada vivienda como cada edificio son RoomGroups formados por distintas habitaciones
-    Returns: Diccionario con todos los grupos de habitaciones siendo la clave el "id" del grupo de habitaciones y
-    el valor los objetos RoomGroup del edificio, siendo uno de los atributos de dichos objetos
-    una lista de los objetos Room que componen el grupo.
+    Crea las instancias de la clase Room que forman parte del edificio: Rooms
+    Las clases se definen en el módulo "building.py"
+    Returns: Diccionario con todas las habitaciones siendo la clave la string <building>_<dwelling>_<habitación> y
+    el valor los objetos Room existentes
     """
     print(f"\n(load_roomgroups)\tPROCESANDO GRUPOS DE HABITACIONES\n")
-    roomgroups = {}
-
-    hay_habitaciones = False  # Si no hay ninguna habitación definida en el proyecto se genera un aviso y se
-    # para el programa
+    prj_rooms = {}
 
     for bldid, bld in buildings.items():
         dwellings = bld.get("dwellings")
@@ -225,7 +70,6 @@ def load_roomgroups():
                 print(f"WARNING (phoenix-config: load_buildings) - La vivienda {dwell.get('name')} del edificio "
                       f"{bld.get('name')} no tiene definidas habitaciones")
                 continue
-            hay_habitaciones = True
             for roomid, room in rooms.items():
                 print(f"\n\tProcesando habitación {room.get('name')}")
                 # Se instancia cada habitación.
@@ -247,46 +91,116 @@ def load_roomgroups():
                     offsetairref=room.get("offsetairref"),
                     offsetaircal=room.get("offsetaircal")
                 )
-                # print(f"DEBUGGING {__file__} - Atributos Room\n{new_room.__dict__}")
-                for idx, group in enumerate(groups):
-                    print(f"\t\t(load_roomgroups) Procesando grupo {idx} con 'id': {group}")
-                    # Compruebo si existe el grupo de habitaciones
-                    grp = roomgroups.get(str(group))
-                    if grp is None:
-                        print(f"\t\t\tNo existia el grupo {group}. Lo creo")
-                        # No existía el grupo, creo la clave en el diccionario all_rooms y el
-                        # objeto RoomGroup
-                        roomgroups[str(group)] = RoomGroup(id_rg=str(group))
-                        print(f"\t\t\t... creado grupo de habitaciones\nGrupo: {str(group)}")
-                    # Se añade la habitación a la lista de habitaciones del RoomGroup.
-                    roomgroups[str(group)].roomgroup.append(new_room)
-                    print(f"\t\t\t... añadiendo habitación {new_room.name} al grupo {str(group)}")
+                # añadiendo la habitación al diccionario de habitaciones del proyecto.
+                # La clave será bldid_dwellid_name y el valor el objeto Room
+                new_room_key = bldid + "_" + dwellid + "_" + roomid
+                prj_rooms[new_room_key] = new_room
 
-    if not hay_habitaciones:
+    if not prj_rooms:
         print("ERROR (phoenix-config: load_buildings) - No se ha definido ninguna habitación en todo el "
               "edificio en el fichero de configuración")
         sys.exit()
+    collect()
+    return prj_rooms
+
+
+def load_roomgroups():
+    """
+    Crea las instancias de las clases que forman parte del edificio: Rooms y RoomGroups.
+    Dichas clases se almacenan en el módulo "building.py"
+    Se considera que tanto cada vivienda como cada edificio son RoomGroups formados por distintas habitaciones
+    Returns: Diccionario con todos los grupos de habitaciones siendo la clave el "id" del grupo de habitaciones y
+    el valor los objetos RoomGroup del edificio, siendo uno de los atributos de dichos objetos
+    una lista de los objetos Room que componen el grupo.
+    """
+    print(f"\n(load_roomgroups)\tPROCESANDO GRUPOS DE HABITACIONES\n")
+    roomgroups = {}
+    for room_id, room in all_rooms.items():
+        groups = room.groups
+        for idx, groupname in enumerate(groups):
+            print(f"\t\t(load_roomgroups) Procesando grupo {idx} con 'id': {groupname}")
+            # Compruebo si existe el grupo de habitaciones
+            grp = roomgroups.get(groupname)
+            if grp is None:
+                print(f"\t\t\tNo existia el grupo {groupname}. Lo creo")
+                # No existía el grupo, creo la clave en el diccionario all_rooms y el
+                # objeto RoomGroup
+                roomgroups[groupname] = RoomGroup(id_rg=groupname)
+                print(f"\t\t\t... creado grupo de habitaciones\nGrupo: {groupname}")
+            # Se añade la habitación a la lista de habitaciones del RoomGroup.
+            roomgroups[groupname].roomgroup.append(room)
+            print(f"\t\t\t... añadiendo habitación {room.name} al grupo {groupname}")
+
+    # hay_habitaciones = False  # Si no hay ninguna habitación definida en el proyecto se genera un aviso y se
+    # # para el programa
+    #
+    # for bldid, bld in buildings.items():
+    #     dwellings = bld.get("dwellings")
+    #     if dwellings is None:
+    #         print(f"WARNING (phoenix-config: load_buildings) - El edificio {bld.get('name')} no tiene "
+    #               "definidas viviendas.")
+    #         continue
+    #     for dwellid, dwell in dwellings.items():
+    #         print(f"Procesando vivienda {dwell.get('name')}")
+    #         rooms = dwell.get("rooms")
+    #         if rooms is None:
+    #             print(f"WARNING (phoenix-config: load_buildings) - La vivienda {dwell.get('name')} del edificio "
+    #                   f"{bld.get('name')} no tiene definidas habitaciones")
+    #             continue
+    #         hay_habitaciones = True
+    #         for roomid, room in rooms.items():
+    #             print(f"\n\tProcesando habitación {room.get('name')}")
+    #             # Se instancia cada habitación.
+    #             groups = room.get("groups")
+    #             new_room = Room(
+    #                 building_id=bldid,
+    #                 dwelling_id=dwellid,
+    #                 room_id=roomid,
+    #                 name=room.get("name"),
+    #                 groups=groups,
+    #                 iv_source=room.get("iv_source"),
+    #                 sp_source=room.get("sp_source"),
+    #                 rh_source=room.get("rh_source"),
+    #                 rt_source=room.get("rt_source"),
+    #                 st_source=room.get("st_source"),
+    #                 af=room.get("af"),
+    #                 aq_source=room.get("aq_source"),
+    #                 aqsp_source=room.get("aqsp_source"),
+    #                 offsetairref=room.get("offsetairref"),
+    #                 offsetaircal=room.get("offsetaircal")
+    #             )
+    #             # añadiendo la habitación al diccionario de habitaciones del proyecto.
+    #             # La clave será bldid_dwellid_name y el valor el objeto Room
+    #             new_room_key = bldid + "_" + dwellid + "_" + roomid
+    #             all_rooms[new_room_key] = new_room
+    #             print(f" Añadida la habitación {roomid} de la vivienda {dwellid} y del edificio {bldid} al "
+    #                   f"conjunto de habitaciones del proyecto")
+    #             # print(f"DEBUGGING {__file__} - Atributos Room\n{new_room.__dict__}")
+    #             for idx, group in enumerate(groups):
+    #                 print(f"\t\t(load_roomgroups) Procesando grupo {idx} con 'id': {group}")
+    #                 # Compruebo si existe el grupo de habitaciones
+    #                 grp = roomgroups.get(str(group))
+    #                 if grp is None:
+    #                     print(f"\t\t\tNo existia el grupo {group}. Lo creo")
+    #                     # No existía el grupo, creo la clave en el diccionario all_rooms y el
+    #                     # objeto RoomGroup
+    #                     roomgroups[str(group)] = RoomGroup(id_rg=str(group))
+    #                     print(f"\t\t\t... creado grupo de habitaciones\nGrupo: {str(group)}")
+    #                 # Se añade la habitación a la lista de habitaciones del RoomGroup.
+    #                 roomgroups[str(group)].roomgroup.append(new_room)
+    #                 print(f"\t\t\t... añadiendo habitación {new_room.name} al grupo {str(group)}")
+    #
+    # if not hay_habitaciones:
+    #     print("ERROR (phoenix-config: load_buildings) - No se ha definido ninguna habitación en todo el "
+    #           "edificio en el fichero de configuración")
+    #     sys.exit()
     # for k, v in roomgroups.items():
     #     print(f"Grupo {k}: {[x.name for x in v.roomgroup]}")
     collect()
     return roomgroups
 
 
-if not os.path.isdir(TEMP_FOLDER):
-    os.makedirs(TEMP_FOLDER)
-if not os.path.isfile(ROOMGROUPS_INSTANCES_FILE):
-    all_room_groups = load_roomgroups()  # Diccionario con todos los grupos de habitaciones.
-    # Clave principal es id del grupo
-    with open(ROOMGROUPS_INSTANCES_FILE, "wb") as rgf:
-        pickle.dump(all_room_groups, rgf)
-else:
-    # Ya se habían creado los grupos de habitaciones
-    with open(ROOMGROUPS_INSTANCES_FILE, "rb") as rgf:
-        all_room_groups = pickle.load(rgf)
-
-
-# print(all_rooms)
-
+# Para cargar los dispositivos Modbus del proyecto e instanciarlos
 def load_buses():
     """
     Genera un diccionario con los dispositivos ModBus físicos del sistema.
@@ -373,28 +287,13 @@ def load_buses():
         msg = """WARNING (load_devices) - No se ha definido ningún dispositivo en ningún bus del proyecto.
         ... Abandonando el programa"""
         print(msg)
-        sys.exit()
 
     print(f"\n(load_buses)\tFINALIZADO EL PROCESAMIENTO DE LOS BUSES DEL PROYECTO\n\n")
 
     return devices
 
 
-# buses = load_buses()
-if not os.path.isfile(BUSES_INSTANCES_FILE):
-    buses = load_buses()  # Diccionario con todos los buses.
-    # Clave principal es id del grupo
-    with open(BUSES_INSTANCES_FILE, "wb") as bf:
-        print(
-            f"{__file__}\n\tPRIMERA EJECUCIÓN\nCREANDO ARCHIVO DE BUSES CON LAS INSTANCIAS DE LOS DISPOSITIVOS MODBUS")
-        pickle.dump(buses, bf)
-else:
-    # Ya se habían creado los grupos de habitaciones
-    with open(BUSES_INSTANCES_FILE, "rb") as bf:
-        print(f"{__file__}\n\t...CARGANDO ARCHIVO DE BUSES CON LAS INSTANCIAS DE LOS DISPOSITIVOS MODBUS")
-        buses = pickle.load(bf)
-
-
+# Para cargar los mapas de registros de los dispositivos modbus definidos en /devices
 def load_regmapfiles() -> Tuple:
     """
     Crea los mapas de registros modbus de los dispositivos del proyecto y completa los atributos qregsmax (máximo
@@ -442,6 +341,7 @@ def load_regmapfiles() -> Tuple:
     return tuple(regmaps)
 
 
+# Para terminar de configurar los dispositivos modbus con atributos adicionales
 def config_devices():
     """
     Módulo para terminar de configurar los Objetos-Dispositivos del proyecto según su clase.
@@ -451,7 +351,7 @@ def config_devices():
     # Buscamos todos los tipos de dispositivo existentes bajo la clave 'class' en cada 'devices' de cada 'bus'
     # device_dbs = set()  # SET con los Nombres de los ficheros JSON que contienen las bases de datos de cada tipo
     # de dispositivo
-    print(f"\n(load_buses)\tCONFIGURANDO DISPOSITIVOS MODBUS DEL PROYECTO")
+    print(f"\n(config_devices)\tCONFIGURANDO DISPOSITIVOS MODBUS DEL PROYECTO")
     devtypes = {}  # Lista de diccionarios con los objetos del proyecto según su tipo, generator, fancoil, etc. y
     # su brand_model (marca_modelo), me_ecodan, uponor_x148...
     for bus in buses:
@@ -484,6 +384,7 @@ def config_devices():
                     devtypes[typedb] = obj_info.get(dev_id)  # Diccionario para, por ejemplo, un generador tipo
                     # ecodan: Generator_me_ecodan
                     print(f"\t\t... cargada base de datos {dev_id}")
+
         # Ahora se completa la definición de los objetos del proyecto: Generadores, Fancoils, etc.
         null_values = (None, "")
         for device in bus_devices:
@@ -507,22 +408,107 @@ def config_devices():
                         setattr(dev_to_config, attr, new_val)
             print(f"\t\t... configuración del dispositivo {dev_to_config.name} FINALIZADA\n")
             collect()
+            # bus[device] = device  TODO asegurarme de que se actualiza "buses"
             # print(f"Configurando dispositivo:\n{dev_to_config.__dict__}")
 
-    print(f"\n(load_buses)\nCONFIGURACIÓN DE LOS DISPOSITIVOS MODBUS DEL PROYECTO FINALIZADA\n\n")
+    # print("Imprimiendo como queda buses tras ultima configuracion")
+    # for key, value in buses.items():
+    #     print(key, value)
+    print(f"\n(config_devices)\nCONFIGURACIÓN DE LOS DISPOSITIVOS MODBUS DEL PROYECTO FINALIZADA\n\n")
 
     return 1
 
 
-# mbregmaps = load_regmapfiles()
-if not os.path.isfile(REGMAP_INSTANCES_FILE):
-    mbregmaps = load_regmapfiles()  # Diccionario con todos los buses.
-    # Clave principal es id del grupo
-    with open(REGMAP_INSTANCES_FILE, "wb") as rmf:
-        pickle.dump(mbregmaps, rmf)
-else:
-    # Ya se habían creado los grupos de habitaciones
-    with open(REGMAP_INSTANCES_FILE, "rb") as rmf:
-        mbregmaps = pickle.load(rmf)
+# INICIALIZACIÓN DE VARIABLES GLOBALES
+boardsn = get_boardsn()
 
-dev_config = config_devices()
+
+system_iv = init_modo_iv()  # Inicializamos el modo de funcionamiento frío_calor antes de leer dispositivos modbus
+
+
+# Cargo el proyecto y compruebo si existe el JSON de configuración y si el proyecto tiene definidos edificios
+prj = load_project()
+if prj is None:
+    print("\nERROR cargando la configuración del proyecto.\n...Abandonando el programa")
+    sys.exit()
+# print(prj)
+
+buildings = prj.get("buildings")
+if buildings is None:
+    print("ERROR (phoenix-config: load_buildings) - No se ha definido ningún edificio en el fichero de "
+          "configuración del proyecto,\n\n\t...Abandonando el programa.")
+    sys.exit()
+
+
+create_outdoors_data_files()  # Creando los archivos de intercambio para los valores del aire exterior y
+# modo IV del sistema
+
+
+init_time = datetime.now()
+print(f"Hora inicio: {str(init_time)}")
+
+if not os.path.isdir(TEMP_FOLDER):
+    os.makedirs(TEMP_FOLDER)
+
+# Obtengo la última fecha de modificación de los pickle, si existen
+buses_file_modif_time = get_f_modif_timestamp(BUSES_INSTANCES_FILE)  # Devuelve none si no existe el fichero
+rooms_file_modif_time = get_f_modif_timestamp(ROOM_INSTANCES_FILE)
+roomgroups_file_modif_time = get_f_modif_timestamp(ROOMGROUPS_INSTANCES_FILE)
+regmaps_file_modif_time = get_f_modif_timestamp(REGMAP_INSTANCES_FILE)
+
+# Considero válidos los pickle si son de hace menos de 1 hora
+valid_pickle_file_date = init_time - timedelta(hours=1)
+
+if buses_file_modif_time and buses_file_modif_time > valid_pickle_file_date:
+    # existe el pickle de dispositivos y es válido
+    # Cargo el pickle de dispositivos
+    print(f"Cargando mapas de registros modbus desde pickle de fecha {regmaps_file_modif_time}")
+    mbregmaps = load_mbregmaps()
+    print(f"Cargando instancias de dispositivos modbus desde pickle de fecha {buses_file_modif_time}")
+    buses = load_devices_instances()
+else:
+    print("\nCreando pickle de instancias de dispositivos modbus")
+    buses = load_buses()  # Diccionario con todos los buses.
+    print("Creando pickle de mapas de registros modbus")
+    mbregmaps = load_regmapfiles()  # Tupla con los mapas de registros modbus
+    save_mbregmaps_file(mbregmaps)
+    dev_config = config_devices()
+    print(f"phoenix_init: diccionario buses a guardar en el pickle de dispositivos:\n{type(buses)}")
+    save_devices_instances_file(buses)  # Guardando el pickle con todos los objetos modbus de los buses
+
+if rooms_file_modif_time and rooms_file_modif_time > valid_pickle_file_date:
+    # existe el pickle de rooms y es válido
+    # Cargo el pickle de habitaciones
+    print(f"Cargando habitaciones desde pickle de fecha {rooms_file_modif_time}")
+    all_rooms = load_room_instances()
+    print(f"Nº habitaciones cargadas: {len(all_rooms)}")
+else:
+    print("Creando pickle de instancias de habitaciones")
+    all_rooms = load_rooms()
+    print(f"phoenix_init: diccionario rooms a guardar en el pickle de las rooms:\n{type(all_rooms)}")
+    save_room_instances_file(all_rooms)  # Guardando el pickle con todos las instancias de habitaciones
+
+if roomgroups_file_modif_time and roomgroups_file_modif_time > valid_pickle_file_date:
+    # existe el pickle de roomgroups y es válido
+    # Cargo el pickle de grupos de habitaciones
+    print(f"Cargando instancias de grupos de habitaciones desde pickle de fecha {roomgroups_file_modif_time}")
+    all_room_groups = load_roomgroups_instances()
+else:
+    print("Creando pickle de instancias de grupos de habitaciones")
+    all_room_groups = load_roomgroups()
+    save_roomgroups_instances_file(all_room_groups)  # Guardando el pickle con todos las instancias de
+    # grupos de habitaciones
+
+
+# system_classes = list(SYSTEM_CLASSES.values())  # Clases de dispositivos del sistema
+# dev_config = config_devices()
+# save_devices_instances_file(buses)  # Se vuelve a guardar el pickle con los dispositivos una vez actualizados
+
+# Compruebo si hay alguna lectura anterior
+lectura_anterior = {}
+last_reading_file_exists = os.path.isfile(READINGS_FILE)
+if last_reading_file_exists:
+    last_reading_date = get_f_modif_timestamp(READINGS_FILE)
+    print(f"Hay una lectura modbus de fecha {last_reading_date}")
+    with open(READINGS_FILE, "r") as f:  # Hay una lectura anterior
+        lectura_anterior= json.load(f)

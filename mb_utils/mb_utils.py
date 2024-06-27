@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-import sys
+
+# import sys
 from asyncio import create_task, gather
 from os import path
 import phoenix_init as phi
-from regops.regops import group_adrs, recursive_conv_f
+from regops.regops import group_adrs, recursive_conv_f, get_hb_lb
+from file_utils import get_f_modif_timestamp, save_devices_instances_file
 
 
 def get_value(value_source: [dict, None]) -> [int, float, bool, phi.Tuple]:
@@ -87,16 +89,18 @@ def save_value(value_target: [dict, None], new_value: [int, float, bool, phi.Tup
                             # sys.exit()
                             if isinstance(old_value, float):
                                 phi.datadb["buses"][bus_id][device_id]["data"][datatype][adr] = float(new_value)
-                        elif isinstance(old_value, int):
-                            phi.datadb["buses"][bus_id][device_id]["data"][datatype][adr] = int(new_value)
-                        else:
-                            phi.datadb["buses"][bus_id][device]["data"][datatype][adr] = new_value
-                        print(f"\nsave_value. Valor anterior {old_value}/{type(old_value)} "
-                              f"actualizado a {new_value}/{type(new_value)}")
-                        check_new_value = get_value(value_target)
-                        print(f"save_value. Comprobando actualización. "
-                              f"Nuevo valor leído en db: {check_new_value}\n")
-                        return check_new_value
+                            elif isinstance(old_value, int):
+                                phi.datadb["buses"][bus_id][device_id]["data"][datatype][adr] = int(new_value)
+                            elif isinstance(old_value, tuple):  # El registro separa bytes alto y bajo
+                                phi.datadb["buses"][bus_id][device_id]["data"][datatype][adr] = get_hb_lb(new_value)
+                            else:
+                                phi.datadb["buses"][bus_id][device]["data"][datatype][adr] = new_value
+                            print(f"\nsave_value. Valor anterior {old_value}/{type(old_value)} "
+                                  f"actualizado a {new_value}/{type(new_value)}")
+                            check_new_value = get_value(value_target)
+                            print(f"save_value. Comprobando actualización. "
+                                  f"Nuevo valor leído en db: {check_new_value}\n")
+                            return check_new_value
                 else:
                     print(f"save_value - No se han encontrado datos del dispositivo {device_id} en el bus {bus_id}")
                     print(f"save_value\n{phi.datadb}")
@@ -294,7 +298,7 @@ async def read_project_device(device: phi.MBDevice) -> [str, None]:
 
 async def read_all_buses(id_lectura: int = 0):
     """
-    Recorre todos los buses y guarda en READINGS_FILE el diccionario con los valores leídos en los registros
+    Recorre todos los buses y guarda en el json READINGS_FILE el diccionario con los valores leídos en los registros
     ModBus de todos los dispositivos.
     Returns: diccionario con la última lectura: hora y buses con los valores de cada tipo de registro leído en cada
     dispositivo de cada bus.
@@ -303,13 +307,29 @@ async def read_all_buses(id_lectura: int = 0):
 
     hora_lectura = phi.datetime.now()  # Hora actual en formato datetime
 
-    # historico_lecturas["lecturas"][id_lectura_actual] = {}
+    # Se lee el id de la última lectura si existe. Si no, vale 0
+    id_lectura_anterior = phi.lectura_anterior.get("id") if phi.lectura_anterior else 0
+    id_lectura = id_lectura_anterior + 1
+
+    # Se reinicia cada día el id de lectura
+    if id_lectura > 1:
+        # si hay lectura anterior, extraigo la fecha y si no, le asigno el día de hoy
+
+        fecha_lectura_anterior = phi.datetime.strptime(phi.lectura_anterior.get("hora"),
+                                                       "%Y-%m-%d %H:%M:%S.%f") \
+            if phi.lectura_anterior else hora_lectura
+        # si la fecha de la lectura anterior es más antigua que la actual y los días son distintos, se asume que el
+        # día ha cambiado y hay que reiniciar el contador de lecturas
+        if fecha_lectura_anterior < hora_lectura and fecha_lectura_anterior.day != hora_lectura.day:
+            id_lectura = 1
+
     lectura_actual = {
         "id": id_lectura,
-        "hora": str(hora_lectura),
+        "hora": str(hora_lectura),  # Los objetos datetime no se pueden pasar a JSON
         "buses": {}
     }
-    print(f"(read_all_buses) {hora_lectura}: LEYENDO TODOS LOS BUSES\n")
+    print(f"(read_all_buses) {hora_lectura}: LEYENDO TODOS LOS BUSES\n"
+          f"La lectura anterior tuvo lugar a las {phi.lectura_anterior.get('hora')}\n")
     for idbus, bus in phi.buses.items():
         lectura_actual["buses"][idbus] = {}
         for iddevice, device in bus.items():
@@ -317,9 +337,8 @@ async def read_all_buses(id_lectura: int = 0):
             # lectura_actual["buses"][idbus][iddevice]["slave"] = device.slave
             # Lee el dispositivo completo y almacena la información en un fichero en memoria StringIO?
             device_readings = await read_project_device(device)  # Lectura ModBus
-            # print(f"\n\tLECTURA DISPOSITIVO\t{device.name}\n\t\t{device_readings}")
+            print(f"\n\tLECTURA DISPOSITIVO\t{device.name}\n\t\t{device_readings}")
             print(f"\n{str(phi.datetime.now())}\nDuración:\t{str(phi.datetime.now() - hora_lectura)}")
-            print(f"\ndevice_readings: {device_readings}")
             if all([x is None for x in device_readings]):
                 print(f"No hay lecturas del dispositivo {device.name}")
                 continue
@@ -343,133 +362,316 @@ async def read_all_buses(id_lectura: int = 0):
         phi.json.dump(lectura_actual, f)
     return lectura_actual
 
+# async def check_changes_from_web() -> int:
+#     """
+#     Módulo para intercambiar información con la web a través de los archivos almacenados en /home/pi/var/tmp/reg
+#     Habrá un directorio por cada esclavo y dentro de cada directorio un archivo con el último valor de cada
+#     atributo: consignas, modos, temperaturas, etc.
+#     Algunos de los archivos se pueden escribir tanto desde la web como desde el código. En función de la fecha
+#     de la última modificación del archivo, se actualizará la web o el atributo correspondiente.
+#     Las consignas de temperatura compartidas se almacenan en ficheros con el nombre spx donde x es el nombre del
+#     canal de la centralita X148 y, paralelamente, las consignas leídas de cada X148 se almacenan en los archivos
+#     spx_bus.
+#     Cuando se ejecuta este módulo, ya existe un archivo con las lecturas almacenadas.
+#     Returns:
+#          1 si se ha hecho alguna modificación desde la web
+#          0 si no hay que modificar nada desde la web
+#     """
+#     # first_time = False
+#     # Obtengo la fecha de la última lectura guardada:
+#     if not path.isfile(phi.READINGS_FILE):
+#         # No se ha generado el archivo con las últimas lecturas ModBus.
+#         # Se recogen los valores almacenados en los ficheros de intercambio.
+#         # first_time = True
+#         # last_reading_time = None
+#         emsg = f"{phi.datetime.now}/ {__file__} (check_changes_from_web) ERROR - No se ha generado fichero de lecturas"
+#         raise FileNotFoundError(emsg)
+#         # return
+#     else:
+#         # with open(phi.READINGS_FILE, "r") as rf:
+#         #     last_reading = phi.json.load(rf)
+#         # last_reading_time = last_reading.get("hora")
+#         last_reading_time = phi.lectura_anterior.get("hora")
+#         print(f"\nComprobando cambios desde la WEB:\n\tHora de la última lectura: {last_reading_time}")
+#         # last_exec_time = get_f_modif_timestamp(phi.LAST_EXEC_DATE_FILE)
+#         last_exec_time =  phi.datetime.strptime(last_reading_time, "%Y-%m-%d %H:%M:%S.%f")
+#
+#     # Recorro todos los esclavos para ver si hay que actualizar algún valor
+#     attr_mod = {}
+#     attr_not_mod = {}
+#     checked = []
+#     for bus_id, bus in phi.buses.items():
+#         # devs = phi.buses.get(bus)
+#         changes = False
+#         for dev_id, dev in bus.items():
+#             dev_sl = str(dev.slave)
+#             checked_device = (bus_id, dev_sl)
+#             if checked_device in checked:  # Si ya he comprobado el dispositivo, no vuelvo a hacerlo (normalmente
+#                 # no va a haber dispositivos repetidos, pero por si acaso...
+#                 print(f"Ya se han comprobado los cambios del esclavo {dev_sl}: {dev.name} del bus {bus_id}")
+#                 continue
+#             else:
+#                 checked.append(checked_device)
+#             dev_class = dev.__class__.__name__
+#             if dev_class == "UFHCController":  # Los cambios en la centralita X148 ya se han comprobado
+#                 continue
+#
+#             xch_rw_files = phi.EXCHANGE_RW_FILES.get(dev_class)
+#             ex_folder_name = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + dev_sl
+#             print(f"Comprobando esclavo {dev_sl}: {dev.name} (clase {dev_class})) del bus {bus_id}")
+#             # print(f"\tArchivos\n{xch_rw_files}")
+#             for xf in xch_rw_files:
+#                 xch_file_to_check = ex_folder_name + r"/" + xf
+#                 # file_from_dev_to_check = ex_folder_name + r"/" + xf
+#                 last_mod_time = get_f_modif_timestamp(xch_file_to_check)
+#                 print(f"check_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, "
+#                       f"atributo {xf}")
+#                 # Cambio la siguiente línea porque por algún motivo el atributo no está actualizado NO APLICA
+#                 current_value = getattr(dev, xf)  # el nombre del fichero xf coincide con el atributo a comprobar
+#
+#                 if None in (last_mod_time, last_exec_time):
+#                     print(f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
+#                           f"Última modificación {xch_file_to_check}: {last_mod_time} - tipo {type(last_mod_time)}\n\t"
+#                           f"Última ejecución: {last_exec_time} - tipo {type(last_exec_time)}")
+#                     continue
+#                 print(f"Fechas de última modificación y última lectura:\n\t"
+#                       f"Última modificación {xch_file_to_check}: {last_mod_time}\n\t"
+#                       f"Última ejecución: {last_exec_time}")
+#                 with open(xch_file_to_check, "r") as modf:
+#                     print(f"Examinando file_from_web_to_check: {xch_file_to_check}")
+#                     web_value = modf.read().strip()
+#                 print(f"\nDEBUGGING {__file__}:"
+#                       f"\n\tValor leído en la web: {web_value}"
+#                       f"\n\tValor actual: {current_value} {type(current_value)}")
+#
+#                 if last_mod_time > last_exec_time:  # Ha habido modificaciones desde la Web
+#                     changes = True
+#                     print(f"\nSe ha modificado desde la Web el fichero:\n\t{xch_file_to_check}\n"
+#                           f"\tValor anterior:\t{current_value} (tipo {type(getattr(dev, xf))})\n"
+#                           f"\tValor desde web:\t{web_value} (tipo {type(web_value)})\n")
+#                     attr_mod[xch_file_to_check] = web_value
+#                     if not web_value is None:
+#                         if '(' in web_value:  # Is Tuple
+#                             val_to_write = tuple(map(int, web_value.strip('()').split(', ')))
+#                         elif '.' in web_value:  # Is float
+#                             val_to_write = float(web_value)
+#                         elif web_value.isdecimal():  # Is int
+#                             val_to_write = int(web_value)
+#                         else:
+#                             val_to_write = str(web_value)
+#                         print(f"Actualizando el atributo {xf} del dispositivo {dev.name} con el valor {val_to_write}")
+#                         setattr(dev, xf, val_to_write)
+#                         print(f"Leyendo atributo tras escritura: {getattr(dev, xf)}")
+#
+#                         with open(xch_file_to_check, "w") as xchf:
+#                             xchf.write(str(web_value))
+#                         with open(xch_file_to_check, "r") as modf:
+#                             web_value = modf.read().strip()
+#                             print(f"\nComprobando si se ha escrito {val_to_write} en {xch_file_to_check}. "
+#                                   f"Valor leído: {web_value}")
+#                 else:
+#                     attr_not_mod[xch_file_to_check] = current_value
+#             if changes:
+#                 changes = False
+#                 print(f"{__file__} Subiendo actualización a dispositivo ModBus")
+#                 await dev.upload()
+#         print(f"Archivos modificados: {attr_mod}")
+#         print(f"Archivos NO modificados: {attr_not_mod}")
+#
+#     return 1
 
-def get_f_modif_timestamp(path_to_file: str) -> [str, None]:
-    """
-    Devuelve la fecha de la última modificación del archivo o None si el archivo no existe.
-    Se utiliza en el intercambio de datos con la web para ver si hay que escribir en el archivo de intercambio
-    la última lectura del dispositivo o si hay que propagar al dispositivo modbus el valor almacenado en el archivo.
-    Param:
-        path_to_file: path hasta el archivo
-    Returns:
-         Fecha de modificación del archivo (str de datetime) o None si no se encuentra el archivo
-    """
-    file_exists = phi.os.path.isfile(path_to_file)
-    if file_exists:
-        last_mod_date = str(phi.datetime.fromtimestamp(phi.os.stat(path_to_file).st_mtime))
-        print(f"DEBUGGING {__file__}: Obteniendo fecha ultima modificacion {path_to_file}: {last_mod_date}")
-        return last_mod_date
-    else:
-        return None
+# JSC 19/06/2024
+# Cambio la versión de check_changes_from_web introdudiendo como parámetros el dispositivo y el atributo.
+# Si el archivo contiene un valor de atributo distinto, actualizo el atributo y si no, el archivo.
+# Las consignas de las X147 y X148 se pueden modificar también desde el termostato y hay que ver los valores de sp_bus
 
-
-async def check_changes_from_web() -> int:
+async def check_changes_from_web(bus_id: str, dev: phi.MBDevice, attr: str) -> int:
     """
-    Módulo para intercambiar información con la web a través de los archivos almacenados en /home/pi/var/tmp/reg
-    Habrá un directorio por cada esclavo y dentro de cada directorio un archivo con el último valor de cada
-    atributo: consignas, modos, temperaturas, etc.
-    Algunos de los archivos se pueden escribir tanto desde la web como desde el código. En función de la fecha
-    de la última modificación del archivo, se actualizará la web o el atributo correspondiente.
-    Las consignas de temperatura compartidas se almacenan en ficheros con el nombre spx donde x es el nombre del
-    canal de la centralita X148 y, paralelamente, las consignas leídas de cada X148 se almacenan en los archivos
-    spx_bus.
+    Módulo para comprobar si se ha cambiado algún atributo desde la web.
+    Si el atributo no está en <CLASE>_RW_FILES, se rellena el atributo con la última lectura porque se trata de
+    archivos de sólo lectura.
+    Si el valor del atributo RW es distinto del contenido del archivo, se interpreta que hay cambios desde la web,
+    excepto con los archivos spx_bus de ls UFHCController, en los que se comprueba si lo que ha cambiado es el
+    archivo spx o spx_bus en función de la fecha del archivo
+    parameters:
+    bus_id: bus al que pertenece el dispositivo. Es string
+    dev: dispositivo modbus de la clase MBDevice
+    attr: atributo del dispositivo a comprobar. Es string
     Cuando se ejecuta este módulo, ya existe un archivo con las lecturas almacenadas.
     Returns:
          1 si se ha hecho alguna modificación desde la web
          0 si no hay que modificar nada desde la web
     """
-    # first_time = False
     # Obtengo la fecha de la última lectura guardada:
     if not path.isfile(phi.READINGS_FILE):
         # No se ha generado el archivo con las últimas lecturas ModBus.
         # Se recogen los valores almacenados en los ficheros de intercambio.
-        # first_time = True
-        # last_reading_time = None
         emsg = f"{phi.datetime.now}/ {__file__} (check_changes_from_web) ERROR - No se ha generado fichero de lecturas"
         raise FileNotFoundError(emsg)
         # return
     else:
-        with open(phi.READINGS_FILE, "r") as rf:
-            last_reading = phi.json.load(rf)
-            last_reading_time = last_reading.get("hora")
-            print(f"\nComprobando cambios desde la WEB:\n\tHora de la última lectura: {last_reading_time}")
+        last_reading_time = phi.lectura_anterior.get("hora")
+        if last_reading_time:
+            last_exec_time =  phi.datetime.strptime(last_reading_time, "%Y-%m-%d %H:%M:%S.%f")
+        else:
+            last_exec_time = phi.init_time - phi.timedelta(hours=1)
 
     # Recorro todos los esclavos para ver si hay que actualizar algún valor
-    attr_mod = {}
-    attr_not_mod = {}
-    checked = []
-    for bus_id, bus in phi.buses.items():
-        # devs = phi.buses.get(bus)
-        changes = False
-        for dev_id, dev in bus.items():
-            dev_sl = str(dev.slave)
-            checked_device = (bus_id, dev_sl)
-            if checked_device in checked:  # Si ya he comprobado el dispositivo, no vuelvo a hacerlo (normalmente
-                # no va a haber dispositivos repetidos, pero por si acaso...
-                print(f"Ya se han comprobado los cambios del esclavo {dev_sl}: {dev.name} del bus {bus_id}")
-                continue
+    dev_sl = str(dev.slave)
+    dev_class = dev.__class__.__name__
+
+    class_rw_files = phi.EXCHANGE_RW_FILES.get(dev_class)  # Si el atributo no está entre los archivos RW, no puede
+    # escribirse desde la web y, por tanto, el archivo y el atributo se actualizan con el último valor leído
+
+    is_UFHC_SP = dev_class == "UFHCController" and "sp" in attr  # Para ver si el atributo es una consigna de termostato
+
+    ex_folder_name = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + dev_sl
+    print(f"Comprobando esclavo {dev_sl}: {dev.name} (clase {dev_class})) del bus {bus_id}")
+    xch_file_to_check = ex_folder_name + r"/" + attr
+    with open(xch_file_to_check, "r") as xchf:
+        xch_value = xchf.read().strip()  # Valor leído en el archivo de intercambio
+    last_mod_time = get_f_modif_timestamp(xch_file_to_check)
+    current_value = getattr(dev, attr)  # obtengo el valor del atributo
+    print(f"check_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, "
+          f"atributo {attr}.\n"
+          f"Valor actual: {current_value}\n"
+          f"Valor en web: {xch_value}")
+
+
+    # Si el atributo a comprobar es la consigna de los X147/8, el procedimiento es distinto al resto de atributos
+    if is_UFHC_SP:
+        attr_dev_bus_file = f"{xch_file_to_check}_bus"  # Debe comprobarse si hay cambios desde la web
+        last_spbus_change_date = get_f_modif_timestamp(attr_dev_bus_file)  # Fecha de la última modif desde tto.
+        # if not phi.os.path.isfile(attr_dev_bus_file):
+        if not last_spbus_change_date:  # get_f_modif_timestamp devuelve None cuando el archivo no existe
+            print(f"ERROR {__file__}\nNo se encuentra el archivo {attr_dev_bus_file}")
+            print(f"Se actualiza con el valor leído en {xch_file_to_check}: {current_value}")
+            try:
+                with open(attr_dev_bus_file, "w") as f:
+                    f.write(str(current_value))
+            except FileNotFoundError as e:
+                print(f"\n\tError guardando valor en spx_bus file\n{e}\n")
+            stored_sp_bus_val = current_value
+        else:
+            with open(attr_dev_bus_file, "r") as f:
+                stored_sp_bus_val = f.read().strip()  # Valor leído anteriormente en el dispositivo
+        print(f"Valor almacenado en {attr_dev_bus_file} de {dev.name}: {stored_sp_bus_val} / "
+              f"\t{type(stored_sp_bus_val)}")
+        if not stored_sp_bus_val:
+            stored_sp_bus_val = current_value
+            with open(attr_dev_bus_file, "w") as f:
+                print(f"Escribiendo por primera vez en {attr_dev_bus_file} de {dev.name}: {stored_sp_bus_val} / ")
+                f.write(str(stored_sp_bus_val))
+
+        modif_from_web = last_spbus_change_date < last_mod_time  # se ha modificado el archivo con el valor web
+        # porque su fecha de modificación es posterior a la del archivo xxx_bus
+        if float(stored_sp_bus_val) != current_value and not modif_from_web:  # El usuario ha cambiado la consigna.
+            # Se actualizan con el nuevo valor los archivos spx, spx_bus y el dispositivo
+            print(f"{dev.name} - Consigna {stored_sp_bus_val} cambiada en termostato a {current_value}")
+            with open(attr_dev_bus_file, "w") as attdbf:
+                attdbf.write(str(current_value))
+            with open(xch_file_to_check, "w") as attdf:
+                attdf.write(str(current_value))
+            setattr(dev, attr, current_value)  # Se actualiza el atributo
+            return 1
+        elif float(xch_value) != current_value:  # Se ha cambiado desde la Web.
+            # Se actualiza el archivo spx_bus
+            print(f"{dev.name} - Consigna {stored_sp_bus_val} cambiada desde la web a {xch_value}")
+            setattr(dev, attr, float(xch_value))  # Se actualiza el atributo
+            print(f"Atributo {attr} actualizado desde la web a {getattr(dev, attr)} / {type(getattr(dev, attr))}")
+            with open(attr_dev_bus_file, "w") as attdbf:
+                attdbf.write(str(xch_value))  # Se actualiza el archivo spx_bus
+            with open(xch_file_to_check, "w") as attdbf:
+                attdbf.write(str(xch_value))  # Se actualiza el archivo de intercambio
+            print("\n\tCOMPROBANDO ACTUALIZACIÓN DE ARCHIVO")
+            with open(attr_dev_bus_file, "r") as attdbf:
+                file_content = attdbf.read()
+                print(f"\n\tValor guardado en el archivo spx_bus leído desde el termostato {file_content}")
+            return 1
+        else:
+            print(f"No hay que actualizar {attr} en {dev.name}")
+            return 0
+
+    if None in (last_mod_time, last_exec_time):
+        print(f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
+              f"Última modificación {xch_file_to_check}: {last_mod_time} - tipo {type(last_mod_time)}\n\t"
+              f"Última ejecución: {last_exec_time} - tipo {type(last_exec_time)}")
+        return 0
+
+    print(f"Fechas de última modificación y última lectura:\n\t"
+          f"Última modificación {xch_file_to_check}: {last_mod_time}\n\t"
+          f"Última ejecución: {last_exec_time}")
+
+    changes = False  # changes se refiere a los cambios por Web
+    if attr not in class_rw_files:
+        print(f"\n{attr} es de sólo lectura para {dev.name}. Se actualiza directamente el archivo "
+              f"con el último valor del atributo leído: {current_value}")
+        with open(xch_file_to_check, "w") as xchf:
+            xchf.write(str(current_value))
+        with open(xch_file_to_check, "r") as modf:
+            new_web_value = modf.read().strip()
+            print(f"\nComprobando si se ha escrito {current_value} en {xch_file_to_check}. "
+                  f"Valor leído: {new_web_value}")
+
+    elif last_mod_time > last_exec_time:  # Ha habido modificaciones desde la Web en atributo RW
+        changes = True
+        print(f"\nEl fichero:\t{xch_file_to_check}\tse ha modificado desde la última lectura\n")
+        if not xch_value is None:
+            if '(' in xch_value:  # Is Tuple
+                val_to_write = tuple(map(int, xch_value.strip('()').split(', ')))
+            elif '.' in xch_value:  # Is float
+                val_to_write = float(xch_value)
+            elif xch_value.isdecimal():  # Is int
+                val_to_write = int(xch_value)
             else:
-                checked.append(checked_device)
-            dev_class = dev.__class__.__name__
-            if dev_class == "UFHCController":  # Los cambios en la centralita X148 ya se han comprobado
-                continue
+                val_to_write = str(xch_value)
+            print(f"Actualizando el atributo {attr} del dispositivo {dev.name} con el valor {val_to_write}")
+            setattr(dev, attr, val_to_write)
+            print(f"Leyendo atributo tras escritura: {getattr(dev, attr)}")
 
-            xch_rw_files = phi.EXCHANGE_RW_FILES.get(dev_class)
-            ex_folder_name = phi.EXCHANGE_FOLDER + r"/" + bus_id + r"/" + dev_sl
-            print(f"Comprobando esclavo {dev_sl}: {dev.name} (clase {dev_class})) del bus {bus_id}")
-            # print(f"\tArchivos\n{xch_rw_files}")
-            for xf in xch_rw_files:
-                xch_file_to_check = ex_folder_name + r"/" + xf
-                # file_from_dev_to_check = ex_folder_name + r"/" + xf
-                last_mod_time = get_f_modif_timestamp(xch_file_to_check)
-                print(f"check_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, "
-                      f"atributo {xf}")
-                # Cambio la siguiente línea porque por algún motivo el atributo no está actualizado NO APLICA
-                current_value = getattr(dev, xf)  # el nombre del fichero xf coincide con el atributo a comprobar
+            with open(xch_file_to_check, "w") as xchf:
+                xchf.write(str(xch_value))
+            with open(xch_file_to_check, "r") as modf:
+                web_value = modf.read().strip()
+                print(f"\nComprobando si se ha escrito {val_to_write} en {xch_file_to_check}. "
+                      f"Valor leído: {web_value}")
 
-                if None in (last_mod_time, last_reading_time):
-                    print(f"ERROR al recuperar las fechas de última modificación y última lectura:\n\t"
-                          f"Última modificación {xch_file_to_check}: {last_mod_time}\n\t"
-                          f"Última lectura: {last_reading_time}")
-                    continue
-                print(f"Fechas de última modificación y última lectura:\n\t"
-                      f"Última modificación {xch_file_to_check}: {last_mod_time}\n\t"
-                      f"Última lectura: {last_reading_time}")
-                with open(xch_file_to_check, "r") as modf:
-                    print(f"Examinando file_from_web_to_check: {xch_file_to_check}")
-                    web_value = modf.read().strip()
-                print(f"\nDEBUGGING {__file__}:"
-                      f"\n\tValor leído en la web: {web_value}"
-                      f"\n\tValor actual: {current_value} {type(current_value)}")
+    else:  # Se propaga el valor del atributo al archivo si ha cambiado
+        changes = False
+        if current_value != xch_value:
+            print(f"No coincide el valor del archivo de intercambio, {xch_value} con el valor actual "
+                  f"del atributo, {current_value}")
+            print(f"Actualizando archivo de intercambio: {xch_file_to_check}")
 
-                if last_mod_time > last_reading_time:  # Ha habido modificaciones desde la Web
-                    changes = True
-                    print(f"\nSe ha modificado desde la Web el fichero:\n\t{xch_file_to_check}\n"
-                          f"\tValor anterior:\t{current_value} (tipo {type(getattr(dev, xf))})\n"
-                          f"\tValor desde web:\t{web_value} (tipo {type(web_value)})\n")
-                    attr_mod[xch_file_to_check] = web_value
-                    if web_value is not None:
-                        if '(' in web_value:  # Is Tuple
-                            val_to_write = tuple(map(int, web_value.strip('()').split(', ')))
-                        elif '.' in web_value:  # Is float
-                            val_to_write = float(web_value)
-                        elif web_value.isdecimal():  # Is int
-                            val_to_write = int(web_value)
-                        else:
-                            val_to_write = str(web_value)
-                        setattr(dev, xf, val_to_write)
-                        with open(xch_file_to_check, "w") as xchf:
-                            xchf.write(str(web_value))
-                else:
-                    attr_not_mod[xch_file_to_check] = current_value
-            if changes:
-                changes = False
-                print(f"{__file__} Subiendo actualización a dispositivo ModBus")
-                await dev.upload()
-        print(f"Archivos modificados: {attr_mod}")
-        print(f"Archivos NO modificados: {attr_not_mod}")
+            with open(xch_file_to_check, "w") as xchf:
+                xchf.write(str(current_value))
+            with open(xch_file_to_check, "r") as modf:
+                new_web_value = modf.read().strip()
+                print(f"\nComprobando si se ha escrito {current_value} en {xch_file_to_check}. "
+                    f"Valor leído: {new_web_value}")
+        else:
+            print(f"No es necesario actualizar nada en {attr}")
 
-    return 1
+    if changes:
+        return 1
+    return 0
+
+
+async def update_all_rooms():
+    """
+    Actualiza los valores asociados a todos los objetos Room del proyecto.
+    Returns: resultado de la actualización de las habitaciones
+    """
+    print(f"\n(update_all_rooms) Actualizando todos los objetos Room:\n")
+    print("\n".join([r.name for r in phi.all_rooms.values()]))
+
+    rooms_updating_tasks = [create_task(r.update())
+                                for r in tuple(phi.all_rooms.values())]
+    rooms_updating_results = await gather(*rooms_updating_tasks)
+    print(f"Resultado de la actualización de todas las habitaciones (tupla de 1's): {rooms_updating_results}")
+    # Actualizo el fichero con la información de las habitaciones
+    phi.save_room_instances_file(phi.all_rooms)
+    return rooms_updating_results
 
 
 async def update_roomgroups_values():
@@ -477,6 +679,7 @@ async def update_roomgroups_values():
     Actualiza los cálculos para todos los grupos de habitaciones y los guarda en ROOMGROUPS_VALUES_FILE
     Returns: si la actualización de grupos de habitaciones y la escritura de ROOMGROUPS_VALUES_FILE ha sido un éxito
     """
+
     roomgroup_updating_tasks = [create_task(r.get_consignas())
                                 for r in tuple(phi.all_room_groups.values())]
     roomgroup_updating_results = await gather(*roomgroup_updating_tasks)
@@ -526,8 +729,8 @@ async def update_all_buses(device_type=None):
     """
     Actualiza los datos en todos los dispositivos en función de los valores calculados para los grupos de
     habitaciones
-    Como las centralitas de suelo radiante (UFHCControlLer ya se habían actualizado, si no se especifica
-    "device_type", se actualiza todo excepto los UFHCControler
+    Como las centralitas de suelo radiante (UFHCControlLer) ya se habían actualizado, si no se especifica
+    "device_type", se actualizan todos los dispositivos excepto los UFHCControler
     Returns: 1
     Args:
         device_type (object): Si se especifica el nombre de un tipo de dispositivo, UFHCController por ejemplo,
@@ -545,10 +748,10 @@ async def update_all_buses(device_type=None):
             if repr(device) is not None:
                 print(repr(device))
             print(f"Finalizada actualización de {device.name} / {device.brand}_{device.model}")
-    with open(phi.BUSES_INSTANCES_FILE, "wb") as bf:
-        print(
-            f"{__file__} (mbutils) \n\tACTUALIZANDO ARCHIVO buses CON INSTANCIAS DE LOS DISPOSITIVOS")
-        phi.pickle.dump(phi.buses, bf)
+
+    print(
+        f"{__file__} (mbutils) \n\tACTUALIZANDO ARCHIVO buses CON INSTANCIAS DE LOS DISPOSITIVOS")
+    save_devices_instances_file(phi.buses)
     return 1
 
 

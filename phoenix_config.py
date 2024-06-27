@@ -16,6 +16,7 @@ from phoenix_constants import *
 boardsn: str = ""  # Número de serie de la placa
 prj: Dict = {}  # Diccionario generado a partir del JSON con la configuración del proyecto
 datadb: Dict = {}  # Variable para almacenar las lecturas de registros ModBus y asociarlas con las Rooms
+all_rooms: Dict = {}  # Diccionario para almacenar todas las habitaciones del proyecto
 all_room_groups: Dict = {}  # Diccionario con todos los grupos de habitaciones. Clave principal es id del grupo
 buses: Dict = {}  # Diccionario con las instancias de los dispositivos ModBus asociados a cada bus
 mbregmaps: Tuple = ()  # Tupla de objetos tipo mapa de registros modbus ModbusRegisterMap.
@@ -170,6 +171,17 @@ class MBDevice:
             return
         finally:
             self.conn.close()
+
+
+    async def update(self):
+        """
+        Método para actualizar los registros modbus.
+        Se definen en cada dispositivo.
+        Returns:
+
+        """
+        pass
+        return
 
     def __repr__(self):
         dev_info = f"Dispositivo {self.name}: {self.brand} / {self.model}. Esclavo {self.slave}"

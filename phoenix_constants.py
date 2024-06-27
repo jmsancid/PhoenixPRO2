@@ -58,8 +58,10 @@ TEMP_FOLDER = "/home/pi/var/tmp/phoenix/"
 READINGS_FILE = TEMP_FOLDER + "modbus_readings.json"
 ROOMGROUPS_VALUES_FILE = TEMP_FOLDER + "roomgroups_values.json"
 ROOMGROUPS_INSTANCES_FILE = TEMP_FOLDER + "roomgroups.pickle"
+ROOM_INSTANCES_FILE = TEMP_FOLDER + "rooms.pickle"
 BUSES_INSTANCES_FILE = TEMP_FOLDER + "buses.pickle"
 REGMAP_INSTANCES_FILE = TEMP_FOLDER + "regmaps.pickle"
+LAST_EXEC_DATE_FILE = TEMP_FOLDER + "last_exec_date_file"
 
 # CONFIG_FILE = "./project.json"
 

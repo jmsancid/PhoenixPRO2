@@ -57,6 +57,11 @@ async def get_modo_iv(bld: str = "1") -> [int, None]:
         # se introduce como un entero, pero la clave del diccionario con los datos leídos son str
         device_id = str(
             modo_iv_from_mbdev_source.get("device"))  # # OJO, es el ID del Device en la base de datos, NO EL SLAVE
+
+        print(f"(get_modo_iv)\n\t"
+              f"Dispositivo para obtener modo IV: {modo_iv_from_mbdev_source}\n\t"
+              f"Archivo del que leer modo IV: {modo_iv_from_file_source}\n\t"
+              f"bus_id = {bus_id}  |  device_id = {device_id}")
         device = phi.buses.get(bus_id).get(device_id)  # Devuelve el dispositivo en el que se va a escribir
         # modo_iv = await device.iv_mode()
         modo_iv = await device.iv_mode()
@@ -112,16 +117,16 @@ def get_temp_exterior(bld: str = "1") -> [float, None]:
     t_ext_from_file_source = te_source.get("file")
     if t_ext_from_mbdev_source not in [None, {}]:
         t_ext = get_value(t_ext_from_mbdev_source)
-        print("La temperatura exterior se lee de un dispositivo ModBus")
-        print(f"Valor de temperatura exterior leido: {t_ext}\n")
+        print("\nLa temperatura exterior se lee de un dispositivo ModBus")
+        print(f"Valor de temperatura exterior leido: {t_ext}")
         t_ext_file = phi.EXCHANGE_FOLDER + t_ext_from_file_source
         with open(t_ext_file, "w") as ivf:
-            print(f"Guardando temperatura exterior en {t_ext_file}")
+            print(f"Guardando temperatura exterior en {t_ext_file}\n")
             ivf.write(str(t_ext))
         return t_ext
     elif t_ext_from_file_source:
-        print("La temperatura exterior se lee de un archivo")
         t_ext_file = phi.EXCHANGE_FOLDER + t_ext_from_file_source
+        print(f"\nLa temperatura exterior se lee de un archivo: {t_ext_file}")
         if path.isfile(t_ext_file):
             with open(t_ext_file, "r") as txf:
                 t_ext = float(txf.read())
@@ -250,33 +255,6 @@ class Room:
         self.offsetairref = offsetairref
         self.offsetaircal = offsetaircal
 
-    def __repr__(self):
-        """
-        Para imprimir la información de la habitación
-        Returns:
-        """
-        modo = "Refrigeración" if self.iv else "Calefacción"
-        # sp = self.get_sp()
-        # rh = self.get_rh()
-        # rt = self.get_rt()
-        # st = self.get_st()
-        # dp = self.calc_dp()
-        # h = self.h()
-        room_info = f"""\nDatos de la habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id}
-            Modo: {modo}
-            Consigna: {self.sp}
-            Humedad relativa: {self.rh}
-            Temperatura ambiente: {self.rt}
-            Estado actuador: {self.st}
-            Temperatura de rocío: {self.dp}
-            Entalpía: {self.calc_h}
-            """
-        if None not in (self.sp, self.rt) and self.sp < 50 and self.rt < 50:
-            return room_info
-        else:
-            msg = f"\nHabitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id} " \
-                  f"tiene una consigna o una temperatura no válidas"
-            return msg
 
     def calc_dp(self):
         """
@@ -301,7 +279,7 @@ class Room:
         # rt = self.get_rt()
         # rh = self.get_rh()
         pres_total = 101325 if altitud is None else 101325 * (1 - 2.25577 * 0.00001 * altitud) ** 5.2559
-        print(f"DEBUGGING {__file__} Calculando entalpia: {self.rt} / {self.rh}")
+        print(f"DEBUGGING {__file__} \nCalculando entalpia: {self.rt} / {self.rh}")
         if None in (self.rt, self.rh) or self.rh == 0.0:
             return entalpia
         pres_vap_sat = 10 ** (7.5 * self.rt / (273.159 + self.rt - 35.85) + 2.7858)  # Pa
@@ -327,8 +305,8 @@ class Room:
         modo = ("Calefacción", "Refrigeración")
         # iv_mode = get_modo_iv(self.building_id)
         iv_mode = phi.system_iv
-        print(f"Modo funcionamiento habitación {self.name} del edificio {self.building_id}:")
-        print(f"\t\t{modo[iv_mode]}\n")
+        print(f"Modo funcionamiento habitación {self.name} del edificio {self.building_id}:"
+              f"\t\t{modo[iv_mode]}\n")
         self.iv = iv_mode
         return self.iv
 
@@ -423,7 +401,7 @@ class Room:
         Actualiza las lecturas de la habitación
         Returns 1 cuando termina la actualización:
         """
-        print(f"Iniciando actualización de la habitación {self.name}")
+        print(f"\nIniciando actualización de la habitación {self.name}\n")
         self.iv = self.get_iv_mode()
         self.rt = self.get_rt()
         self.rh = self.get_rh()
@@ -443,6 +421,36 @@ class Room:
               f"\nCalidad de aire: {self.aq}"
               f"\nConsigna de calidad de aire: {self.aqsp}\n")
         return 1
+
+
+    def __repr__(self):
+        """
+        Para imprimir la información de la habitación
+        Returns:
+        """
+        modo = "Refrigeración" if self.iv else "Calefacción"
+        # sp = self.get_sp()
+        # rh = self.get_rh()
+        # rt = self.get_rt()
+        # st = self.get_st()
+        # dp = self.calc_dp()
+        # h = self.h()
+        room_info = f"""\nDatos de la habitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id}
+            Modo: {modo}
+            Consigna: {self.sp}
+            Humedad relativa: {self.rh}
+            Temperatura ambiente: {self.rt}
+            Estado actuador: {self.st}
+            Temperatura de rocío: {self.dp}
+            Entalpía: {self.h}"""
+            # """
+
+        if None not in (self.sp, self.rt) and self.sp < 50 and self.rt < 50:
+            return room_info
+        else:
+            msg = f"\nHabitación {self.name}, vivienda {self.dwelling_id}, edificio {self.building_id} " \
+                  f"tiene una consigna o una temperatura no válidas"
+            return msg
 
 
 class RoomGroup:
@@ -518,13 +526,22 @@ class RoomGroup:
         h_max = None  # Inicializo la entalpia del grupo
         demanda = 0
         # Se actualizan los atributos de las habitaciones del grupo según las últimas lecturas
-        room_updating_tasks = [create_task(r.update())
-                               for r in tuple(self.roomgroup)]
 
-        updating_results = await gather(*room_updating_tasks)
-        print(f"Resultado actualización habitaciones {updating_results}.\nDebe ser una tupla de 1's")
-        for room in self.roomgroup:
-            print(f"Calculando consignas del grupo {self.id_rg}. Datos habitación {room.name}")
+        # 22/06/2024 Se elimina esta operación para no repetir la actualización de las habitaciones cuando estas
+        # pertenecen a más de un grupo, Ahora se actualizan todas de una vez tras leer las centralitas de suelo
+        # radiante desde mb_utils/update_all_rooms
+        # room_updating_tasks = [create_task(r.update())
+        #                        for r in tuple(self.roomgroup)]
+        # updating_results = await gather(*room_updating_tasks)
+        # print(f"Resultado actualización habitaciones {updating_results}.\nDebe ser una tupla de 1's")
+
+        for room_instance in self.roomgroup:
+            room_id = room_instance.building_id + "_" + room_instance.dwelling_id + "_" + room_instance.room_id
+            room = phi.all_rooms.get(room_id)
+            # print(f"(get_consignas): {room_id}")
+            # print(f"(get_consignas): {room.__dict__}")
+            # print(f"Recorriendo el grupo {self.id_rg}. Habitación {room.name}. Tipo {type(room)}")
+            print(f"\nCalculando consignas del grupo {self.id_rg}. Datos habitación {room.name}\n{room}\n")
             null_values = ["", None, 0, 0.0, "0", "0.0", "true", "false"]
             # Calidad de aire
             room_aq = room.aq if room.aq is not None else 0
@@ -543,6 +560,8 @@ class RoomGroup:
                 continue
             group_air_temperature = rt if group_air_temperature is None else group_air_temperature
             air_sp = sp + room.offsetairref if cooling else sp + room.offsetaircal
+            print(f"(roomgroups-get_consignas): Calculando air_sp ({room.name}/{self.id_rg}: "
+                  f"{air_sp} = {sp} + offset (0.5 C/-1.5 H)")
             dp = room.dp  # Temperatura de rocío del objeto Room
             h = room.h  # Entalpia del objeto Room
 
@@ -612,7 +631,7 @@ class RoomGroup:
         self.aq = group_aq
         self.aq_sp = group_aq_sp
         collect()
-        print(repr(self))
+        print(self)
         return 1
 
     def iv_mode(self, new_iv_mode: [int, None] = None):
@@ -640,25 +659,31 @@ class RoomGroup:
         n_hab = len(self.roomgroup)  # nº de habitaciones del grupo
         for room in self.roomgroup:
             room_modo_iv = room.iv  # Obtengo el modo IV de la habitación
+            print(f"(roomgroups-iv_mode - {self.id_rg}) Valor Modo IV {room.name}:\t{room_modo_iv}")
             if room_modo_iv in ['1', 1, True, 'True']:
                 q_hab_cooling += 1
             elif room_modo_iv in ['0', 0, False, 'False']:
                 q_hab_heating += 1
-
+        print(f"(roomgroups-iv_mode) Habitaciones en cooling: {q_hab_cooling}")
+        print(f"(roomgroups-iv_mode) Habitaciones en heating: {q_hab_heating}")
         modo_iv = phi.COOLING if q_hab_cooling > q_hab_heating else phi.HEATING
 
         if new_iv_mode in [0, 1]:  # Se fuerza el modo IV. TODO Comprobar si esta opción tiene sentido.
+            print(f"(roomgroups-iv_mode) Modo IV prefijado")
             self.iv = new_iv_mode
         elif q_hab_cooling + q_hab_heating == 0:  # No se ha leído el modo IV de ninguna habitación
             # self.iv = get_modo_iv()
+            print(f"(roomgroups-iv_mode) Modo IV del sistema: {phi.system_iv}")
             self.iv = phi.system_iv
         else:
+            print(f"(roomgroups-iv_mode) Modo IV del grupo en función del nº de habitaciones cooling(iv=1) o "
+                  f"heating(iv=0): {modo_iv}")
             self.iv = modo_iv
 
         return self.iv
 
     def __repr__(self):
-        # self.get_consignas()
+        # print("\n\n ejecutando roomgroup.__repr__")
         demanda_str = ("No hay demanda", "Demanda de Refrigeración", "Demanda de Calefacción")
 
         results = f"""Datos calculados para el grupo {self.id_rg}:
@@ -670,4 +695,6 @@ class RoomGroup:
                         Entalpia grupo: {self.air_h}
                         Nivel CO2 grupo: {self.aq}
                         Consigna nivel CO2 grupo: {self.aq_sp}"""
+
+
         return results

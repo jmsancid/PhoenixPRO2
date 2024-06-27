@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 import asyncio
 import sys
+import time
+
+# import sys
 
 import phoenix_init as phi
 
-from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_all_buses, check_changes_from_web
+from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_all_buses, update_all_rooms
 
 
 # from publish.publish_results import publish_results
@@ -26,8 +29,12 @@ async def main():
     # todos los registros
     print(f"\n************\t LECTURA MODBUS FINALIZADA {id_lectura_actual}\t************\n")
 
+
     phi.system_iv = await phi.get_modo_iv()  # Variable global con el modo de funcionamiento del sistema
-    print(f"\nMODO de funcionamiento del sistema: {phi.system_iv}")
+    print("==========================================================\n")
+    print(f"\n\tMODO de funcionamiento del sistema: {phi.system_iv}\n")
+    print("==========================================================\n")
+
 
     print(f"\n************\t ACTUALIZANDO CENTRALITAS X148 {str(phi.datetime.now())}\t************\n")
     # Actualizo las instancias de los Controladores de suelo radiante con las últimas lecturas
@@ -36,11 +43,23 @@ async def main():
 
     print(f"\n************\t COMPROBANDO CAMBIOS EN LA WEB {str(phi.datetime.now())}\t************\n")
 
-    # Tras las lecturas de los buses, compruebo si el usuario ha cambiado la consigna en algún termostato
-    # (revisando el fichero correspondiente) o si ha habido algún cambio desde la web: nueva consigna,
-    # modos manuales, etc.
-    changes = await check_changes_from_web()
+    # Tras leer los buses y actualizar las centralitas de suelo radiante "UFHCController",
+    # compruebo si ha habido algún cambio desde la web: modos manuales, etc.
+    print("\t\t Se ha cambiado la forma de comprobar los cambios por web JSC 19/06/2024")
+    # changes = await check_changes_from_web()
+
+    # Se sustituye por la nueva versión de check_changes_from_web con el
+    # bus, dispositivo y atributo como parámetros. Se comprueba por separado para cada dispositivo
+
     print(f"\n************\t FINALIZADA COMPROBACIÓN CAMBIOS EN LA WEB {str(phi.datetime.now())}\t************\n")
+
+    print(f"\n************\t ACTUALIZANDO TODAS LAS HABITACIONES {str(phi.datetime.now())}\t************\n")
+    # Actualizo las lecturas de todas las habitaciones y grupos de habitaciones del proyecto
+    rooms_updating_results = await update_all_rooms()
+
+    print(f"\n************\t "
+          f"FINALIZADA ACTUALIZACIÓN DE TODAS LAS HABITACIONES {str(phi.datetime.now())}"
+          f"\t************\n")
 
     print(f"\n************\t ACTUALIZANDO GRUPOS DE HABITACIONES {str(phi.datetime.now())}\t************\n")
     # Actualizo las lecturas de todas las habitaciones y grupos de habitaciones del proyecto
@@ -53,8 +72,6 @@ async def main():
 
     # print(f"Free Memory: {micropython.mem_info(1)}")
     phi.collect()
-
-
 
 if __name__ == "__main__":
     asyncio.run(main())

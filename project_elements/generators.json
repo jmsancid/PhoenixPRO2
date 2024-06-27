@@ -14,8 +14,8 @@
       "cooling_value": 2,
       "alarm_source":  ["hr", 55],
       "t_ext_source": ["hr", 35],
-      "supply_water_temp_source": ["hr", 46],
-      "return_water_temp_source": ["hr", 47],
+      "supply_water_temp_source": ["hr", 47],
+      "return_water_temp_source": ["hr", 50],
       "dwh_temp_source": ["hr", 48],
       "t_inercia_source":  [],
       "water_flow_source": ["hr", 51]
