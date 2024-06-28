@@ -2635,7 +2635,7 @@ class TempFluidController(phi.MBDevice):
                             if circuito in (1, "1") and algun_actuador_abierto: # El circuito 1 es el de suelo radiante
                             # hay algún actuador abierto
                                 print(f"\nEl grupo {group_name} tiene demanda: {group_demand} y "
-                                        f"algun_actuador_abierto={algun_actuador abierto}. Se arranca bomba\n")
+                                        f"algun_actuador_abierto={algun_actuador_abierto}. Se arranca bomba\n")
                                 await self.onoff(circuito, phi.ON)
                             elif circuito in (1, "1"): # Todos los actuadores están cerrados
                                 print(f"\nEl grupo {group_name} tiene demanda: {group_demand} y "

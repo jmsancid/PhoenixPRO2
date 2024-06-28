@@ -9,14 +9,16 @@
           "en": "Flow rate set point (m³/h)",
           "sp": "Caudal (m³/h, no puede leerse)",
           "po": "Caudal (m³/h, no puede leerse)"
-        }
+        },
+        "readable": false
       },
       "6005": {
         "descr": {
           "en": "Bypass operation mode (0:auto / 1:closed / 2:open)",
           "sp": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)",
           "po": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)"
-        }
+        },
+        "readable": false
       },
       "4008": {
         "descr": {
@@ -88,63 +90,72 @@
           "en": "Modbus address",
           "sp": "Direccion modbus",
           "po": "Direccion modbus"
-        }
+        },
+        "readable": false
       },
       "6000": {
         "descr": {
           "en": "Flow rate set point (m³/h)",
           "sp": "Caudal (m³/h, no puede leerse)",
           "po": "Caudal (m³/h, no puede leerse)"
-        }
+        },
+        "readable": false
       },
       "6001": {
         "descr": {
           "en": "Supply fan use (%)",
           "sp": "Porcentaje uso ventilador de impulsión (%)",
           "po": "Porcentaje uso ventilador de impulsión (%)"
-        }
+        },
+        "readable": false
       },
       "6002": {
         "descr": {
           "en": "Exhaust fan use (%)",
           "sp": "Porcentaje uso ventilador de extracción (%)",
           "po": "Porcentaje uso ventilador de extracción (%)"
-        }
+        },
+        "readable": false
       },
       "6003": {
         "descr": {
           "en": "Exhaust/supply unbalance allowed",
           "sp": "Habilitar desequilibro (0:qimp = qextrac / 1:desequilibrio de caudales habilitado)",
           "po": "Habilitar desequilibro (0:qimp = qextrac / 1:desequilibrio de caudales habilitado)"
-        }
+        },
+        "readable": false
       },
       "6004": {
         "descr": {
           "en": "Default unbalance flow rate (m³/h)",
           "sp": "Desequilibrio predeterminado (m³/h, no puede leerse)",
           "po": "Desequilibrio predeterminado (m³/h, no puede leerse)"
-        }
+        },
+        "readable": false
       },
       "6005": {
         "descr": {
           "en": "Bypass operation mode (0:auto / 1:closed / 2:open)",
           "sp": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)",
           "po": "Funcionamiento del bypass (0:auto / 1:cerrado / 2:abierto, no puede leerse)"
-        }
+        },
+        "readable": false
       },
       "6006": {
         "descr": {
           "en": "Filter alarm reset",
           "sp": "Resetear alarma filtros (1:reset, no puede leerse)",
           "po": "Resetear alarma filtros (1:reset, no puede leerse)"
-        }
+        },
+        "readable": false
       },
       "6012": {
         "descr": {
           "en": "Control module configuration (0:Siber / 1:Modbus)",
           "sp": "Configuración módulo de control (0:Control Siber / 1:Modbus)",
           "po": "Configuración módulo de control (0:Control Siber / 1:Modbus)"
-        }
+        },
+        "readable": false
       },
       "4001": {
         "descr": {

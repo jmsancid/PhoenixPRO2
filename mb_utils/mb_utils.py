@@ -231,6 +231,22 @@ async def read_device_datatype(device: phi.MBDevice, regmap: dict, dtype: int) -
     if regs is not None:  # El dispositivo tiene registros del tipo "dtype"
         addresses = sorted([int(adr) for adr in regs.keys()])  # Lista ordenada de registros a leer
         # print(f"Registros del JSON: {addresses}")
+
+        # JSC 240628 Tengo que eliminar los registros con el campo "readable": false
+        addresses_to_remove = []
+        if "siber" in device.name.lower():
+            print(f"addresses de Siber: {addresses}")
+        for address in addresses:
+            is_readable = regs[str(address)].get("readable") is None  # Si existe el campo readable es porque no
+            # se puede leer el registro. Cuando existe el campo readable siempre es false
+            if not is_readable:
+                addresses_to_remove.append(address)
+        addresses = [address for address in addresses if regs[str(address)].get("readable") is None]
+        if addresses_to_remove:
+            print(f"Se han eliminado de la lectura los siguientes registros del dispositivo {device.name}:\n"
+                  f"{addresses_to_remove} y addresses queda {addresses}")
+        # Fin modificación JSC 240628
+
         grouped_addresses = group_adrs(addresses)  # Agrupo las direcciones de registros que van consecutivas
         # print(f"\nRegistros tipo {MODBUS_DATATYPES[dtype]}: {grouped_addresses}")
         read_data = []
