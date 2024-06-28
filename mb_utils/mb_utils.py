@@ -844,3 +844,45 @@ async def update_devices_from_xch_files(device):
                     attr_value_in_file = attr_value_in_device
             if attr_value_in_file is not None:
                 setattr(device, attr, attr_value_in_file)
+
+
+async def get_all_fancoils_st()  -> bool:
+    """
+    Módulo para comprobar si hay algún fancoil del proyecto en marcha.
+    Se cargan todos los dispositivos tipo fancoil del archivo BUSES_INSTANCES_FILE y se comprueba si su estado
+    actual es distinto de parado
+    Returns: True si algún fancoil está en marcha
+            False si están todos parados.
+    """
+    buses = phi.load_devices_instances()
+    for bus in buses:
+        devices = buses[bus]
+        for dev_idx, device in devices.items():
+            # print(f"get_all_fancoils_st: Evaluando dispositivo de clase: {device.__class__.__name__.lower()}")
+            if "fancoil" in device.__class__.__name__.lower():
+                print(f"\nEncontrado fancoil {device.name}, con velocidad {device.fan_speed}")
+                if device.fan_speed != 0:
+                    return True
+    return False
+
+
+async def get_all_ufhc_actuators_st()  -> bool:
+    """
+    Módulo para comprobar si hay algún actuador de suelo radiante abierto
+    Se cargan todos los dispositivos tipo ufhccontroller del archivo BUSES_INSTANCES_FILE y se comprueba 
+    su atributo pump
+    Returns: True si algún actuador está abierto
+            False si están todos cerrados.
+    """
+    buses = phi.load_devices_instances()
+    for bus in buses:
+        devices = buses[bus]
+        for dev_idx, device in devices.items():
+            # print(f":get_all_ufhc_actuators_st() Evaluando dispositivo de clase: {device.__class__.__name__.lower()}")
+            if "ufhc" in device.__class__.__name__.lower():
+                print(f"Encontrado controlador de suelo radiante {device.name} con el relé de bomba en " 
+                        f"estado {device.pump}")
+                if device.pump != 0:
+                    return True
+    return False
+

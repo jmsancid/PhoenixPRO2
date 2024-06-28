@@ -4,7 +4,7 @@ from bisect import bisect
 
 import phoenix_init as phi
 from mb_utils.mb_utils import get_value, save_value, set_value, get_h, get_dp, get_roomgroup_values, \
-    update_xch_files_from_devices, get_regmap, check_changes_from_web
+    update_xch_files_from_devices, get_regmap, check_changes_from_web, get_all_fancoils_st, get_all_ufhc_actuators_st 
 from regops.regops import set_hb, set_lb
 from project_elements.building import get_temp_exterior, get_hrel_exterior, get_h_exterior, get_modo_iv
 
@@ -229,8 +229,10 @@ class Generator(phi.MBDevice):
                   "datatype": datatype,
                   "adr": adr}
         current_sp = get_value(value_source=source)
+        setattr(self, "sp", current_sp)
+        print(f"CAMARINES ECODAN UPDATE. Consigna actual: {self.sp} / {current_sp}")
 
-        if new_sp is not None:
+        if not new_sp is None:
             if new_sp > phi.TMAX_IMPUL_CALEF or new_sp < phi.TMIN_IMPUL_REFR:
                 print(f"{self.name}: Error escribiendo la consigna {new_sp} para el generador {self.name}.\n"
                       f"Está fuera de los límites [{phi.TMIN_IMPUL_REFR} - {phi.TMAX_IMPUL_CALEF}]")
@@ -341,6 +343,7 @@ class Generator(phi.MBDevice):
         await self.set_manual_onoff()
         await self.set_manual_iv()
         await self.set_manual_sp()
+        await self.set_sp()
         await self.set_dhwsp(self.dhw_sp)
         return 1
 
@@ -375,7 +378,12 @@ class Generator(phi.MBDevice):
         if self.manual_sp_mode:
             await self.set_sp(self.manual_sp)
         else:
-            await self.set_sp(group_supply_water_setpoint)
+            # Línea exclusiva para proyecto de Intecser - Camarines. Dejo la consigna que tiene la ECODAN
+            if not "camarines" in phi.prj.get("name").lower():
+                await self.set_sp(group_supply_water_setpoint)
+            else:
+                await self.set_sp()
+                print(f"CAMARINES ECODAN UPDATE. Consigna actual: {self.sp}")
         if self.manual_onoff_mode:
             await self.onoff(self.manual_onoff)
         else:
@@ -2460,8 +2468,6 @@ class TempFluidController(phi.MBDevice):
         """
         v_source_attr = "v" + str(circuit) + "_source"
         v_attr = "v" + str(circuit)
-        sources = ("v1_source", "v2_source", "v3_source")
-        values = ("v1", "v2", "v3")
 
         valv_source = getattr(self, v_source_attr)
         if valv_source is None or circuit not in (1, 2, 3):
@@ -2528,6 +2534,7 @@ class TempFluidController(phi.MBDevice):
             await self.sp(circuit)
             await self.man_onoff(circuit)  # Recoge el valor del atributo de activación manual de la bomba
             await self.man_sp(circuit)  # Recoge el valor del atributo de activación manual de la consigna
+            await self.valv(circuit)
 
         await self.set_st4(self.st4)
 
@@ -2569,13 +2576,12 @@ class TempFluidController(phi.MBDevice):
             if roomgroup is None:
                 print(f"No se ha encontrado información del grupo de habitaciones {self.groups[circ]}")
                 return
-            else:
-                group_sp = int(round(roomgroup.get("water_sp"), 0))  # Se extrae la consigna de agua del grupo
-                group_demand = roomgroup.get("demanda")  # Se extrae la demanda del grupo
-                group_name = self.groups[circ]
-                print(f"(tempfluidcontroller update) Valores del grupo {group_name}\n"
-                      f"\tConsigna a escribir en controlador: {group_sp}\n"
-                      f"\tDemanda del grupo: {group_demand}")
+            group_sp = int(round(roomgroup.get("water_sp"), 0))  # Se extrae la consigna de agua del grupo
+            group_demand = roomgroup.get("demanda")  # Se extrae la demanda del grupo
+            group_name = self.groups[circ]
+            print(f"(tempfluidcontroller update) Valores del grupo {group_name}\n"
+                  f"\tConsigna a escribir en controlador: {group_sp}\n"
+                  f"\tDemanda del grupo: {group_demand}")
 
             # Los valores de lectura y escritura proceden de la web por lo que hay que ver si se han modificado.
             # Sólo se actualiza EL ESTADO DE LAS BOMBAS, LA CONSIGNA MANUAL y LA CONSIGNA REAL
@@ -2585,6 +2591,7 @@ class TempFluidController(phi.MBDevice):
             sp_man_activation_attr = "act_man_sp" + str(circuito)
             sp_man_value_attr = "man_sp" + str(circuito)
             spx = "sp" + str(circuito)
+            vx = "v" + str(circuito)
 
             iv = await self.iv_mode(circuito)
             if iv != tempfluidcontroller_iv:
@@ -2624,14 +2631,32 @@ class TempFluidController(phi.MBDevice):
                         await self.man_onoff(circuito, new_val)
                     elif new_val == phi.OFF: # Modo manual desactivado. Se arranca si hay demanda y se para si no
                         if group_demand != 0:  # El grupo tiene demanda
-                            print(f"El grupo {group_name} tiene demanda: {group_demand}. Se arranca bomba")
-                            await self.onoff(circuito, phi.ON)
+                            algun_actuador_abierto = await get_all_ufhc_actuators_st()
+                            if circuito in (1, "1") and algun_actuador_abierto: # El circuito 1 es el de suelo radiante
+                            # hay algún actuador abierto
+                                print(f"\nEl grupo {group_name} tiene demanda: {group_demand} y "
+                                        f"algun_actuador_abierto={algun_actuador abierto}. Se arranca bomba\n")
+                                await self.onoff(circuito, phi.ON)
+                            elif circuito in (1, "1"): # Todos los actuadores están cerrados
+                                print(f"\nEl grupo {group_name} tiene demanda: {group_demand} y "
+                                        f"algun_actuador_abierto={algun_actuador_abierto}. Se para bomba\n")
+                                await self.onoff(circuito, phi.OFF)
+                            algun_fancoil_activo = await get_all_fancoils_st()
+                            if circuito in (2, "2") and algun_fancoil_activo: # El circuito 2 es el de los fancoils
+                            # hay algún fancoil en marcha
+                                print(f"\nEl grupo {group_name} tiene demanda: {group_demand} y "
+                                        f"algun_fancoil_activo={algun_fancoil_activo}. Se arranca bomba\n")
+                                await self.onoff(circuito, phi.ON)
+                            elif circuito in (2, "2"): # Todos los fancoils están parados
+                                print(f"\nEl grupo {group_name} tiene demanda: {group_demand} y "
+                                        f"algun_fancoil_activo={algun_fancoil_activo}. Se para bomba\n")
+                                await self.onoff(circuito, phi.OFF)
                         else:
-                            print(f"El grupo {group_name} no tiene demanda: {group_demand}. Se para la bomba")
+                            print(f"\nEl grupo {group_name} no tiene demanda: {group_demand}. Se para la bomba\n")
                             await self.onoff(circuito, phi.OFF)
                     else:
-                        print(f"UPDATE TempFluidController - Algo ha ido mal procesando la bomba del "
-                              f"circuito {circuito}")
+                        print(f"\nUPDATE TempFluidController - Algo ha ido mal procesando la bomba del "
+                              f"circuito {circuito}\n")
                 elif "sp" in attrname: # Ha cambiado la habilitación manual de la consigna
                     if new_val == phi.ON:  # Consigna manual activada. Se propaga la consigna manual
                         await self.man_sp(circuito, new_val)
@@ -2647,11 +2672,16 @@ class TempFluidController(phi.MBDevice):
                     print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
 
 
-            # Finalmente se actualiza la consigna real
+            # Finalmente se actualiza la consigna real y el estado de la válvula
             print(f"{self.name}.{spx}: {getattr(self, spx)}")
             changed = await check_changes_from_web(self.bus_id, self, spx)
             if changed:
                 print(f"{self.name}.{spx} ha cambiado en la web: {getattr(self, spx)}")
+
+            print(f"{self.name}.{vx}: {getattr(self, vx)}")
+            changed = await check_changes_from_web(self.bus_id, self, vx)
+            if changed:
+                print(f"{self.name}.{vx} ha cambiado en la web: {getattr(self, vx)}")
 
             iv = await self.iv_mode(circuito)
             pump_man_activation, pump_man_value = await self.man_onoff(circuito)
@@ -3598,7 +3628,7 @@ class DataSource(phi.MBDevice):
         """
         msg = f"\nInformación extraída de {self.name}:\n"
         ds_regmap = get_regmap(self)  # Diccionario con el mapa de registros del DataSource
-        print(f"{self.name}.__repr__: Registros obtenidos: {ds_regmap}")
+        # print(f"{self.name}.__repr__: Registros obtenidos: {ds_regmap}")
         for idx, src in enumerate(self.attr_sources):
             val_src = getattr(self, src)
             datatype = val_src[0]

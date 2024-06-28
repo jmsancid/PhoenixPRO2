@@ -7,7 +7,8 @@ import time
 
 import phoenix_init as phi
 
-from mb_utils.mb_utils import read_all_buses, update_roomgroups_values, update_all_buses, update_all_rooms
+from mb_utils.mb_utils import (read_all_buses, update_roomgroups_values, update_all_buses, update_all_rooms,
+                               get_all_fancoils_st, get_all_ufhc_actuators_st)
 
 
 # from publish.publish_results import publish_results
@@ -70,10 +71,19 @@ async def main():
     # Propago los valores calculados a los dispositivos del proyecto
     bus_updating_results = await update_all_buses()
 
+    algun_actuador_abierto = await get_all_ufhc_actuators_st()
+    msg = "Hay algun actuador abierto" if algun_actuador_abierto else "Todos los actuadores están cerrados"
+    print(f"\n\n{msg}\n\n")
+
+    algun_fancoil_activo = await get_all_fancoils_st()
+    msg = "Hay algun fancoil activo" if algun_fancoil_activo else "Ningún fancoil activo"
+    print(f"\n\n{msg}\n\n")
+
+
     # print(f"Free Memory: {micropython.mem_info(1)}")
     phi.collect()
 
 if __name__ == "__main__":
     asyncio.run(main())
     end_time = phi.datetime.now()
-    print(f"Hora finalización: {str(end_time)}")
+    print(f"Hora finalización: {str(end_time)}\nDuración: {str(end_time - phi.init_time)}")

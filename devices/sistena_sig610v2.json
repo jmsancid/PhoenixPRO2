@@ -106,8 +106,8 @@
       "16": {
         "descr": {
           "en": "Circuit 3 % valve opening",
-          "sp": "% apertura valvula circuito 1",
-          "po": "% apertura valvula circuito 1"
+          "sp": "% apertura valvula circuito 3",
+          "po": "% apertura valvula circuito 3"
         }
       },
       "17": {
@@ -120,8 +120,8 @@
       "18": {
         "descr": {
           "en": "Circuit 1 % valve opening",
-          "sp": "% apertura valvula circuito 3",
-          "po": "% apertura valvula circuito 3"
+          "sp": "% apertura valvula circuito 1",
+          "po": "% apertura valvula circuito 1"
         }
       }
     }
