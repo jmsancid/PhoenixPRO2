@@ -2261,15 +2261,13 @@ class TempFluidController(phi.MBDevice):
             setattr(self, manual_activation_attribute, new_man_mode)
             await self.onoff(circuit, manual_state_attribute)
 
+        val_to_write = current_manual_state
         if not new_man_mode is None:
             if new_man_mode not in [phi.OFF, phi.ON]:  # Activación manual incorrecta
                 print(f"{self.name}: Error activando el modo manual de la bomba del circuito {circuit} "
                       f"con el valor {new_man_mode}")
-                val_to_write = current_manual_state
             else:
                 val_to_write = new_man_mode
-        else:
-            val_to_write = current_manual_state
 
         if val_to_write == current_manual_state:
             print(f"No cambia el estado de activación manual de la bomba del circuito {circuit} de {self.name}")
@@ -2308,31 +2306,43 @@ class TempFluidController(phi.MBDevice):
                   "adr": adr}
 
         current_iv_sp = get_value(value_source=target)  # El SIG610 almacena CONSIGNA en byte bajo y MODO en byte alto
-        if current_iv_sp is not None:
+        if not current_iv_sp is None:
+            current_iv_sp_value = current_iv_sp[0] * 256 + current_iv_sp[1]
             current_iv, current_sp = current_iv_sp
             print(f"Modo off/frio/calor actual del circuito {circuit} de {self.name}: {current_iv}")
             print(f"Consigna actual del circuito {circuit} de {self.name}: {current_sp}")
         else:
             print(f"No se ha podido leer el modo del circuito {circuit} de {self.name}")
             return
+
+        mode_to_write = current_iv
+        print(f"tempfluidcontroller, \n"
+              f"current_iv_sp = {current_iv_sp}, \n"
+              f"current_iv = {current_iv}, \n"
+              f"current_sp = {current_sp}")
         if not new_iv_mode is None:
-            if new_iv_mode not in [0, 1, 2]:
+            if not new_iv_mode in [0, 1, 2]:
                 print(f"{self.name}: Error activando el modo del circuito {circuit} con el valor {new_iv_mode}")
-                mode_to_write = current_iv
+                # mode_to_write = current_iv
                 # Se mantiene el modo actual
             else:
                 # Se propaga el nuevo modo de funcionamiento
                 mode_to_write = new_iv_mode
 
-            if mode_to_write == current_iv:
-                return current_iv  # No ha cambiado el modo. No hay nada que actualizar
+        if mode_to_write == current_iv:
+            print(f"No ha cambiado el modo de funcionamiento frío/calor del circuito {circuit} "
+                  f"de {self.name}: {current_iv}")
 
-            # Actualizo el valor del modo de funcionamiento (byte alto)
-            new_val = set_hb(current_iv_sp, int(mode_to_write))
-            dbval = save_value(target, new_val)
-            res = await set_value(target, new_val)  # Escritura Modbus
-            setattr(self, mode_attr, mode_to_write)
+        # Se propaga la nueva consigna en el byte bajo.
+        print(f"\ntempfluidcontroller, \n"
+              f"mode_to_write = {mode_to_write}, \n")
+
+        new_val = set_hb(current_iv_sp_value, int(mode_to_write))
+        dbval = save_value(target, new_val)
+        res = await set_value(target, new_val)  # Escritura Modbus
+        setattr(self, mode_attr, mode_to_write)
         mode = getattr(self, mode_attr)
+
         return mode
 
     async def sp(self, circuit: int = 1, new_sp: [int, None] = None) -> [int, None]:
@@ -2378,8 +2388,8 @@ class TempFluidController(phi.MBDevice):
             else:
                 sp_to_write = new_sp
 
-            if sp_to_write == current_sp:
-                return current_sp  # No se ha cambiado la consigna. No hay nada que actualizar.
+        if sp_to_write == current_sp:
+            print(f"No ha cambiado la consigna del circuito {circuit} de {self.name}: {current_sp}")
 
         # Se propaga la nueva consigna en el byte bajo.
         print(f"\ntempfluidcontroller, \n"
@@ -2535,6 +2545,7 @@ class TempFluidController(phi.MBDevice):
             await self.man_onoff(circuit)  # Recoge el valor del atributo de activación manual de la bomba
             await self.man_sp(circuit)  # Recoge el valor del atributo de activación manual de la consigna
             await self.valv(circuit)
+            await self.ti(circuit)
 
         await self.set_st4(self.st4)
 
@@ -2590,9 +2601,10 @@ class TempFluidController(phi.MBDevice):
             pump_man_value_attr = "man_st" + str(circuito)
             sp_man_activation_attr = "act_man_sp" + str(circuito)
             sp_man_value_attr = "man_sp" + str(circuito)
-            spx = "sp" + str(circuito)
-            vx = "v" + str(circuito)
-            tix = "ti" + str(circuito)
+            stx = "st" + str(circuito)  # atributo del estado de la bomba del circuito x
+            spx = "sp" + str(circuito)  # atributo de la consigna bomba del circuito x
+            vx = "v" + str(circuito)  # atributo de la posición de la válvula del circuito x
+            tix = "ti" + str(circuito)  # atributo de la temperatura de impulsión del circuito x
 
             iv = await self.iv_mode(circuito)
             if iv != tempfluidcontroller_iv:
@@ -2674,7 +2686,7 @@ class TempFluidController(phi.MBDevice):
 
 
             # Finalmente se actualiza la consigna real, el estado de la válvula y la temperatura de impulsión
-            attr_to_update = (spx, vx, tix)
+            attr_to_update = (stx, spx, vx, tix)
             for attr in attr_to_update:
                 print(f"{self.name}.{attr}: {getattr(self, attr)}")
                 changed = await check_changes_from_web(self.bus_id, self, attr)
@@ -2684,10 +2696,14 @@ class TempFluidController(phi.MBDevice):
             iv = await self.iv_mode(circuito)
             pump_man_activation, pump_man_value = await self.man_onoff(circuito)
             sp_man_activation, sp_man_value = await self.man_sp(circuito)
+            stx = await self.man_onoff(circuito)
             spx = await self.sp(circuito)  # se vuelve a ejecutar por si ha cambiado la consigna manualmente
-            print(f"UPDATE TempFluidController {self.name}, circuito {circuito}: "
+            vx = await self.ti(circuito)  #
+            tix = await self.valv(circuito)  #
+            print(f"UPDATE TempFluidController {self.name}, circuito {circuito}:\n "
                   f"Valores de los atributos DESPUÉS de comprobar actualización desde la web")
             print(f"\tModo IV: {iv}\n"
+                  f"\tEstado actual de la bomba: {stx}\n"
                   f"\tMando manual bomba habilitado: {pump_man_activation}\n"
                   f"\tValor manual bomba: {pump_man_value}\n"
                   f"\tConsigna manual habilitada: {sp_man_activation}\n"
