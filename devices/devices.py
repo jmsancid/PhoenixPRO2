@@ -2592,6 +2592,7 @@ class TempFluidController(phi.MBDevice):
             sp_man_value_attr = "man_sp" + str(circuito)
             spx = "sp" + str(circuito)
             vx = "v" + str(circuito)
+            tix = "ti" + str(circuito)
 
             iv = await self.iv_mode(circuito)
             if iv != tempfluidcontroller_iv:
@@ -2672,21 +2673,18 @@ class TempFluidController(phi.MBDevice):
                     print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
 
 
-            # Finalmente se actualiza la consigna real y el estado de la válvula
-            print(f"{self.name}.{spx}: {getattr(self, spx)}")
-            changed = await check_changes_from_web(self.bus_id, self, spx)
-            if changed:
-                print(f"{self.name}.{spx} ha cambiado en la web: {getattr(self, spx)}")
-
-            print(f"{self.name}.{vx}: {getattr(self, vx)}")
-            changed = await check_changes_from_web(self.bus_id, self, vx)
-            if changed:
-                print(f"{self.name}.{vx} ha cambiado en la web: {getattr(self, vx)}")
+            # Finalmente se actualiza la consigna real, el estado de la válvula y la temperatura de impulsión
+            attr_to_update = (spx, vx, tix)
+            for attr in attr_to_update:
+                print(f"{self.name}.{attr}: {getattr(self, attr)}")
+                changed = await check_changes_from_web(self.bus_id, self, attr)
+                if changed:
+                    print(f"{self.name}.{attr} ha cambiado en la web: {getattr(self, attr)}")
 
             iv = await self.iv_mode(circuito)
             pump_man_activation, pump_man_value = await self.man_onoff(circuito)
             sp_man_activation, sp_man_value = await self.man_sp(circuito)
-            spx = await self.sp(circuito)
+            spx = await self.sp(circuito)  # se vuelve a ejecutar por si ha cambiado la consigna manualmente
             print(f"UPDATE TempFluidController {self.name}, circuito {circuito}: "
                   f"Valores de los atributos DESPUÉS de comprobar actualización desde la web")
             print(f"\tModo IV: {iv}\n"
@@ -2695,6 +2693,8 @@ class TempFluidController(phi.MBDevice):
                   f"\tConsigna manual habilitada: {sp_man_activation}\n"
                   f"\tValor manual consigna: {sp_man_value}\n"
                   f"\tValor aplicado consigna: {spx}\n"
+                  f"\tTemperatura de impulsión: {tix}\n"
+                  f"\tApertura de la válvula: {vx}\n"
                   )
         return 1
 
