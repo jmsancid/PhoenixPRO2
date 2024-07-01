@@ -175,7 +175,11 @@ class Generator(phi.MBDevice):
             self.iv = phi.HEATING
         else:
             print(f"ERROR {__file__} - Posible error de definición de los valores de calefacción o refrigeración "
-                  f"en {self.name}. Ver JSON {self.brand}-{self.model}.JSON")
+                  f"en {self.name}. Ver JSON {self.brand}-{self.model}.JSON\n"
+                  f"type(current_iv_mode): {type(current_iv_mode)}\n"
+                  f"type(self.cooling_value): {type(self.cooling_value)}\n"
+                  f"type(self.heating_value): {type(self.heating_value)}\n"
+                  f"")
         iv_set_datatype = self.iv_target[0]
         iv_set_adr = self.iv_target[1]
         target = {"bus": int(self.bus_id),
@@ -2219,7 +2223,11 @@ class TempFluidController(phi.MBDevice):
         current_st = get_value(target)
         if not new_st_value is None:
             if new_st_value not in [phi.OFF, phi.ON]:
-                print(f"{self.name}: Error accionando la bomba del circuito {circuit} con el valor {new_st_value}")
+                print(f"{self.name}: Error accionando la bomba del circuito {circuit} con el valor {new_st_value}\n"
+                  f"type(new_st_value): {type(new_st_value)}\n"
+                  f"type(phi.ON): {type(phi.ON)}\n"
+                  f"type(phi.OFF): {type(phi.OFF)}\n"
+                  f"")
                 val_to_write = current_st
             else:
                 val_to_write = new_st_value
@@ -2259,7 +2267,7 @@ class TempFluidController(phi.MBDevice):
             # el valor de manual_state_attribute se escribe desde la web
             # se propaga el valor manual de la bomba al circuito correspondiente
             setattr(self, manual_activation_attribute, new_man_mode)
-            await self.onoff(circuit, manual_state_attribute)
+            await self.onoff(circuit, current_manual_value)
 
         val_to_write = current_manual_state
         if not new_man_mode is None:
@@ -2632,8 +2640,8 @@ class TempFluidController(phi.MBDevice):
                     print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
 
             # Luego se actualizan los atributos que habilitan los valores manuales y se procesan
-            man_values_attrs = (pump_man_activation_attr, sp_man_activation_attr)
-            for attrname in man_values_attrs:
+            man_activation_values_attrs = (pump_man_activation_attr, sp_man_activation_attr)
+            for attrname in man_activation_values_attrs:
                 print(f"{self.name}.{attrname}: {getattr(self, attrname)}")
                 changed = await check_changes_from_web(self.bus_id, self, attrname)
                 if changed:
@@ -2682,7 +2690,8 @@ class TempFluidController(phi.MBDevice):
                 print(f"{self.name}.{attrname}: {getattr(self, attrname)}")
                 changed = await check_changes_from_web(self.bus_id, self, attrname)
                 if changed:
-                    print(f"{self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}")
+                    print(f"ACTUALIZACIÓN FINAL {self.name}.{attrname} ha cambiado en la web: {getattr(self, attrname)}\n"
+                          f"type self.{attrname}: {type(getattr(self, attrname))}")
 
 
             # Finalmente se actualiza la consigna real, el estado de la válvula y la temperatura de impulsión
@@ -2690,13 +2699,15 @@ class TempFluidController(phi.MBDevice):
             for attr in attr_to_update:
                 print(f"{self.name}.{attr}: {getattr(self, attr)}")
                 changed = await check_changes_from_web(self.bus_id, self, attr)
+                print(f"ACTUALIZACIÓN FINAL {self.name}.{attr} ha cambiado en la web: {getattr(self, attr)}\n"
+                      f"type self.{attr}: {type(getattr(self, attr))}")
                 if changed:
                     print(f"{self.name}.{attr} ha cambiado en la web: {getattr(self, attr)}")
 
             iv = await self.iv_mode(circuito)
             pump_man_activation, pump_man_value = await self.man_onoff(circuito)
             sp_man_activation, sp_man_value = await self.man_sp(circuito)
-            stx = await self.man_onoff(circuito)
+            stx = await self.onoff(circuito)
             spx = await self.sp(circuito)  # se vuelve a ejecutar por si ha cambiado la consigna manualmente
             vx = await self.ti(circuito)  #
             tix = await self.valv(circuito)  #
