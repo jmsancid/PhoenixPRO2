@@ -581,13 +581,15 @@ class UFHCController(phi.MBDevice):
             Diccionario con la información del canal
             None cuando el canal no se utiliza en el proyecto
         """
+        print(f"\nENTRANDO EN SET_CHANNEL_INFO\n")
         channel_source_attr = f"ch{channel}_source"
         channel_attr = f"ch{channel}"
         channel_info = {"sp": None, "rt": None, "rh": None, "ft": None, "st": None, "coff": None}
         channel_val_attrs = {magnitud: f"{magnitud}{channel}" for magnitud in tuple(channel_info.keys())}
         # ch_sources = self.__getattribute__(channel_source_attr)
         ch_sources = getattr(self, channel_source_attr)
-        print(f"(método set_channel_info) Valor almacenado modo IV X147: {self.iv} ")
+        print(f"\n(método set_channel_info) Valor almacenado modo IV X147: {self.iv} \n"
+              f"Origen atributos: {ch_sources}\m")
 
         for key, value in ch_sources.items():
             datatype = value[0]
@@ -598,13 +600,15 @@ class UFHCController(phi.MBDevice):
                       "adr": adr}
             # current_value = get_value(source)
             current_value = get_value(source)
+            print(f"\n(método set_channel_info - bucle atributos) \n"
+                  f"Valor actual atributo {key} desde get_value(): {current_value} / tipo: {type(current_value)}")
             if current_value not in (None, ""):
                 if "sp" in key and "x147" in self.model.lower() and self.iv:
                     print(f"(método set_channel_info) Valor almacenado consigna X147:sl-{self.slave} - canal: {channel}"
                           f" {current_value} / ({type(current_value)})")
                     current_value += 2.0  # En refrigeración, la consigna de los ttos es 2 gradC superior a la leída
                     print(f"(método set_channel_info) Valor refrigeración consigna X147: {current_value} "
-                          f"({type(current_value)})")
+                          f"({type(current_value)})\n")
             else:
                 current_value = phi.READ_ERROR_VALUE  # 08/07/2023 mala lectura
 
@@ -632,6 +636,8 @@ class UFHCController(phi.MBDevice):
                 channel_dp = await get_dp(float(rt), float(rh))
         setattr(self, channel_h_attr, channel_h)
         setattr(self, channel_dp_attr, channel_dp)
+
+        print(f"\nSALIENDO DE SET_CHANNEL_INFO\n")
 
         return getattr(self, channel_attr)
 
@@ -812,7 +818,7 @@ class UFHCController(phi.MBDevice):
                 await check_changes_from_web(self.bus_id, self, f)
                 # propago al dispositivo los valores de sp y coff
                 if "sp" in f or "coff" in f:  # Se trata de una consigna o de una autorización para refrigeración
-                    print(f"(ubase update) Propagando el atributo {f} al dispositifo {self.name}")
+                    print(f"(ubase update) Propagando el atributo {f} al dispositivo {self.name}")
                     await self.upload(f)
         # await self.upload()  # Se cargan los nuevos valores en el dispositivo
         # await update_xch_files_from_devices(self)  # Guarda los valores del dispositivo en el archivo de intercambio
@@ -828,26 +834,48 @@ class UFHCController(phi.MBDevice):
         :return:
         """
         es_consigna = "sp" in attr
+
         attr_type = "sp" if es_consigna else "coff"
         channel_id = attr[len(attr_type):]
 
         attr_source_name = "ch" + channel_id + "_source"
         ch_info = getattr(self, attr_source_name)
-        sp_value = getattr(self, attr)
+        attr_value = getattr(self, attr)
         attr_name = "consigna" if es_consigna else "refrigeración autorizada"
-        print(f"\n\tValor actual de {attr_name} antes de terminar upload:{sp_value}/{type(sp_value)}\n")
-        sp_value_corr = sp_value  # sp_value es un valor real de consigna en grados centígrados (sin x10)
-        if es_consigna and sp_value is not None and sp_value:
-            if float(sp_value) > 35.0:
+        print(f"\n\tValor actual de {attr_name} antes de terminar upload:{attr_value}/{type(attr_value)}\n")
+
+        # Modificado JSC 2024/08/03
+        # if es_consigna:
+        #     sp_value_corr = attr_value  # sp_value es un valor real de consigna en grados centígrados (sin x10)
+        # if es_consigna and attr_value is not None and attr_value:
+        #     if float(attr_value) > 35.0:
+        #         print(f"la consigna leída en {attr} está fuera de rango")
+        #     else:
+        #         if "x147" in self.model.lower() and self.iv:
+        #             sp_value_corr = float(attr_value) - 2.0  # En refrig, la consigna a escribir es 2 gradC
+        #             # inferior a la de los ttos
+        #             print(f"(método set_channel_info) Valor consigna a escribir X147: {sp_value_corr} "
+        #                   f"({type(sp_value_corr)})")
+        #
+        # if None not in (ch_info, attr_value):
+        #     sp_target = ch_info.get(attr_type)  # extraído la consigna o cooling off
+        #     datatype = sp_target[0]
+        #     adr = sp_target[1]
+        #     target = {"bus": int(self.bus_id),
+        #               "device": int(self.device_id),
+        #               "datatype": datatype,
+        #               "adr": adr}
+        if es_consigna and attr_value is not None and attr_value:
+            if float(attr_value) > 35.0:
                 print(f"la consigna leída en {attr} está fuera de rango")
             else:
                 if "x147" in self.model.lower() and self.iv:
-                    sp_value_corr = float(sp_value) - 2.0  # En refrig, la consigna a escribir es 2 gradC
+                    attr_value = float(attr_value) - 2.0  # En refrig, la consigna a escribir es 2 gradC
                     # inferior a la de los ttos
-                    print(f"(método set_channel_info) Valor consigna a escribir X147: {sp_value_corr} "
-                          f"({type(sp_value_corr)})")
+                    print(f"(método set_channel_info) Valor consigna a escribir X147: {attr_value} "
+                          f"({type(attr_value)})")
 
-        if None not in (ch_info, sp_value):
+        if None not in (ch_info, attr_value):
             sp_target = ch_info.get(attr_type)  # extraído la consigna o cooling off
             datatype = sp_target[0]
             adr = sp_target[1]
@@ -855,9 +883,9 @@ class UFHCController(phi.MBDevice):
                       "device": int(self.device_id),
                       "datatype": datatype,
                       "adr": adr}
-            print(f"UFHCController {self.name}. uploading value {sp_value_corr}")
-            uploaded_value = await set_value(target, sp_value_corr)
-            dbval = save_value(target, sp_value_corr)
+            print(f"UFHCController {self.name}. uploading value {attr_value}")
+            uploaded_value = await set_value(target, attr_value)
+            dbval = save_value(target, attr_value)
             uploaded_value = get_value(target)
             print(f"UPLOAD - Comprobando valor de atributo escrito: {uploaded_value}")
 

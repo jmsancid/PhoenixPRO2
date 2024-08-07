@@ -548,14 +548,14 @@ async def check_changes_from_web(bus_id: str, dev: phi.MBDevice, attr: str) -> i
         xch_value = xchf.read().strip()  # Valor leído en el archivo de intercambio
     last_mod_time = get_f_modif_timestamp(xch_file_to_check)
     current_value = getattr(dev, attr)  # obtengo el valor del atributo
-    print(f"check_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, "
-          f"atributo {attr}.\n"
-          f"Valor actual: {current_value}\n"
-          f"Valor en web: {xch_value}")
-
+    print(f"\ncheck_changes_from_web - Comprobando valores actuales del dispositivo {dev.name}, \n"
+          f"\tatributo {attr}.\n"
+          f"\tValor actual: {current_value}\n"
+          f"\tValor en web: {xch_value}\n")
 
     # Si el atributo a comprobar es la consigna de los X147/8, el procedimiento es distinto al resto de atributos
     if is_UFHC_SP:
+        print("\n\t ES UNA CONSIGNA DE CENTRALITA DE SUELO RADIANTE\n")
         attr_dev_bus_file = f"{xch_file_to_check}_bus"  # Debe comprobarse si hay cambios desde la web
         last_spbus_change_date = get_f_modif_timestamp(attr_dev_bus_file)  # Fecha de la última modif desde tto.
         # if not phi.os.path.isfile(attr_dev_bus_file):
@@ -573,14 +573,29 @@ async def check_changes_from_web(bus_id: str, dev: phi.MBDevice, attr: str) -> i
                 stored_sp_bus_val = f.read().strip()  # Valor leído anteriormente en el dispositivo
         print(f"Valor almacenado en {attr_dev_bus_file} de {dev.name}: {stored_sp_bus_val} / "
               f"\t{type(stored_sp_bus_val)}")
-        if not stored_sp_bus_val:
+        if not stored_sp_bus_val:  # es la primeva vez que se escribe
             stored_sp_bus_val = current_value
             with open(attr_dev_bus_file, "w") as f:
                 print(f"Escribiendo por primera vez en {attr_dev_bus_file} de {dev.name}: {stored_sp_bus_val} / ")
-                f.write(str(stored_sp_bus_val))
+                f.write(str(stored_sp_bus_val))  # se inicializa con el valor leído en el termostato
+        if not xch_value:
+            xch_value = current_value
+            with open(xch_file_to_check, "w") as xchf:
+                print(f"Escribiendo por primera vez en {xch_file_to_check} de {dev.name}: {xch_value} / ")
+                xchf.write(str(xch_value))  # Se inicializa el fichero de intercambio si no se ha hecho desde la web
 
-        modif_from_web = last_spbus_change_date < last_mod_time  # se ha modificado el archivo con el valor web
-        # porque su fecha de modificación es posterior a la del archivo xxx_bus
+        # Modificado JSC 20240803
+        modif_from_web = last_spbus_change_date < last_mod_time and xch_value # se ha modificado el archivo con
+        # el valor web porque su fecha de modificación es posterior a la del archivo xxx_bus. Además, se comprueba
+        # que el valor web no es None
+        if modif_from_web:
+            print(f"(check_changes_from_web): Cambios desde la web con el valor {xch_value} en el archivo intercamb.")
+        else:
+            print(f"(check_changes_from_web): No hay cambios desde la web o el valor {xch_value} del "
+                  f"archivo de intercambio es nulo")
+
+        # modif_from_web = last_spbus_change_date < last_mod_time  # se ha modificado el archivo con el valor web
+        # # porque su fecha de modificación es posterior a la del archivo xxx_bus
         if float(stored_sp_bus_val) != current_value and not modif_from_web:  # El usuario ha cambiado la consigna.
             # Se actualizan con el nuevo valor los archivos spx, spx_bus y el dispositivo
             print(f"{dev.name} - Consigna {stored_sp_bus_val} cambiada en termostato a {current_value}")
@@ -631,26 +646,32 @@ async def check_changes_from_web(bus_id: str, dev: phi.MBDevice, attr: str) -> i
 
     elif last_mod_time > last_exec_time:  # Ha habido modificaciones desde la Web en atributo RW
         changes = True
-        print(f"\nEl fichero:\t{xch_file_to_check}\tse ha modificado desde la última lectura\n")
-        if not xch_value is None:
-            if '(' in xch_value:  # Is Tuple
-                val_to_write = tuple(map(int, xch_value.strip('()').split(', ')))
-            elif '.' in xch_value:  # Is float
-                val_to_write = float(xch_value)
-            elif xch_value.isdecimal():  # Is int
-                val_to_write = int(xch_value)
-            else:
-                val_to_write = str(xch_value)
-            print(f"Actualizando el atributo {attr} del dispositivo {dev.name} con el valor {val_to_write}")
-            setattr(dev, attr, val_to_write)
-            print(f"Leyendo atributo tras escritura: {getattr(dev, attr)}")
+        print(f"\nEl fichero:\t{xch_file_to_check}\tse ha modificado desde la última lectura\n"
+              f"Valor de xch_value: {xch_value} / {type(xch_value)}")
 
-            with open(xch_file_to_check, "w") as xchf:
-                xchf.write(str(xch_value))
-            with open(xch_file_to_check, "r") as modf:
-                web_value = modf.read().strip()
-                print(f"\nComprobando si se ha escrito {val_to_write} en {xch_file_to_check}. "
-                      f"Valor leído: {web_value}")
+        if xch_value == "":
+            print(f"\n(check_changes_from_web) Atributo {attr} del dispositivo {dev.name} tiene está vacío")
+            xch_value = str(current_value)
+            print(f"(check_changes_from_web) Actualizando xch_value a {xch_value}\n")
+
+        if '(' in xch_value:  # Is Tuple
+            val_to_write = tuple(map(int, xch_value.strip('()').split(', ')))
+        elif '.' in xch_value:  # Is float
+            val_to_write = float(xch_value)
+        elif xch_value.isdecimal():  # Is int
+            val_to_write = int(xch_value)
+        else:
+            val_to_write = str(xch_value)
+
+        print(f"Actualizando el atributo {attr} del dispositivo {dev.name} con el valor {val_to_write}")
+        setattr(dev, attr, val_to_write)
+        print(f"Leyendo atributo tras escritura: {getattr(dev, attr)}")
+        with open(xch_file_to_check, "w") as xchf:
+            xchf.write(str(xch_value))
+        with open(xch_file_to_check, "r") as modf:
+            web_value = modf.read().strip()
+            print(f"\nComprobando si se ha escrito {val_to_write} en {xch_file_to_check}. "
+                  f"Valor leído: {web_value}")
 
     else:  # Se propaga el valor del atributo al archivo si ha cambiado
         changes = False
